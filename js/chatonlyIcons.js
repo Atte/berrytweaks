@@ -1,21 +1,19 @@
 BerryTweaks.modules['chatonlyIcons'] = (function(){
 "use strict";
 
-var icons = {
-	'#chatControls > .settings:contains(Poll)': 'https://dl.atte.fi/famfamfam/chart_bar.png',
-	'#chatControls > .settings:contains(Playlist)': 'https://dl.atte.fi/famfamfam/table.png'
-}
+var classes = {
+	'Poll': 'poll-button',
+	'Playlist': 'playlist-button'
+};
 
 var self = {
+	'css': true,
 	'enable': function(){
-		$.each(icons, function(sel, url){
-			whenExists(sel, function(el){
-				el.css('background', 'url('+url+') 0% 50% no-repeat scroll transparent');
+		$.each(classes, function(text, cls){
+			whenExists('#chatControls > .settings:contains('+text+')', function(el){
+				el.addClass(cls).addClass('berrytweaks-icon');
 			})
 		});
-	},
-	'disable': function(){
-		
 	}
 };
 

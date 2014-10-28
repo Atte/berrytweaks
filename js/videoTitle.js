@@ -39,6 +39,7 @@ var self = {
 			})
 		);
 
+		self.update();
 		titleUpdateInterval = setInterval(self.update, 1000*5);
 	},
 	'disable': function(){
@@ -51,6 +52,8 @@ var self = {
 			link.remove();
 			link = null;
 		}
+
+		prevID = null;
 	}
 };
 

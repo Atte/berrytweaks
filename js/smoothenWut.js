@@ -5,8 +5,10 @@ var patchDone = false;
 
 var self = {
 	'enable': function(){
-		if ( patchDone )
+		if ( patchDone ){
+			wutReloadUserColors();
 			return;
+		}
 
 		patchDone = true;
 		whenExists('#wutColorStyles', function(){
@@ -15,11 +17,7 @@ var self = {
 					return;
 
 				var sheet = document.getElementById('wutColorStyles').sheet;
-
-				var m = sheet.cssRules[0].cssText.match(/\bcolor\s*:\s*([^;}]+)/);
-				var color = m && m[1];
-				if ( !color )
-					return;
+				var color = wutGetUsercolor(nick);
 
 				sheet.insertRule('.msg-'+nick+' { border-image: linear-gradient(to right, '+color+', transparent) 1 100%; }', sheet.cssRules.length);
 				sheet.insertRule('#chatlist > ul > li.'+nick+' { border-left-width: 0; }', sheet.cssRules.length);
@@ -28,7 +26,7 @@ var self = {
 		});
 	},
 	'disable': function(){
-		
+		wutReloadUserColors();
 	}
 };
 

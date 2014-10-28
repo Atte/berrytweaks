@@ -7,6 +7,7 @@ var mapDataWaiting = [];
 var clockUpdateInterval = null;
 
 var self = {
+	'css': true,
 	'getMapData': function(callback){
 		if ( mapDataCache ){
 			callback(mapDataCache);
@@ -16,7 +17,7 @@ var self = {
 		mapDataWaiting.push(callback);
 
 		if ( mapDataWaiting.length == 1 ){
-			$.getJSON('https://atte.fi/berrymap/json.php', function(data){
+			$.getJSON('https://atte.fi/berrytweaks/api/map.php', function(data){
 				mapDataCache = data;
 				mapDataWaiting.forEach(function(waiter){
 					waiter(mapDataCache);
@@ -55,18 +56,9 @@ var self = {
 			}, function(data){
 				el.append(
 					$('<div>', {
-						'class': 'localtime',
-						'css': {
-							'position': 'absolute',
-							'top': 0,
-							'right': 0
-						}
+						'class': 'localtime'
 					})
 				);
-				
-				el.css({
-					'position': 'relative'
-				});
 
 				el.data('localtime_offset', (new Date(data.time)).getTime() - Date.now());
 				

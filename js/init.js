@@ -29,6 +29,16 @@ var self = {
 			};
 		}
 	},
+	'loadCSS': function(name){
+		$('<link>', {
+			'data-module': name,
+			'rel': 'stylesheet',
+			'href': /^https?:/.test(name) ? name : ('https://atte.fi/berrytweaks/css/'+name+'.css')
+		}).appendTo(document.head);
+	},
+	'unloadCSS': function(name){
+		$('link[data-module='+name+']').remove();
+	},
 	'loadSettings': function(){
 		return $.extend(true, {
 			'enabled': {
@@ -61,14 +71,20 @@ var self = {
 			if ( mod.enabled )
 				return;
 
-			mod.enable();
+			if ( mod.css )
+				self.loadCSS(name);
+
 			mod.enabled = true;
+
+			if ( mod.enable )
+				mod.enable();
+
 			return;
 		}
 
 		$.getScript('https://atte.fi/berrytweaks/js/'+name+'.js', function(){
-			self.modules[name].enable();
-			self.modules[name].enabled = true;
+			if ( self.modules[name] )
+				self.enableModule(name);
 		});
 	},
 	'disableModule': function(name){
@@ -78,7 +94,12 @@ var self = {
 				return;
 
 			mod.enabled = false;
-			mod.disable();
+
+			if ( mod.disable )
+				mod.disable();
+
+			if ( mod.css )
+				self.unloadCSS(name);
 		}
 	},
 	'init': function(){
