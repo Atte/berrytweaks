@@ -1,28 +1,26 @@
 BerryTweaks.modules['showLocaltimes'] = (function(){
 "use strict";
 
-var mapDataCache = null;
-var mapDataWaiting = [];
-
-var clockUpdateInterval = null;
-
 var self = {
 	'css': true,
+	'clockUpdateInterval': null,
+	'mapDataCache': null,
+	'mapDataWaiting': [],
 	'getMapData': function(callback){
-		if ( mapDataCache ){
-			callback(mapDataCache);
+		if ( self.mapDataCache ){
+			callback(self.mapDataCache);
 			return;
 		}
 
-		mapDataWaiting.push(callback);
+		self.mapDataWaiting.push(callback);
 
-		if ( mapDataWaiting.length == 1 ){
+		if ( self.mapDataWaiting.length == 1 ){
 			$.getJSON('https://atte.fi/berrytweaks/api/map.php', function(data){
-				mapDataCache = data;
-				mapDataWaiting.forEach(function(waiter){
-					waiter(mapDataCache);
+				self.mapDataCache = data;
+				self.mapDataWaiting.forEach(function(waiter){
+					waiter(self.mapDataCache);
 				});
-				mapDataWaiting = null;
+				self.mapDataWaiting = null;
 			}, 'xml');
 		}
 	},
@@ -70,12 +68,12 @@ var self = {
 		$('#chatlist > ul > li').each(function(){
 			self.handleUser($(this).data('nick'));
 		});
-		clockUpdateInterval = setInterval(self.update, 1000*60);
+		self.clockUpdateInterval = setInterval(self.update, 1000*60);
 	},
 	'disable': function(){
-		if ( clockUpdateInterval ){
-			clearInterval(clockUpdateInterval);
-			clockUpdateInterval = null;
+		if ( self.clockUpdateInterval ){
+			clearInterval(self.clockUpdateInterval);
+			self.clockUpdateInterval = null;
 		}
 
 		$('#chatlist > ul > li .localtime').remove();

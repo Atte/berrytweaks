@@ -1,16 +1,16 @@
 BerryTweaks.modules['smoothenWut'] = (function(){
 "use strict";
 
-var patchDone = false;
-
 var self = {
+	'css': true,
+	'patchDone': false,
 	'enable': function(){
-		if ( patchDone ){
+		if ( self.patchDone ){
 			wutReloadUserColors();
 			return;
 		}
 
-		patchDone = true;
+		self.patchDone = true;
 		whenExists('#wutColorStyles', function(){
 			BerryTweaks.patch('wutProcessUsername', function(nick){
 				if ( !self.enabled )
@@ -20,7 +20,6 @@ var self = {
 				var color = wutGetUsercolor(nick);
 
 				sheet.insertRule('.msg-'+nick+' { border-image: linear-gradient(to right, '+color+', transparent) 1 100%; }', sheet.cssRules.length);
-				sheet.insertRule('#chatlist > ul > li.'+nick+' { border-left-width: 0; }', sheet.cssRules.length);
 			});
 			wutReloadUserColors();
 		});

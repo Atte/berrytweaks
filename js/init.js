@@ -1,16 +1,15 @@
 window.BerryTweaks = (function(){
 "use strict";
 
-var configTitles = {
-	'chatonlyIcons': "Add icons to Chat-Only mode buttons",
-	'hideLoggedin': 'Hide extra "Logged in as" label',
-	'videoTitle': "Show video title in chat toolbar",
-	'showLocaltimes': "Show users' local times",
-	'smoothenWut': "Smoothen wutColors",
-	'hideFloaty': "Hide floaty stuff"
-};
-
 var self = {
+	'configTitles': {
+		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
+		'hideLoggedin': 'Hide extra "Logged in as" label',
+		'videoTitle': "Show video title in chat toolbar",
+		'showLocaltimes': "Show users' local times",
+		'smoothenWut': "Smoothen wutColors",
+		'hideFloaty': "Hide floaty stuff"
+	},
 	'modules': {},
 	'patch': function(name, callback, before){
 		var original = window[name];
@@ -31,25 +30,25 @@ var self = {
 	},
 	'loadCSS': function(name){
 		$('<link>', {
-			'data-module': name,
+			'data-berrytweaks_module': name,
 			'rel': 'stylesheet',
 			'href': /^https?:/.test(name) ? name : ('https://atte.fi/berrytweaks/css/'+name+'.css')
 		}).appendTo(document.head);
 	},
 	'unloadCSS': function(name){
-		$('link[data-module='+name+']').remove();
+		$('link[data-berrytweaks_module='+name+']').remove();
 	},
 	'loadSettings': function(){
 		return $.extend(true, {
 			'enabled': {
-				'chatonlyIcons': true,
+				'chatonlyIcons': false,
 				'hideLoggedin': false,
 				'videoTitle': false,
 				'showLocaltimes': false,
 				'smoothenWut': false,
 				'hideFloaty': false
 			}
-		}, JSON.parse(localStorage['BerryTweaks'] || '{}'))
+		}, JSON.parse(localStorage['BerryTweaks'] || '{}'));
 	},
 	'saveSettings': function(settings){
 		localStorage['BerryTweaks'] = JSON.stringify(settings);
@@ -113,7 +112,7 @@ var self = {
 						 	'text': 'BerryTweaks'
 						 })
 					).append(
-						$.map(configTitles, function(label, key){
+						$.map(self.configTitles, function(label, key){
 							return $('<div>').append(
 								$('<span>', {
 									'text': label + ': '

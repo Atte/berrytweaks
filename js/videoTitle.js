@@ -1,12 +1,11 @@
 BerryTweaks.modules['videoTitle'] = (function(){
 "use strict";
 
-var link = null;
-var prevID = null;
-
-var titleUpdateInterval = null;
-
 var self = {
+	'css': true,
+	'link': null,
+	'prevID': null,
+	'titleUpdateInterval': null,
 	'videoLink': function(vid){
 		if ( vid.meta && vid.meta.permalink )
 			return vid.meta.permalink;
@@ -21,39 +20,37 @@ var self = {
 		}
 	},
 	'update': function(){
-		if ( window.ACTIVE.videoid == prevID )
+		if ( window.ACTIVE.videoid == self.prevID )
 			return;
-		prevID = window.ACTIVE.videoid;
+		self.prevID = window.ACTIVE.videoid;
 
-		link.attr('href', self.videoLink(window.ACTIVE))
-		link.html(decodeURIComponent(window.ACTIVE.videotitle));
+		self.link.attr('href', self.videoLink(window.ACTIVE))
+		self.link.html(decodeURIComponent(window.ACTIVE.videotitle));
 	},
 	'enable': function(){
 		$('#chatControls').append(
-			link = $('<a>', {
+			self.link = $('<a>', {
+				'id': 'berrytweaks-video-title',
 				'target': '_blank',
-				'text': 'Loading...',
-				'css': {
-					'float': 'left'
-				}
+				'text': 'Loading...'
 			})
 		);
 
 		self.update();
-		titleUpdateInterval = setInterval(self.update, 1000*5);
+		self.titleUpdateInterval = setInterval(self.update, 1000*5);
 	},
 	'disable': function(){
-		if ( titleUpdateInterval ){
-			clearInterval(titleUpdateInterval);
-			titleUpdateInterval = null;
+		if ( self.titleUpdateInterval ){
+			clearInterval(self.titleUpdateInterval);
+			self.titleUpdateInterval = null;
 		}
 
-		if ( link ){
-			link.remove();
-			link = null;
+		if ( self.link ){
+			self.link.remove();
+			self.link = null;
 		}
 
-		prevID = null;
+		self.prevID = null;
 	}
 };
 
