@@ -29,10 +29,17 @@ var self = {
 		}
 	},
 	'loadCSS': function(name){
+		var url;
+		if ( /^https?:/.test(name) )
+			url = name;
+		else
+			url = 'https://atte.fi/berrytweaks/css/'+name+'.css';
+
+
 		$('<link>', {
 			'data-berrytweaks_module': name,
 			'rel': 'stylesheet',
-			'href': /^https?:/.test(name) ? name : ('https://atte.fi/berrytweaks/css/'+name+'.css')
+			'href': url
 		}).appendTo(document.head);
 	},
 	'unloadCSS': function(name){

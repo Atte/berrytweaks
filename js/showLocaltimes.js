@@ -28,13 +28,13 @@ var self = {
 		var now = Date.now();
 		$('#chatlist > ul > li').each(function(){
 			var el = $(this);
-			var offset = el.data('localtime_offset');
+			var offset = el.data('berrytweaks-localtime_offset');
 			if ( offset == null )
 				return;
 
 			var time = new Date(now + offset);
 			var mins = time.getMinutes();
-			$('.localtime', el).text(time.getHours() + ':' + (mins<10 ? '0'+mins : mins));
+			$('.berrytweaks-localtime', el).text(time.getHours() + ':' + (mins<10 ? '0'+mins : mins));
 		});
 	},
 	'handleUser': function(nick){
@@ -47,18 +47,25 @@ var self = {
 			if ( !userdata )
 				return;
 
-			$.getJSON('http://api.geonames.org/timezoneJSON', {
-				'username': 'Atte',
+			$.getJSON('http://api.timezonedb.com/', {
+				'format': 'json',
+				'key': 'PLXFU6Y9V2J1',
 				'lat': userdata.lat,
 				'lng': userdata.lng
 			}, function(timedata){
-				el.append(
-					$('<div>', {
-						'class': 'localtime'
-					})
-				);
+				var offset = timedata && timedata.gmtOffset;
+				if ( offset == null )
+					return;
 
-				el.data('localtime_offset', (new Date(timedata.time)).getTime() - Date.now());
+				if ( !$('.berrytweaks-localtime', el).length ){
+					el.append(
+						$('<div>', {
+							'class': 'berrytweaks-localtime'
+						})
+					);
+				}
+
+				el.data('berrytweaks-localtime_offset', (+offset)*1000);
 				
 				self.update();
 			});
@@ -76,7 +83,7 @@ var self = {
 			self.clockUpdateInterval = null;
 		}
 
-		$('#chatlist > ul > li .localtime').remove();
+		$('#chatlist > ul > li .berrytweaks-localtime').remove();
 	}
 };
 

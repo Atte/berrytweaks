@@ -30,7 +30,7 @@ var self = {
 	'enable': function(){
 		$('#chatControls').append(
 			self.link = $('<a>', {
-				'id': 'berrytweaks-video-title',
+				'id': 'berrytweaks-video_title',
 				'target': '_blank',
 				'text': 'Loading...'
 			})
