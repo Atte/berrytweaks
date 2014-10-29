@@ -42,23 +42,23 @@ var self = {
 			return;
 
 		var el = $('#chatlist > ul > li.' + nick);
-		self.getMapData(function(data){
-			data = data[nick.toLowerCase()];
-			if ( !data )
+		self.getMapData(function(mapdata){
+			var userdata = mapdata && mapdata[nick.toLowerCase()];
+			if ( !userdata )
 				return;
 
 			$.getJSON('http://api.geonames.org/timezoneJSON', {
 				'username': 'Atte',
-				'lat': data.lat,
-				'lng': data.lng
-			}, function(data){
+				'lat': userdata.lat,
+				'lng': userdata.lng
+			}, function(timedata){
 				el.append(
 					$('<div>', {
 						'class': 'localtime'
 					})
 				);
 
-				el.data('localtime_offset', (new Date(data.time)).getTime() - Date.now());
+				el.data('localtime_offset', (new Date(timedata.time)).getTime() - Date.now());
 				
 				self.update();
 			});
