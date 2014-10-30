@@ -33,8 +33,8 @@ var self = {
 				return;
 
 			var time = new Date(now + offset);
-			var mins = time.getMinutes();
-			$('.berrytweaks-localtime', el).text(time.getHours() + ':' + (mins<10 ? '0'+mins : mins));
+			var mins = time.getUTCMinutes();
+			$('.berrytweaks-localtime', el).text(time.getUTCHours() + ':' + (mins<10 ? '0'+mins : mins));
 		});
 	},
 	'handleUser': function(nick){
@@ -47,7 +47,7 @@ var self = {
 			if ( !userdata )
 				return;
 
-			$.getJSON('http://api.timezonedb.com/', {
+			$.getJSON('http://api.timezonedb.com/?callback=?', {
 				'format': 'json',
 				'key': 'PLXFU6Y9V2J1',
 				'lat': userdata.lat,
