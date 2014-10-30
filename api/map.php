@@ -7,13 +7,15 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
 $context = stream_context_create([
-	'http' => ['timeout' => 10]
+	'http' => [
+		'timeout' => 10
+	]
 ]);
 
 $xml = @file_get_contents(XML_URL, false, $context);
 
 if ( $xml ){
-	file_put_contents('map_cache.xml', $xml);
+	file_put_contents(CACHE_FNAME, $xml);
 }
 else{
 	$xml = file_get_contents(CACHE_FNAME);

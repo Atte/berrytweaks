@@ -3,6 +3,7 @@ BerryTweaks.modules['hideLoggedin'] = (function(){
 
 var self = {
 	'css': false,
+	'removedNode': null,
 	'enable': function(){
 		whenExists('.loginAs', function(el){
 			var node = el.contents()[0];
@@ -20,8 +21,7 @@ var self = {
 			el.prepend(self.removedNode);
 			self.removedNode = null;
 		});
-	},
-	'removedNode': null
+	}
 };
 
 return self;

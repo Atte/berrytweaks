@@ -58,11 +58,9 @@ var self = {
 					return;
 
 				if ( !$('.berrytweaks-localtime', el).length ){
-					el.append(
-						$('<div>', {
-							'class': 'berrytweaks-localtime'
-						})
-					);
+					$('<div>', {
+						'class': 'berrytweaks-localtime'
+					}).appendTo(el);
 				}
 
 				el.data('berrytweaks-localtime_offset', (+offset)*1000);

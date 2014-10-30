@@ -7,6 +7,7 @@ var self = {
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'videoTitle': "Show video title in chat toolbar",
 		'showLocaltimes': "Show users' local times",
+		'globalFlairs': "Show flairs in user list",
 		'smoothenWut': "Smoothen wutColors",
 		'hideFloaty': "Hide floaty stuff"
 	},
@@ -52,6 +53,7 @@ var self = {
 				'hideLoggedin': false,
 				'videoTitle': false,
 				'showLocaltimes': false,
+				'globalFlairs': false,
 				'smoothenWut': false,
 				'hideFloaty': false
 			}
