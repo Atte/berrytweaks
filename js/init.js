@@ -3,9 +3,11 @@ window.BerryTweaks = (function(){
 
 var self = {
 	'configTitles': {
+		'convertUnits': "Convert measurements in chat into metric",
 		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'videoTitle': "Show video title in chat toolbar",
+		'userMaps': "Show map in user dialog",
 		'showLocaltimes': "Show users' local times",
 		'globalFlairs': "Show flairs in user list",
 		'smoothenWut': "Smoothen wutColors",
@@ -49,9 +51,11 @@ var self = {
 	'loadSettings': function(){
 		return $.extend(true, {
 			'enabled': {
+				'convertUnits': false,
 				'chatonlyIcons': false,
 				'hideLoggedin': false,
 				'videoTitle': false,
+				'userMaps': false,
 				'showLocaltimes': false,
 				'globalFlairs': false,
 				'smoothenWut': false,
