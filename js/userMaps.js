@@ -2,7 +2,7 @@ BerryTweaks.modules['userMaps'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
+	'css': true,
 	'mapDataCache': null,
 	'mapDataWaiting': [],
 	'getMapData': function(callback){
@@ -25,16 +25,19 @@ var self = {
 	},
 	'addMap': function(){
 		self.getMapData(function(data){
+			// find window
 			var dialogContent = $('#userOps').parents('.dialogContent');
 			var dialogWindow = dialogContent.parents('.dialogWindow');
 			var nick = $('h1', dialogContent).text();
 			if ( !dialogContent || !dialogWindow || !nick )
 				return;
 
+			// look up user
 			var mapdata = data[nick.toLowerCase()];
 			if ( !mapdata )
 				return;
 
+			// add map
 			$('<iframe>', {
 				'class': 'berrytweaks-usermap',
 				'frameborder': 0,
@@ -46,11 +49,19 @@ var self = {
 				'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+mapdata.lat+','+mapdata.lng
 			}).appendTo(dialogContent);
 
+			// add close button
+			$('<div>', {
+				'class': 'berrytweaks-close'
+			}).click(function(){
+				dialogWindow.remove();
+			}).appendTo(dialogWindow);
+
 			// fix dialog position if it went outside the window
+			var diaMargin = 8;
 			var offset = dialogWindow.offset();
 			var diaSize = {
-				'height': dialogWindow.height(),
-				'width': dialogWindow.width()
+				'height': dialogWindow.height() + diaMargin,
+				'width': dialogWindow.width() + diaMargin
 			};
 
 			var win = $(window);

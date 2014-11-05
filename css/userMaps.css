@@ -1,0 +1,14 @@
+.dialogWindow > .berrytweaks-close {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+
+	height: 16px;
+	width: 16px;
+	margin: 5px;
+	
+	background: red;
+	border: 1px solid black;
+
+	cursor: pointer;
+}
