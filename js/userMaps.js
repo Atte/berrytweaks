@@ -32,6 +32,13 @@ var self = {
 			if ( !dialogContent || !dialogWindow || !nick )
 				return;
 
+			// add close button
+			$('<div>', {
+				'class': 'berrytweaks-close'
+			}).click(function(){
+				dialogWindow.remove();
+			}).appendTo(dialogWindow);
+
 			// look up user
 			var mapdata = data[nick.toLowerCase()];
 			if ( !mapdata )
@@ -48,13 +55,6 @@ var self = {
 				},
 				'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+mapdata.lat+','+mapdata.lng
 			}).appendTo(dialogContent);
-
-			// add close button
-			$('<div>', {
-				'class': 'berrytweaks-close'
-			}).click(function(){
-				dialogWindow.remove();
-			}).appendTo(dialogWindow);
 
 			// fix dialog position if it went outside the window
 			var diaMargin = 8;

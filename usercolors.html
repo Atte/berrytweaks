@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Custom wutColors</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="//dl.atte.fi/lib/bootstrap3/css/bootstrap.min.css" />
+	<style>
+	ul {
+		font-family: arial;
+		font-size: 13px;
+		font-weight: bold;
+	}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h2>Custom wutColors</h2>
+
+		<ul id="user-list"></ul>
+	</div>
+
+	<script src="./api/usercolors.php"></script>
+	<script>
+	(function(){
+		"use strict";
+
+		var nicks = Object.keys(wutUserColors);
+		nicks.sort(function(a, b){
+			return a.toLowerCase().localeCompare(b.toLowerCase());
+		});
+
+		var ul = document.getElementById('user-list');
+		nicks.forEach(function(nick){
+			var data = wutUserColors[nick];
+			if ( !data || !data.color )
+				return;
+
+			var li = document.createElement('li');
+			li.appendChild(document.createTextNode(nick));
+			li.style.color = data.color;
+			ul.appendChild(li);
+		});
+	})();
+	</script>
+</body>
+</html>
