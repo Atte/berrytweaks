@@ -3,62 +3,7 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 
 var self = {
 	'css': true,
-	'nickAliases': {
-		'Cuddles_theBear': ['irCuddles_tBear'],
-		'cyzon': ['ircyzon'],
-		'maharito': ['mahaquesarito'],
-		'PonisEnvy': ['PonircEnvy'],
-		'ShippingIsMagic': ['ShippingIsPhone']
-	},
 	'clockUpdateInterval': null,
-	'mapDataCache': null,
-	'mapDataWaiting': [],
-	'getMapData': function(callback){
-		if ( self.mapDataCache ){
-			callback(self.mapDataCache);
-			return;
-		}
-
-		self.mapDataWaiting.push(callback);
-
-		if ( self.mapDataWaiting.length == 1 ){
-			$.getJSON('https://atte.fi/berrytweaks/api/map.php', function(data){
-				self.mapDataCache = data;
-				self.mapDataWaiting.forEach(function(waiter){
-					waiter(self.mapDataCache);
-				});
-				self.mapDataWaiting = null;
-			}, 'xml');
-		}
-	},
-	'getNickKeys': function(nick){
-		var keys = [nick]
-
-		// resolve aliases
-		$.each(self.nickAliases, function(key, val){
-			for ( var i=0; i<val.length; ++i ){
-				var alias = val[i].toLowerCase();
-				if ( nick == alias ){
-					keys.push(key);
-					return false;
-				}
-			}
-		});
-
-		// add some default aliases
-		keys.push(nick.replace(/[^a-z0-9]?phone/i, ''));
-		keys.push(nick.replace(/[^a-z0-9]?irc/i, ''));
-		keys.push(nick.replace(/specialcoal/i, 'weed'));
-
-		// lowercase, filter out duplicates
-		var out = [];
-		keys.forEach(function(key){
-			key = key.toLowerCase();
-			if ( out.indexOf(key) == -1 )
-				out.push(key);
-		});
-		return out;
-	},
 	'update': function(){
 		var now = Date.now();
 		$('#chatlist > ul > li').each(function(){
@@ -77,18 +22,18 @@ var self = {
 			return;
 
 		var el = $('#chatlist > ul > li.' + nick);
-		self.getMapData(function(mapdata){
+		BerryTweaks.getMapData(function(mapdata){
 			if ( !mapdata )
 				return;
 
+			// look up user
 			var userdata;
-			var keys = self.getNickKeys(nick);
+			var keys = BerryTweaks.getNickKeys(nick);
 			for ( var i=0; i<keys.length; ++i ){
 				userdata = mapdata[keys[i]];
 				if ( userdata )
 					break;
 			}
-
 			if ( !userdata )
 				return;
 

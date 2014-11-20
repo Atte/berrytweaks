@@ -17,6 +17,8 @@ var self = {
 				return 'http://vimeo.com/' + vid.videoid;
 			case 'dm':
 				return 'http://www.dailymotion.com/video/' + vid.videoid;
+			case 'osmf':
+				return vid.videoid;
 		}
 	},
 	'update': function(){

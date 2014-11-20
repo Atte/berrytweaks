@@ -3,28 +3,8 @@ BerryTweaks.modules['userMaps'] = (function(){
 
 var self = {
 	'css': true,
-	'mapDataCache': null,
-	'mapDataWaiting': [],
-	'getMapData': function(callback){
-		if ( self.mapDataCache ){
-			callback(self.mapDataCache);
-			return;
-		}
-
-		self.mapDataWaiting.push(callback);
-
-		if ( self.mapDataWaiting.length == 1 ){
-			$.getJSON('https://atte.fi/berrytweaks/api/map.php', function(data){
-				self.mapDataCache = data;
-				self.mapDataWaiting.forEach(function(waiter){
-					waiter(self.mapDataCache);
-				});
-				self.mapDataWaiting = null;
-			}, 'xml');
-		}
-	},
 	'addMap': function(){
-		self.getMapData(function(data){
+		BerryTweaks.getMapData(function(mapdata){
 			// find window
 			var dialogContent = $('#userOps').parents('.dialogContent');
 			var dialogWindow = dialogContent.parents('.dialogWindow');
@@ -40,8 +20,14 @@ var self = {
 			}).appendTo(dialogWindow);
 
 			// look up user
-			var mapdata = data[nick.toLowerCase()];
-			if ( !mapdata )
+			var userdata;
+			var keys = BerryTweaks.getNickKeys(nick);
+			for ( var i=0; i<keys.length; ++i ){
+				userdata = mapdata[keys[i]];
+				if ( userdata )
+					break;
+			}
+			if ( !userdata )
 				return;
 
 			// add map
@@ -53,7 +39,7 @@ var self = {
 					'width': 256,
 					'height': 256
 				},
-				'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+mapdata.lat+','+mapdata.lng
+				'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+userdata.lat+','+userdata.lng
 			}).appendTo(dialogContent);
 
 			// fix dialog position if it went outside the window

@@ -14,6 +14,72 @@ var self = {
 		'hideFloaty': "Hide floaty stuff"
 	},
 	'modules': {},
+	'nickAliases': {
+		'Chrono': ['Chrona'],
+		'Cuddles_theBear': ['irCuddles_tBear'],
+		'cyzon': ['ircyzon'],
+		'maharito': ['mahaquesarito', 'Mahayro'],
+		'PonisEnvy': ['PonircEnvy'],
+		'SalientBlue': ['SalientPhone'],
+		'SomeStupidGuy': ['SomeStupidPhone'],
+		'ShippingIsMagic': ['ShippingIsPhone'],
+		'stevepoppers': ['stevephoners']
+	},
+	'getNickKeys': function(nick, favorAliases){
+		var keys = [];
+		
+		if ( !favorAliases )
+			keys.push(nick);
+
+		// resolve aliases
+		$.each(self.nickAliases, function(key, val){
+			for ( var i=0; i<val.length; ++i ){
+				var alias = val[i].toLowerCase();
+				if ( nick == alias ){
+					keys.push(key);
+					return false;
+				}
+			}
+		});
+
+		if ( favorAliases )
+			keys.push(nick);
+
+		// add some default aliases
+		keys.push(nick.replace(/[^a-z0-9]?phone/i, ''));
+		keys.push(nick.replace(/[^a-z0-9]?irc/i, ''));
+		keys.push(nick.replace(/specialcoal/i, 'weed'));
+
+		// lowercase, filter out duplicates
+		var out = [];
+		keys.forEach(function(key){
+			key = key.toLowerCase();
+			if ( out.indexOf(key) == -1 )
+				out.push(key);
+		});
+		
+		return out;
+	},
+	'mapDataCache': null,
+	'mapDataWaiting': [],
+	'getMapData': function(callback){
+		if ( self.mapDataCache ){
+			callback(self.mapDataCache);
+			return;
+		}
+
+		self.mapDataWaiting.push(callback);
+
+		if ( self.mapDataWaiting.length == 1 ){
+			$.getJSON('https://atte.fi/berrytweaks/api/map.php', function(data){
+				self.mapDataCache = data;
+				self.mapDataWaiting.forEach(function(waiter){
+					waiter(self.mapDataCache);
+				});
+				self.mapDataWaiting = null;
+			}, 'xml');
+		}
+	},
 	'patch': function(name, callback, before){
 		var original = window[name];
 
