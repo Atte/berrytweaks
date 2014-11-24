@@ -132,6 +132,7 @@ var self = {
 	'saveSettings': function(settings){
 		localStorage['BerryTweaks'] = JSON.stringify(settings);
 		self.applySettings();
+		self.updateSettingsGUI();
 	},
 	'applySettings': function(){
 		var settings = self.loadSettings();
@@ -157,6 +158,9 @@ var self = {
 			if ( mod.enable )
 				mod.enable();
 
+			if ( mod.addSettings )
+				self.updateSettingsGUI();
+
 			return;
 		}
 
@@ -180,37 +184,71 @@ var self = {
 				self.unloadCSS(name);
 		}
 	},
-	'init': function(){
-		self.patch('showConfigMenu', function(){
-			var settings = self.loadSettings();
+	'settingsContainer': null,
+	'updateSettingsGUI': function(){
+		if ( !self.settingsContainer )
+			return;
 
-			$('#settingsGui > ul').append(
-				$('<li>').append(
-					$('<fieldset>').append(
-						 $('<legend>', {
-						 	'text': 'BerryTweaks'
-						 })
-					).append(
-						$.map(self.configTitles, function(label, key){
-							return $('<div>').append(
-								$('<span>', {
-									'text': label + ': '
-								})
-							).append(
-								$('<input>', {
-									'type': 'checkbox',
-									'checked': !!settings.enabled[key]
-								}).change(function(){
-									var settings = self.loadSettings();
-									settings.enabled[key] = !!$(this).prop('checked');
-									self.saveSettings(settings);
-								})
-							);
-						})
-					)
+		var settings = self.loadSettings();
+		self.settingsContainer.empty();
+
+		// title
+		self.settingsContainer.append(
+			$('<legend>', {
+				'text': 'BerryTweaks'
+			})
+		);
+
+		// basic toggles
+		self.settingsContainer.append(
+			$.map(self.configTitles, function(label, key){
+				return $('<div>', {
+					'class': 'module-toggle',
+					'data-key': key
+				}).append(
+					$('<span>', {
+						'text': label + ': '
+					})
+				).append(
+					$('<input>', {
+						'type': 'checkbox',
+						'checked': !!settings.enabled[key]
+					}).change(function(){
+						var settings = self.loadSettings();
+						settings.enabled[key] = !!$(this).prop('checked');
+						self.saveSettings(settings);
+					})
+				);
+			})
+		);
+
+		// mod specific
+		$.each(self.modules, function(key, mod){
+			if ( !mod.enabled || !mod.addSettings )
+				return;
+
+			mod.addSettings(
+				$('<div>', {
+					'class': 'module-settings',
+					'data-key': key
+				}).insertAfter(
+					$('.module-toggle[data-key='+key+']', self.settingsContainer)
 				)
 			);
 		});
+	},
+	'init': function(){
+		self.patch('showConfigMenu', function(){
+			self.settingsContainer = $('<fieldset>');
+			$('#settingsGui > ul').append(
+				$('<li>').append(
+					self.settingsContainer
+				)
+			);
+
+			self.updateSettingsGUI();
+		});
+
 		self.applySettings();
 	}
 };

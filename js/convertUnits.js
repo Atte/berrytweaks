@@ -77,15 +77,24 @@ var self = {
 		});
 	},
 	'convertAll': function(str){
+		var settings = BerryTweaks.loadSettings();
+
 		self.units.forEach(function(unit){
+			if ( settings.convertUnits && settings.convertUnits.indexOf(unit.names[unit.names.length-1]) == -1 )
+				return;
+
 			str = str.replace(unit.regex, function(m, m1){
 				return m + ' (' + unit.fn(+m1) + ' ' + unit.label + ')';
 			});
 		});
+
 		return str;
 	},
 	'enable': function(){
 		self.preprocessUnits();
+	},
+	'addSettings': function(container){
+		
 	}
 };
 
