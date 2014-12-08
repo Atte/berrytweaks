@@ -3,6 +3,7 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 
 var self = {
 	'css': true,
+	'libs': ['nick', 'map'],
 	'clockUpdateInterval': null,
 	'update': function(){
 		var now = Date.now();
@@ -22,18 +23,7 @@ var self = {
 			return;
 
 		var el = $('#chatlist > ul > li.' + nick);
-		BerryTweaks.getMapData(function(mapdata){
-			if ( !mapdata )
-				return;
-
-			// look up user
-			var userdata;
-			var keys = BerryTweaks.getNickKeys(nick);
-			for ( var i=0; i<keys.length; ++i ){
-				userdata = mapdata[keys[i]];
-				if ( userdata )
-					break;
-			}
+		BerryTweaks.lib.map.getUserData(nick, function(userdata){
 			if ( !userdata )
 				return;
 

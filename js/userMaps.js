@@ -3,8 +3,9 @@ BerryTweaks.modules['userMaps'] = (function(){
 
 var self = {
 	'css': true,
+	'libs': ['nick', 'map'],
 	'addMap': function(){
-		BerryTweaks.getMapData(function(mapdata){
+		BerryTweaks.lib.map.getData(function(mapdata){
 			// find window
 			var dialogContent = $('#userOps').parents('.dialogContent');
 			var dialogWindow = dialogContent.parents('.dialogWindow');
@@ -21,7 +22,7 @@ var self = {
 
 			// look up user
 			var userdata;
-			var keys = BerryTweaks.getNickKeys(nick);
+			var keys = BerryTweaks.lib.nick.getKeys(nick);
 			for ( var i=0; i<keys.length; ++i ){
 				userdata = mapdata[keys[i]];
 				if ( userdata )

@@ -14,72 +14,8 @@ var self = {
 		'hideFloaty': "Hide floaty stuff"
 	},
 	'modules': {},
-	'nickAliases': {
-		'Chrono': ['Chrona'],
-		'Cuddles_theBear': ['irCuddles_tBear'],
-		'cyzon': ['ircyzon'],
-		'maharito': ['mahaquesarito', 'Mahayro'],
-		'PonisEnvy': ['PonircEnvy'],
-		'SalientBlue': ['SalientPhone'],
-		'SomeStupidGuy': ['SomeStupidPhone'],
-		'ShippingIsMagic': ['ShippingIsPhone'],
-		'stevepoppers': ['stevephoners']
-	},
-	'getNickKeys': function(nick, favorAliases){
-		var keys = [];
-		
-		if ( !favorAliases )
-			keys.push(nick);
-
-		// resolve aliases
-		$.each(self.nickAliases, function(key, val){
-			for ( var i=0; i<val.length; ++i ){
-				var alias = val[i].toLowerCase();
-				if ( nick == alias ){
-					keys.push(key);
-					return false;
-				}
-			}
-		});
-
-		if ( favorAliases )
-			keys.push(nick);
-
-		// add some default aliases
-		keys.push(nick.replace(/[^a-z0-9]?phone/i, ''));
-		keys.push(nick.replace(/[^a-z0-9]?irc/i, ''));
-		keys.push(nick.replace(/specialcoal/i, 'weed'));
-
-		// lowercase, filter out duplicates
-		var out = [];
-		keys.forEach(function(key){
-			key = key.toLowerCase();
-			if ( out.indexOf(key) == -1 )
-				out.push(key);
-		});
-		
-		return out;
-	},
-	'mapDataCache': null,
-	'mapDataWaiting': [],
-	'getMapData': function(callback){
-		if ( self.mapDataCache ){
-			callback(self.mapDataCache);
-			return;
-		}
-
-		self.mapDataWaiting.push(callback);
-
-		if ( self.mapDataWaiting.length == 1 ){
-			$.getJSON('https://atte.fi/berrytweaks/api/map.php', function(data){
-				self.mapDataCache = data;
-				self.mapDataWaiting.forEach(function(waiter){
-					waiter(self.mapDataCache);
-				});
-				self.mapDataWaiting = null;
-			}, 'xml');
-		}
-	},
+	'lib': {},
+	'libWaiters': {},
 	'patch': function(name, callback, before){
 		var original = window[name];
 
@@ -116,17 +52,7 @@ var self = {
 	},
 	'loadSettings': function(){
 		return $.extend(true, {
-			'enabled': {
-				'convertUnits': false,
-				'chatonlyIcons': false,
-				'hideLoggedin': false,
-				'videoTitle': false,
-				'userMaps': false,
-				'showLocaltimes': false,
-				'globalFlairs': false,
-				'smoothenWut': false,
-				'hideFloaty': false
-			}
+			'enabled': {}
 		}, JSON.parse(localStorage['BerryTweaks'] || '{}'));
 	},
 	'saveSettings': function(settings){
@@ -142,6 +68,40 @@ var self = {
 				self.enableModule(key);
 			else
 				self.disableModule(key);
+		});
+	},
+	'loadLibs': function(names, callback){
+		names = names.filter(function(name){
+			return !self.lib[name];
+		});
+
+		var left = names.length;
+		if ( left == 0 ){
+			callback();
+			return;
+		}
+
+		var after = function(){
+			if ( --left == 0 )
+				callback();
+		};
+
+		names.forEach(function(name){
+			var first = !self.libWaiters[name];
+
+			if ( first ){
+				self.libWaiters[name] = [after];
+			}
+			else{
+				self.libWaiters[name].push(after);
+
+				$.getScript('https://atte.fi/berrytweaks/js/lib/'+name+'.js', function(){
+					self.libWaiters[name].forEach(function(fn){
+						fn();
+					});
+					delete self.libWaiters[name];
+				});
+			}
 		});
 	},
 	'enableModule': function(name){
@@ -165,8 +125,13 @@ var self = {
 		}
 
 		$.getScript('https://atte.fi/berrytweaks/js/'+name+'.js', function(){
-			if ( self.modules[name] )
+			var mod = self.modules[name];
+			if ( !mod )
+				return;
+
+			self.loadLibs(mod.libs||[], function(){
 				self.enableModule(name);
+			});
 		});
 	},
 	'disableModule': function(name){
