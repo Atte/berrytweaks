@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 
 $context = stream_context_create([
 	'http' => [
-		'timeout' => 10
+		'timeout' => 5
 	]
 ]);
 

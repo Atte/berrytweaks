@@ -2,7 +2,7 @@ BerryTweaks.modules['videoTitle'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
+	'css': true,
 	'link': null,
 	'prevID': null,
 	'titleUpdateInterval': null,
@@ -34,10 +34,7 @@ var self = {
 			self.link = $('<a>', {
 				'id': 'berrytweaks-video_title',
 				'target': '_blank',
-				'text': 'Loading...',
-				'css': {
-					'float': 'left'
-				}
+				'text': 'Loading...'
 			})
 		);
 

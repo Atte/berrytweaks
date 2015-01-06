@@ -1,3 +1,7 @@
+#chatlist > ul > li {
+	position: relative;
+}
+
 #chatlist > ul > li .berrytweaks-flair {
 	position: absolute;
 	top: 0;

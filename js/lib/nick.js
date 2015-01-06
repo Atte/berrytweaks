@@ -11,7 +11,8 @@ var self = {
 		'SalientBlue': ['SalientPhone'],
 		'SomeStupidGuy': ['SomeStupidPhone'],
 		'ShippingIsMagic': ['ShippingIsPhone'],
-		'stevepoppers': ['stevephoners']
+		'stevepoppers': ['stevephoners'],
+		'WeedWuff': ['SpecialCoalWuff']
 	},
 	'getKeys': function(nick, favorAliases){
 		var keys = [];
@@ -36,7 +37,6 @@ var self = {
 		// add some default aliases
 		keys.push(nick.replace(/[^a-z0-9]?phone/i, ''));
 		keys.push(nick.replace(/[^a-z0-9]?irc/i, ''));
-		keys.push(nick.replace(/specialcoal/i, 'weed'));
 
 		// lowercase, filter out duplicates
 		var out = [];
