@@ -75,7 +75,7 @@ var self = {
 	}
 };
 
-BerryTweaks.patch('showUserActions', function(who){
+BerryTweaks.patch(window, 'showUserActions', function(who){
 	if ( !self.enabled )
 		return;
 

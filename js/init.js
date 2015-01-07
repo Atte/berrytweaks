@@ -7,6 +7,7 @@ var self = {
 		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'videoTitle': "Show video title in chat toolbar",
+		'sync': "Sync squees and PEP alerts",
 		'userMaps': "Show map in user dialog",
 		'showLocaltimes': "Show users' local times",
 		'globalFlairs': "Show flairs in user list",
@@ -16,17 +17,17 @@ var self = {
 	'modules': {},
 	'lib': {},
 	'libWaiters': {},
-	'patch': function(name, callback, before){
-		var original = window[name];
+	'patch': function(container, name, callback, before){
+		var original = container[name];
 
 		if ( before ){
-			window[name] = function(){
+			container[name] = function(){
 				callback.apply(this, arguments);
 				return original.apply(this, arguments);
 			};
 		}
 		else{
-			window[name] = function(){
+			container[name] = function(){
 				var retu = original.apply(this, arguments);
 				callback.apply(this, arguments);
 				return retu;
@@ -91,9 +92,6 @@ var self = {
 
 			if ( first ){
 				self.libWaiters[name] = [after];
-			}
-			else{
-				self.libWaiters[name].push(after);
 
 				$.getScript('https://atte.fi/berrytweaks/js/lib/'+name+'.js', function(){
 					self.libWaiters[name].forEach(function(fn){
@@ -102,6 +100,8 @@ var self = {
 					delete self.libWaiters[name];
 				});
 			}
+			else
+				self.libWaiters[name].push(after);
 		});
 	},
 	'enableModule': function(name){
@@ -129,9 +129,13 @@ var self = {
 			if ( !mod )
 				return;
 
-			self.loadLibs(mod.libs||[], function(){
+			if ( mod.libs ){
+				self.loadLibs(mod.libs, function(){
+					self.enableModule(name);
+				});
+			}
+			else
 				self.enableModule(name);
-			});
 		});
 	},
 	'disableModule': function(name){
@@ -203,7 +207,7 @@ var self = {
 		});
 	},
 	'init': function(){
-		self.patch('showConfigMenu', function(){
+		self.patch(window, 'showConfigMenu', function(){
 			self.settingsContainer = $('<fieldset>');
 			$('#settingsGui > ul').append(
 				$('<li>').append(

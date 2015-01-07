@@ -19,7 +19,7 @@ var self = {
 					waiter(self.cache);
 				});
 				self.callbacks = null;
-			}, 'xml');
+			});
 		}
 	},
 	'getUserData': function(nick, callback){

@@ -12,7 +12,7 @@ var self = {
 
 		self.patchDone = true;
 		whenExists('#wutColorStyles', function(){
-			BerryTweaks.patch('wutProcessUsername', function(nick){
+			BerryTweaks.patch(window, 'wutProcessUsername', function(nick){
 				if ( !self.enabled )
 					return;
 
@@ -29,7 +29,7 @@ var self = {
 	}
 };
 
-BerryTweaks.patch('addChatMsg', function(data, _to){
+BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
 	if ( !self.enabled )
 		return;
 

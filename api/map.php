@@ -1,7 +1,7 @@
 <?php
 
 define('DATA_URL', 'http://map.berrytube.tv/phpsqlajax_genxml.php');
-define('CACHE_FNAME', 'map_cache.xml');
+define('CACHE_FNAME', 'cache/map.xml');
 
 function cache_callback($xml){
 	$data = simplexml_load_string($xml);

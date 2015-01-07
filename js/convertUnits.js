@@ -98,7 +98,7 @@ var self = {
 	}
 };
 
-BerryTweaks.patch('addChatMsg', function(data, _to){
+BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
 	if ( !self.enabled )
 		return;
 

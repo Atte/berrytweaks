@@ -65,7 +65,7 @@ var self = {
 	}
 };
 
-BerryTweaks.patch('addUser', function(data){
+BerryTweaks.patch(window, 'addUser', function(data){
 	if ( !self.enabled )
 		return;
 
