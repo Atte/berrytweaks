@@ -5,7 +5,7 @@ var self = {
 	'css': false,
 	'units': [
 		{
-			'names': ['F', 'fahrenheit', 'fahrenheits'],
+			'names': ['F', 'fahrenheit', 'fahrenheits', 'degrees F', 'degrees fahrenheit'],
 			'label': 'C',
 			'fn': function(num){
 				return ((num - 32) / 1.8).toFixed(2);
@@ -67,7 +67,7 @@ var self = {
 	'preprocessUnits': function(){
 		self.units.forEach(function(unit){
 			if ( unit.names )
-				unit.regex = new RegExp('(?:^|\\s)((?:\\d*\\.)?\\d+)\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
+				unit.regex = new RegExp('((?:\\d*\\.)?\\d+)\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
 
 			if ( unit.mul ){
 				unit.fn = function(num){
