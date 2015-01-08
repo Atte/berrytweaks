@@ -3,22 +3,22 @@ BerryTweaks.lib['nick'] = (function(){
 
 var self = {
 	'aliases': {
+		'Blueshift': ['bluephone'],
 		'Chrono': ['Chrona'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
 		'cyzon': ['ircyzon'],
+		'Kris321': ['kris3phone'],
 		'maharito': ['mahaquesarito', 'Mahayro'],
 		'PonisEnvy': ['PonircEnvy'],
 		'SalientBlue': ['SalientPhone'],
 		'SomeStupidGuy': ['SomeStupidPhone'],
 		'ShippingIsMagic': ['ShippingIsPhone'],
 		'stevepoppers': ['stevephoners'],
+		'Toastdeib': ['Toastphone'],
 		'WeedWuff': ['SpecialCoalWuff']
 	},
-	'getKeys': function(nick, favorAliases){
-		var keys = [];
-		
-		if ( !favorAliases )
-			keys.push(nick);
+	'getKeys': function(nick){
+		var keys = [nick];
 
 		// resolve aliases
 		$.each(self.aliases, function(key, val){
@@ -30,9 +30,6 @@ var self = {
 				}
 			}
 		});
-
-		if ( favorAliases )
-			keys.push(nick);
 
 		// add some default aliases
 		keys.push(nick.replace(/[^a-z0-9]?phone/i, ''));

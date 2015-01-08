@@ -19,6 +19,7 @@ var self = {
 			'data': {
 				'squee': localStorage.getItem('highlightList'),
 				'PEP': localStorage.getItem('PEP')
+				//'blacklist': localStorage.getItem('cades.videoblacklist')
 			}
 		};
 
@@ -48,6 +49,10 @@ var self = {
 					PEP.restarPlaylist();
 				}
 			}
+
+			//if ( server.data.blacklist ){
+			//	localStorage.setItem('cades.videoblacklist', server.data.blacklist);
+			//}
 		}, 'json');
 	},
 	'enable': function(){

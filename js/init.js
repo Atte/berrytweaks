@@ -7,7 +7,7 @@ var self = {
 		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'videoTitle': "Show video title in chat toolbar",
-		'sync': "Sync squees and PEP alerts",
+		'sync': "Sync squees and PEP stars",
 		'userMaps': "Show map in user dialog",
 		'showLocaltimes': "Show users' local times",
 		'globalFlairs': "Show flairs in user list",
