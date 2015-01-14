@@ -67,7 +67,7 @@ var self = {
 	'numbers': ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'],
 	'numbersRegex': null,
 	'preprocessUnits': function(){
-		self.numbersRegex = new RegExp(self.numbers.join('|'), 'gi');
+		self.numbersRegex = new RegExp('\\b(?:' + self.numbers.join('|') + ')\\b', 'gi');
 
 		self.units.forEach(function(unit){
 			if ( unit.names )
@@ -88,7 +88,7 @@ var self = {
 				return;
 
 			str = str.replace(unit.regex, function(m, m1){
-				var val = parseInt(str.replace(self.numbersRegex, function(m){
+				var val = parseInt(m.replace(self.numbersRegex, function(m){
 					var index = self.numbers.indexOf(m);
 					return index < 0 ? m : index;
 				}).replace(/,/g, ''), 10);
