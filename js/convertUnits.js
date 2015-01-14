@@ -6,7 +6,7 @@ var self = {
 	'units': [
 		{
 			'names': ['F', 'fahrenheit', 'fahrenheits', 'degrees F', 'degrees fahrenheit'],
-			'label': 'C',
+			'label': "\u2103",
 			'fn': function(num){
 				return ((num - 32) / 1.8).toFixed(2);
 			}
@@ -33,7 +33,7 @@ var self = {
 		},
 		{
 			'names': ['acre', 'acres'],
-			'label': 'm²',
+			'label': "m\u00B2",
 			'mul': 4047
 		},
 		{

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BerryTweaks
 // @namespace    https://atte.fi/berrytweaks/
-// @version      0.1
+// @version      0.2
 // @description  A collection of BerryTube tweaks
 // @author       Atte
 // @match        http://www.berrytube.tv/*
