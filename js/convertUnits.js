@@ -64,10 +64,14 @@ var self = {
 			'mul': 6.35
 		}
 	],
+	'numbers': ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'],
+	'numbersRegex': null,
 	'preprocessUnits': function(){
+		self.numbersRegex = new RegExp(self.numbers.join('|'), 'gi');
+
 		self.units.forEach(function(unit){
 			if ( unit.names )
-				unit.regex = new RegExp('((?:\\d*\\.)?\\d+)\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
+				unit.regex = new RegExp('(-?(?:[\\d,]*\\.)?\\d+|' + self.numbersRegex.source + ')\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
 
 			if ( unit.mul ){
 				unit.fn = function(num){
@@ -84,7 +88,19 @@ var self = {
 				return;
 
 			str = str.replace(unit.regex, function(m, m1){
-				return m + ' (' + unit.fn(+m1) + ' ' + unit.label + ')';
+				var val = parseInt(str.replace(self.numbersRegex, function(m){
+					var index = self.numbers.indexOf(m);
+					return index < 0 ? m : index;
+				}).replace(/,/g, ''), 10);
+
+				if ( !Number.isFinite(val) )
+					return m;
+
+				val = unit.fn(val);
+				if ( val == null )
+					return m;
+
+				return m + ' (' + val + ' ' + unit.label + ')';
 			});
 		});
 

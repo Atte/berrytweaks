@@ -4,7 +4,6 @@ BerryTweaks.lib['nick'] = (function(){
 var self = {
 	'aliases': {
 		'Blueshift': ['bluephone'],
-		'Chrono': ['Chrona'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
 		'cyzon': ['ircyzon'],
 		'Kris321': ['kris3phone'],
@@ -12,7 +11,7 @@ var self = {
 		'PonisEnvy': ['PonircEnvy'],
 		'SalientBlue': ['SalientPhone'],
 		'SomeStupidGuy': ['SomeStupidPhone'],
-		'ShippingIsMagic': ['ShippingIsPhone'],
+		'ShippingIsMagic': ['ShippingIsPhone', 'a_Nickname', 'FlutterNickname'],
 		'stevepoppers': ['stevephoners'],
 		'Toastdeib': ['Toastphone'],
 		'WeedWuff': ['SpecialCoalWuff']
@@ -32,7 +31,7 @@ var self = {
 		});
 
 		// add some default aliases
-		keys.push(nick.replace(/[^a-z0-9]?phone/i, ''));
+		keys.push(nick.replace(/[^a-z0-9]?(?:phone|togo|2go)/i, ''));
 		keys.push(nick.replace(/[^a-z0-9]?irc/i, ''));
 
 		// lowercase, filter out duplicates
