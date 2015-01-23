@@ -26,6 +26,14 @@ var self = {
 	},
 	'disable': function(){
 		wutReloadUserColors();
+	},
+	'concatContinuous': function(_to){
+		var container = $(_to).children().last();
+		var previousContainer = container.prev();
+		if ( container[0] && previousContainer[0] && container[0].className == previousContainer[0].className ){
+			previousContainer.append(container.children());
+			container.remove();
+		}
 	}
 };
 
@@ -33,13 +41,7 @@ BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
 	if ( !self.enabled )
 		return;
 
-	// concatenate messages from the same person to get a continuous line on the left
-	var container = $(_to).children().last();
-	var previousContainer = container.prev();
-	if ( container[0] && previousContainer[0] && container[0].className == previousContainer[0].className ){
-		previousContainer.append(container.children());
-		container.remove();
-	}
+	self.concatContinuous(_to);
 });
 
 return self;

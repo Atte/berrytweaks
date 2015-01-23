@@ -6,6 +6,7 @@ var self = {
 		'Blueshift': ['bluephone'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
 		'cyzon': ['ircyzon'],
+		'discordzilla': ['disczillaphone'],
 		'Kris321': ['kris3phone'],
 		'maharito': ['mahaquesarito', 'Mahayro'],
 		'PonisEnvy': ['PonircEnvy'],

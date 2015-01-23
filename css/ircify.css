@@ -1,0 +1,5 @@
+.berrytweaks-ircify-join,
+.berrytweaks-ircify-part {
+	color: green;
+	font-style: italic;
+}

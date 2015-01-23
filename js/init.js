@@ -12,6 +12,8 @@ var self = {
 		'showLocaltimes': "Show users' local times",
 		'globalFlairs': "Show flairs in user list",
 		'smoothenWut': "Smoothen wutColors",
+		'rawSquees': "Raw squee editing",
+		'ircify': "Show joins/parts",
 		'hideFloaty': "Hide floaty stuff"
 	},
 	'modules': {},
@@ -22,8 +24,8 @@ var self = {
 
 		if ( before ){
 			container[name] = function(){
-				callback.apply(this, arguments);
-				return original.apply(this, arguments);
+				if ( callback.apply(this, arguments) !== false )
+					return original.apply(this, arguments);
 			};
 		}
 		else{
