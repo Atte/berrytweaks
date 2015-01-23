@@ -5,22 +5,27 @@ var self = {
 	'css': true,
 	'partTimeout': 5,
 	'partTimeoutHandles': {},
-	'act': function(nick, cls, text){
+	'act': function(nick, type, time){
 		if ( !nick )
 			return;
+
+		var text = ({
+			'join': 'joined',
+			'part': 'left'
+		})[type];
 
 		addChatMsg({
 			'msg': {
 				'nick': nick,
-				'msg': '<span class="berrytweaks-ircify-' + cls + '">' + text + '</span>',
+				'msg': '<span class="berrytweaks-ircify-' + type + '">' + text + '</span>',
 				'metadata':  {
 					'graymute': false,
 					'nameflaunt': false,
 					'flair': null,
 					'channel': 'main'
 				},
-				'emote': false,
-				'timestamp': (new Date()).getTime()
+				'emote': 'act',
+				'timestamp': time.getTime()
 			},
 			'ghost': false
 		}, '#chatbuffer');
@@ -31,14 +36,15 @@ var self = {
 			self.partTimeoutHandles[nick] = null;
 		}
 		else
-			self.act(nick, 'join', 'joined');
+			self.act(nick, 'join', new Date());
 	},
 	'rmUser': function(nick){
 		if ( self.partTimeoutHandles[nick] )
 			return;
 
+		var time = new Date();
 		self.partTimeoutHandles[nick] = setTimeout(function(){
-			self.act(nick, 'part', 'left');
+			self.act(nick, 'part', time);
 			self.partTimeoutHandles[nick] = null;
 		}, self.partTimeout * 1000);
 	}
