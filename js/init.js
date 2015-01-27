@@ -19,6 +19,17 @@ var self = {
 	'modules': {},
 	'lib': {},
 	'libWaiters': {},
+	'dialogDOM': null,
+	'dialog': function(text){
+		self.dialogDOM.text(text).dialog({
+			'modal': true,
+			'buttons': {
+				'Ok': function(){
+					$(this).dialog('close');
+				}
+			}
+		});
+	},
 	'patch': function(container, name, callback, before){
 		var original = container[name];
 
@@ -174,14 +185,16 @@ var self = {
 		self.settingsContainer.append(
 			$.map(self.configTitles, function(label, key){
 				return $('<div>', {
-					'class': 'module-toggle',
+					'class': 'berrytweaks-module-toggle-wrapper',
 					'data-key': key
 				}).append(
-					$('<span>', {
+					$('<label>', {
+						'for': 'berrytweaks-module-toggle-' + key,
 						'text': label + ': '
 					})
 				).append(
 					$('<input>', {
+						'id': 'berrytweaks-module-toggle-' + key,
 						'type': 'checkbox',
 						'checked': !!settings.enabled[key]
 					}).change(function(){
@@ -195,7 +208,7 @@ var self = {
 
 		// mod specific
 		$.each(self.modules, function(key, mod){
-			if ( !mod.enabled || !mod.addSettings )
+			if ( !mod.addSettings )
 				return;
 
 			mod.addSettings(
@@ -203,12 +216,21 @@ var self = {
 					'class': 'module-settings',
 					'data-key': key
 				}).insertAfter(
-					$('.module-toggle[data-key='+key+']', self.settingsContainer)
+					$('.berrytweaks-module-toggle-wrapper[data-key='+key+']', self.settingsContainer)
 				)
 			);
 		});
 	},
 	'init': function(){
+		self.dialogDOM = $('<div>', {
+			'title': 'BerryTweaks',
+			'class': 'berrytweaks-dialog',
+			'css': {
+				'display': 'none',
+				'z-index': 2000
+			}
+		}).appendTo(document.body);
+
 		self.patch(window, 'showConfigMenu', function(){
 			self.settingsContainer = $('<fieldset>');
 			$('#settingsGui > ul').append(

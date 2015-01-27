@@ -30,10 +30,8 @@ case 'sync':
 	ksort($server['data']);
 
 	if ( $browser['version'] >= $server['version'] ){
-		if ( $browser['version'] == 0 )
-			$browser['version'] = 1;
-		elseif ( $browser['version'] == $server['version'] && print_r($browser['data'], true) != print_r($server['data'], true) )
-			$browser['version'] += 1;
+		if ( $browser['version'] == 0 || ($browser['version'] == $server['version'] && print_r($browser['data'], true) != print_r($server['data'], true)) )
+			$browser['version'] = time();
 
 		$server = $browser;
 	}
@@ -41,6 +39,20 @@ case 'sync':
 	$data = json_encode($server, JSON_FORCE_OBJECT);
 	echo $data;
 	file_put_contents($fname, $data);
+	break;
+case 'delete':
+	if ( file_exists($fname) ){
+		echo json_encode([
+			'found' => true,
+			'deleted' => unlink($fname)
+		]);
+	}
+	else{
+		echo json_encode([
+			'found' => false,
+			'deleted' => false
+		]);
+	}
 	break;
 default:
 	die('invalid action');

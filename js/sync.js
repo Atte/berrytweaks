@@ -4,13 +4,18 @@ BerryTweaks.modules['sync'] = (function(){
 var self = {
 	'css': false,
 	'libs': ['crypto'],
-	'sync': function(){
-		if ( !self.enabled )
-			return;
-
+	'post': function(data, callback){
 		var nick = localStorage.getItem('nick');
 		var pass = localStorage.getItem('pass');
 		if ( !nick || !pass )
+			return;
+
+		data['id'] = BerryTweaks.lib.crypto.sha1(nick+'|'+pass);
+
+		$.post('https://atte.fi/berrytweaks/api/sync.php', data, callback, 'json');
+	},
+	'sync': function(){
+		if ( !self.enabled )
 			return;
 
 		var settings = BerryTweaks.loadSettings();
@@ -23,9 +28,8 @@ var self = {
 			}
 		};
 
-		$.post('https://atte.fi/berrytweaks/api/sync.php', {
+		self.post({
 			'action': 'sync',
-			'id': BerryTweaks.lib.crypto.sha1(nick+'|'+pass),
 			'payload': JSON.stringify(browser)
 		}, function(server){
 			var settings = BerryTweaks.loadSettings();
@@ -53,13 +57,37 @@ var self = {
 			//if ( server.data.blacklist ){
 			//	localStorage.setItem('cades.videoblacklist', server.data.blacklist);
 			//}
-		}, 'json');
+		});
+	},
+	'delete': function(){
+		$('#berrytweaks-module-toggle-sync').prop('checked', false);
+
+		self.post({
+			'action': 'delete'
+		}, function(data){
+			if ( !data.found ){
+				BerryTweaks.dialog('No data found on server! Have you already deleted it?');
+				return;
+			}
+
+			if ( data.deleted )
+				BerryTweaks.dialog('Data found and deleted successfully');
+			else
+				BerryTweaks.dialog('Data found, but deletion failed! Please contact Atte');
+		})
 	},
 	'enable': function(){
 		self.sync();
 	},
 	'disable': function(){
 		
+	},
+	'addSettings': function(container){
+		$('<a>', {
+			'href': 'javascript:void(0)',
+			'click': self['delete'],
+			'text': 'Delete synced data from server'
+		}).appendTo(container);
 	}
 };
 
