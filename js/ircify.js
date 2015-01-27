@@ -5,6 +5,7 @@ var self = {
 	'css': true,
 	'partTimeout': 5,
 	'partTimeoutHandles': {},
+	'holdJoins': true,
 	'act': function(nick, type, time){
 		if ( !nick )
 			return;
@@ -31,12 +32,17 @@ var self = {
 		}, '#chatbuffer');
 	},
 	'addUser': function(nick){
+		if ( nick == window.NAME )
+			self.holdJoins = false;
+
 		if ( self.partTimeoutHandles[nick] ){
 			clearTimeout(self.partTimeoutHandles[nick]);
 			self.partTimeoutHandles[nick] = null;
 		}
-		else
-			self.act(nick, 'join', new Date());
+		else{
+			if ( !self.holdJoins )
+				self.act(nick, 'join', new Date());
+		}
 	},
 	'rmUser': function(nick){
 		if ( self.partTimeoutHandles[nick] )
@@ -51,8 +57,10 @@ var self = {
 };
 
 BerryTweaks.patch(window, 'addUser', function(data){
-	if ( !self.enabled )
+	if ( !self.enabled ){
+		self.holdJoins = false;
 		return;
+	}
 
 	self.addUser(data.nick);
 });
