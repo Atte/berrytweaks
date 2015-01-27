@@ -71,7 +71,7 @@ var self = {
 
 		self.units.forEach(function(unit){
 			if ( unit.names )
-				unit.regex = new RegExp('(-?(?:[\\d,]*\\.)?\\d+|' + self.numbersRegex.source + ')\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
+				unit.regex = new RegExp('(?:^|\\s)(-?(?:[\\d,]*\\.)?\\d+|' + self.numbersRegex.source + ')\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
 
 			if ( unit.mul ){
 				unit.fn = function(num){
@@ -108,9 +108,6 @@ var self = {
 	},
 	'enable': function(){
 		self.preprocessUnits();
-	},
-	'addSettings': function(container){
-		
 	}
 };
 
