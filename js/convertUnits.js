@@ -71,7 +71,7 @@ var self = {
 
 		self.units.forEach(function(unit){
 			if ( unit.names )
-				unit.regex = new RegExp('(?:^|\\s)(-?(?:[\\d,]*\\.)?\\d+|' + self.numbersRegex.source + ')\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
+				unit.regex = new RegExp('(?:^|\\s)(-?(?:[\\d,]*\\.)?\\d+|an?|' + self.numbersRegex.source + ')\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
 
 			if ( unit.mul ){
 				unit.fn = function(num){
@@ -89,6 +89,9 @@ var self = {
 
 			str = str.replace(unit.regex, function(m, m1){
 				var val = parseInt(m.replace(self.numbersRegex, function(m){
+					if ( m == 'a' || m == 'an' )
+						return 1;
+
 					var index = self.numbers.indexOf(m);
 					return index < 0 ? m : index;
 				}).replace(/,/g, ''), 10);
