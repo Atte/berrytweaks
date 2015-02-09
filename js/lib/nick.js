@@ -2,48 +2,45 @@ BerryTweaks.lib['nick'] = (function(){
 "use strict";
 
 var self = {
-	'aliases': {
-		'Blueshift': ['bluephone'],
-		'Cuddles_theBear': ['irCuddles_tBear'],
-		'cyzon': ['ircyzon'],
-		'discordzilla': ['disczillaphone'],
-		'Kris321': ['kris3phone'],
-		'maharito': ['mahaquesarito', 'Mahayro'],
-		'PonisEnvy': ['PonircEnvy'],
-		'SalientBlue': ['SalientPhone'],
-		'SomeStupidGuy': ['SomeStupidPhone'],
-		'ShippingIsMagic': ['ShippingIsPhone', 'a_Nickname', 'FlutterNickname'],
-		'stevepoppers': ['stevephoners'],
-		'Toastdeib': ['Toastphone'],
-		'WeedWuff': ['SpecialCoalWuff']
-	},
-	'getKeys': function(nick){
-		var keys = [nick];
+	'cache': null,
+	'callbacks': [],
+	'getData': function(callback){
+		if ( self.cache ){
+			callback(self.cache);
+			return;
+		}
 
-		// resolve aliases
-		$.each(self.aliases, function(key, val){
-			for ( var i=0; i<val.length; ++i ){
-				var alias = val[i].toLowerCase();
-				if ( nick == alias ){
-					keys.push(key);
-					return false;
+		self.callbacks.push(callback);
+
+		if ( self.callbacks.length == 1 ){
+			$.getJSON('https://atte.fi/berrytweaks/api/nicks.py', function(data){
+				self.cache = data;
+				self.callbacks.forEach(function(waiter){
+					waiter(self.cache);
+				});
+				self.callbacks = null;
+			});
+		}
+	},
+	'resolve': function(nick, callback){
+		self.getData(function(data){
+			if ( data.hasOwnProperty(nick) ){
+				callback([nick].concat(data[nick]));
+				return;
+			}
+
+			for ( var key in data ){
+				if ( !data.hasOwnProperty(key) )
+					continue;
+
+				if ( data[key].indexOf(nick) != -1 ){
+					callback([key].concat(data[key]));
+					return;
 				}
 			}
-		});
 
-		// add some default aliases
-		keys.push(nick.replace(/[^a-z0-9]?(?:phone|togo|2go)/i, ''));
-		keys.push(nick.replace(/[^a-z0-9]?irc/i, ''));
-
-		// lowercase, filter out duplicates
-		var out = [];
-		keys.forEach(function(key){
-			key = key.toLowerCase();
-			if ( out.indexOf(key) == -1 )
-				out.push(key);
+			callback([nick]);
 		});
-		
-		return out;
 	}
 };
 

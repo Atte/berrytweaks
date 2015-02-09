@@ -24,15 +24,16 @@ var self = {
 	},
 	'getUserData': function(nick, callback){
 		self.getData(function(mapdata){
-			var keys = BerryTweaks.lib.nick.getKeys(nick);
-			for ( var i=0; i<keys.length; ++i ){
-				var userdata = mapdata[keys[i]];
-				if ( userdata ){
-					callback(userdata);
-					return;
+			BerryTweaks.lib.nick.resolve(nick, function(keys){
+				for ( var i=0; i<keys.length; ++i ){
+					var userdata = mapdata[keys[i].toLowerCase()];
+					if ( userdata ){
+						callback(userdata);
+						return;
+					}
 				}
-			}
-			callback(null);
+				callback(null);
+			});
 		});
 	}
 };

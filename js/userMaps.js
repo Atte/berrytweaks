@@ -5,29 +5,21 @@ var self = {
 	'css': true,
 	'libs': ['nick', 'map'],
 	'addMap': function(){
-		BerryTweaks.lib.map.getData(function(mapdata){
-			// find window
-			var dialogContent = $('#userOps').parents('.dialogContent');
-			var dialogWindow = dialogContent.parents('.dialogWindow');
-			var nick = $('h1', dialogContent).text();
-			if ( !dialogContent || !dialogWindow || !nick )
-				return;
+		// find window
+		var dialogContent = $('#userOps').parents('.dialogContent');
+		var dialogWindow = dialogContent.parents('.dialogWindow');
+		var nick = $('h1', dialogContent).text();
+		if ( !dialogContent || !dialogWindow || !nick )
+			return;
 
-			// add close button
-			$('<div>', {
-				'class': 'berrytweaks-close'
-			}).click(function(){
-				dialogWindow.remove();
-			}).appendTo(dialogWindow);
+		// add close button
+		$('<div>', {
+			'class': 'berrytweaks-close'
+		}).click(function(){
+			dialogWindow.remove();
+		}).appendTo(dialogWindow);
 
-			// look up user
-			var userdata;
-			var keys = BerryTweaks.lib.nick.getKeys(nick);
-			for ( var i=0; i<keys.length; ++i ){
-				userdata = mapdata[keys[i]];
-				if ( userdata )
-					break;
-			}
+		BerryTweaks.lib.map.getUserData(nick, function(userdata){
 			if ( !userdata )
 				return;
 
