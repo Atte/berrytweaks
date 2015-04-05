@@ -2,18 +2,40 @@ window.BerryTweaks = (function(){
 "use strict";
 
 var self = {
+	'categories': [
+		{
+			'title': 'Chat view',
+			'configs': ['convertUnits', 'smoothenWut', 'ircify']
+		},
+		{
+			'title': 'User list',
+			'configs': ['userMaps', 'showLocaltimes', 'globalFlairs']
+		},
+		{
+			'title': 'Other',
+			'configs': ['videoTitle', 'sync', 'linkOpener']
+		},
+		{
+			'title': 'Nitpicking',
+			'configs': ['chatonlyIcons', 'hideLoggedin', 'rawSquees', 'hideFloaty']
+		}
+	],
 	'configTitles': {
-		'convertUnits': "Convert measurements in chat into metric",
-		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
-		'hideLoggedin': 'Hide extra "Logged in as" label',
-		'videoTitle': "Show video title in chat toolbar",
-		'sync': "Sync squees and PEP stars",
+		'convertUnits': "Convert measurements into metric",
+		'smoothenWut': "Smoothen wutColors",
+		'ircify': "Show joins/parts",
+
 		'userMaps': "Show map in user dialog",
 		'showLocaltimes': "Show users' local times",
-		'globalFlairs': "Show flairs in user list",
-		'smoothenWut': "Smoothen wutColors",
+		'globalFlairs': "Show flairs",
+
+		'videoTitle': "Show video title in chat toolbar",
+		'sync': "Sync squees and PEP stars",
+		'linkOpener': "Open links automatically",
+
+		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
+		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'rawSquees': "Raw squee editing",
-		'ircify': "Show joins/parts",
 		'hideFloaty': "Hide floaty stuff"
 	},
 	'modules': {},
@@ -118,6 +140,9 @@ var self = {
 		});
 	},
 	'enableModule': function(name){
+		if ( !self.configTitles.hasOwnProperty(name) )
+			return;
+
 		var mod = self.modules[name];
 		if ( mod ){
 			if ( mod.enabled )
@@ -152,6 +177,9 @@ var self = {
 		});
 	},
 	'disableModule': function(name){
+		if ( !self.configTitles.hasOwnProperty(name) )
+			return;
+		
 		var mod = self.modules[name];
 		if ( mod ){
 			if ( !mod.enabled )
@@ -171,6 +199,19 @@ var self = {
 		if ( !self.settingsContainer )
 			return;
 
+		var win = self.settingsContainer.parents('.dialogContent');
+		if ( !win )
+			return;
+
+		// if just opened, do height-magic
+		if ( !win.data('berrytweaked') ){
+			win.css({
+				'overflow-y': 'scroll',
+				'max-height': win.height() + 20
+			});
+			win.data('berrytweaked', true);
+		}
+
 		var settings = self.loadSettings();
 		self.settingsContainer.empty();
 
@@ -182,27 +223,34 @@ var self = {
 		);
 
 		// basic toggles
-		self.settingsContainer.append(
-			$.map(self.configTitles, function(label, key){
-				return $('<div>', {
-					'class': 'berrytweaks-module-toggle-wrapper',
-					'data-key': key
-				}).append(
-					$('<label>', {
-						'for': 'berrytweaks-module-toggle-' + key,
-						'text': label + ': '
-					})
-				).append(
-					$('<input>', {
-						'id': 'berrytweaks-module-toggle-' + key,
-						'type': 'checkbox',
-						'checked': !!settings.enabled[key]
-					}).change(function(){
-						var settings = self.loadSettings();
-						settings.enabled[key] = !!$(this).prop('checked');
-						self.saveSettings(settings);
-					})
-				);
+		self.settingsContainer.append.apply(self.settingsContainer, 
+			self.categories.map(function(cat){
+				return [$('<label>', {
+					'class': 'berrytweaks-module-category',
+					'text': cat.title
+				})].concat(cat.configs.map(function(key){
+					var label = self.configTitles[key];
+
+					return $('<div>', {
+						'class': 'berrytweaks-module-toggle-wrapper',
+						'data-key': key
+					}).append(
+						$('<label>', {
+							'for': 'berrytweaks-module-toggle-' + key,
+							'text': label + ': '
+						})
+					).append(
+						$('<input>', {
+							'id': 'berrytweaks-module-toggle-' + key,
+							'type': 'checkbox',
+							'checked': !!settings.enabled[key]
+						}).change(function(){
+							var settings = self.loadSettings();
+							settings.enabled[key] = !!$(this).prop('checked');
+							self.saveSettings(settings);
+						})
+					);
+				}));
 			})
 		);
 
@@ -213,7 +261,7 @@ var self = {
 
 			mod.addSettings(
 				$('<div>', {
-					'class': 'module-settings',
+					'class': 'berrytweaks-module-settings',
 					'data-key': key
 				}).insertAfter(
 					$('.berrytweaks-module-toggle-wrapper[data-key='+key+']', self.settingsContainer)
@@ -224,12 +272,8 @@ var self = {
 	'init': function(){
 		self.dialogDOM = $('<div>', {
 			'title': 'BerryTweaks',
-			'class': 'berrytweaks-dialog',
-			'css': {
-				'display': 'none',
-				'z-index': 2000
-			}
-		}).appendTo(document.body);
+			'class': 'berrytweaks-dialog'
+		}).hide().appendTo(document.body);
 
 		self.patch(window, 'showConfigMenu', function(){
 			self.settingsContainer = $('<fieldset>');
@@ -242,6 +286,7 @@ var self = {
 			self.updateSettingsGUI();
 		});
 
+		self.loadCSS('init');
 		self.applySettings();
 	}
 };

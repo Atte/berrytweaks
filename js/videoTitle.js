@@ -3,18 +3,40 @@ BerryTweaks.modules['videoTitle'] = (function(){
 
 var self = {
 	'css': true,
+	'time': 0,
 	'link': null,
 	'prevID': null,
-	'titleUpdateInterval': null,
-	'videoLink': function(vid){
+	'interval': null,
+	'parseTime': function(time){
+		return {
+			'h': Math.floor(time / 60 / 60),
+			'm': Math.floor((time / 60) % 60),
+			's': Math.floor(time % 60)
+		};
+	},
+	'timeString': function(time){
+		if ( !time )
+			return;
+
+		time = self.parseTime(time);
+		if ( time.h > 0 )
+			return time.h+'h' + time.m+'m' + time.s+'s';
+		else if ( time.m > 0 )
+			return time.m+'m' + time.s+'s';
+		else if ( time.s > 0 )
+			return time.s+'s';
+	},
+	'videoLink': function(vid, time){
 		if ( vid.meta && vid.meta.permalink )
 			return vid.meta.permalink;
 
+		var timeStr = self.timeString(time);
+
 		switch ( vid.videotype ){
 			case 'yt':
-				return 'http://youtu.be/' + vid.videoid;
+				return 'https://www.youtube.com/watch?v=' + vid.videoid + (timeStr ? '?t='+timeStr : '');
 			case 'vimeo':
-				return 'http://vimeo.com/' + vid.videoid;
+				return 'https://vimeo.com/' + vid.videoid + (timeStr ? '#t='+timeStr : '');
 			case 'dm':
 				return 'http://www.dailymotion.com/video/' + vid.videoid;
 			case 'osmf':
@@ -22,12 +44,21 @@ var self = {
 		}
 	},
 	'update': function(){
-		if ( window.ACTIVE.videoid == self.prevID )
-			return;
-		self.prevID = window.ACTIVE.videoid;
+		self.link.attr('href', self.videoLink(window.ACTIVE, Math.max(self.time-1, 0)));
 
-		self.link.attr('href', self.videoLink(window.ACTIVE))
-		self.link.html(decodeURIComponent(window.ACTIVE.videotitle));
+		if ( window.ACTIVE.videoid != self.prevID ){
+			self.prevID = window.ACTIVE.videoid;
+			self.link.html(decodeURIComponent(window.ACTIVE.videotitle));
+			self.link.css('background-color', $('#chatbuffer').css('background-color'));
+		}
+	},
+	'onSecondPassed': function(){
+		self.time += 1;
+		self.update();
+	},
+	'handleVideoDetails': function(data){
+		self.time = data.time;
+		self.update();
 	},
 	'enable': function(){
 		$('#chatControls').append(
@@ -39,12 +70,12 @@ var self = {
 		);
 
 		self.update();
-		self.titleUpdateInterval = setInterval(self.update, 1000*5);
+		self.interval = setInterval(self.onSecondPassed, 1000);
 	},
 	'disable': function(){
-		if ( self.titleUpdateInterval ){
-			clearInterval(self.titleUpdateInterval);
-			self.titleUpdateInterval = null;
+		if ( self.interval ){
+			clearInterval(self.interval);
+			self.interval = null;
 		}
 
 		if ( self.link ){
@@ -55,6 +86,16 @@ var self = {
 		self.prevID = null;
 	}
 };
+
+socket.on('hbVideoDetail', function(data){
+	if ( self.enabled )
+		self.handleVideoDetails(data);
+});
+
+socket.on('forceVideoChange', function(data){
+	if ( self.enabled )
+		self.handleVideoDetails(data);
+});
 
 return self;
 

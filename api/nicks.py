@@ -19,8 +19,11 @@ aliases = defaultdict(set, (
 		'ayrl': ['aryl'],
 		'Chrono': ['Chrona'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
+		'Lavender': ['LavPhone'],
+		'Drywin': ['Drywinn'],
 		'lovershy': ['loversh'],
 		'maharito': ['mahaquesarito', 'Mahayro'],
+		'Malsententia': ['Malpone', 'malpone'],
 		'PonisEnvy': ['PonircEnvy'],
 		'shadowthug': ['shadowphone'],
 		'ShippingIsMagic': ['a_Nickname', 'FlutterNickname'],
@@ -37,15 +40,19 @@ prefixes = {
 		'discordzilla': 'disczilla',
 		'IAmInASnuggie': 'Snuggie',
 		'Kris321': 'kris3',
+		'KKGourmet': 'KKGour',
 		'SalientBlue': 'Salient',
+		'shado_jaguar': 'shado_',
 		'ShippingIsMagic': 'ShippingIs',
 		'SomeStupidGuy': 'SomeStupid',
 		'stevepoppers': 'steve',
 		'Toastdeib': 'Toast',
+		'Trellmor': 'Trell',
 	}.items()
 }
 
 forcebases = set([
+	'LavenderFox',
 	'StevenAD',
 	'Q0',
 ])

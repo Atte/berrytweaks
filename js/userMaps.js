@@ -2,7 +2,7 @@ BerryTweaks.modules['userMaps'] = (function(){
 "use strict";
 
 var self = {
-	'css': true,
+	'css': false,
 	'libs': ['nick', 'map'],
 	'addMap': function(){
 		// find window
@@ -11,13 +11,6 @@ var self = {
 		var nick = $('h1', dialogContent).text();
 		if ( !dialogContent || !dialogWindow || !nick )
 			return;
-
-		// add close button
-		$('<div>', {
-			'class': 'berrytweaks-close'
-		}).click(function(){
-			dialogWindow.remove();
-		}).appendTo(dialogWindow);
 
 		BerryTweaks.lib.map.getUserData(nick, function(userdata){
 			if ( !userdata )

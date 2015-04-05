@@ -37,6 +37,11 @@ var self = {
 		};
 	},
 	'disconnect': function(){
+		if ( self.reconnectTimeout ){
+			clearTimeout(self.reconnectTimeout);
+			self.reconnectTimeout = null;
+		}
+
 		if ( !self.sock )
 			return;
 
