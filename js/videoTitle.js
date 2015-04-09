@@ -49,7 +49,6 @@ var self = {
 		if ( window.ACTIVE.videoid != self.prevID ){
 			self.prevID = window.ACTIVE.videoid;
 			self.link.html(decodeURIComponent(window.ACTIVE.videotitle));
-			self.link.css('background-color', $('#chatbuffer').css('background-color'));
 		}
 	},
 	'onSecondPassed': function(){

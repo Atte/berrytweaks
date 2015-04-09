@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import cgi
 import cgitb
 cgitb.enable(format=None)
@@ -10,6 +11,7 @@ import glob
 import gzip
 import GeoIP
 import itertools
+from operator import itemgetter
 from datetime import datetime
 
 TEXT_NAMES = ['/var/log/nginx/access.log']
@@ -34,10 +36,14 @@ def handleFile(fh):
 				continue
 
 			geo = geoip.record_by_name(m.group('ip'))
-			if geo is None or geo['city'] is None or geo['region_name'] is None or geo['country_code'] is None:
+			if geo is None:
 				continue
 
-			loc = geo['city'] + ', ' + geo['region_name'] + ', ' + geo['country_code']
+			loc = tuple(
+				geo[key] or ''
+				for key in ['country_name', 'region_name', 'city']
+			)
+
 			time = datetime.strptime(m.group('time'), IN_DATE_FORMAT)
 
 			if loc not in lastTimes or lastTimes[loc] < time:
@@ -51,7 +57,18 @@ for fname in GZIP_NAMES:
 	with gzip.open(fname, 'rt') as fh:
 		handleFile(fh)
 
-lastTimes = sorted(lastTimes.items(), reverse=True, key=lambda item: item[1])
+lines = [
+	[time.strftime(OUT_DATE_FORMAT)] + list(loc)
+	for loc, time in sorted(lastTimes.items(), key=itemgetter(1), reverse=True)
+]
 
-for loc, time in lastTimes:
-	print(time.strftime(OUT_DATE_FORMAT), loc, sep=' - ')
+columnLengths = [
+	max(map(len, map(itemgetter(i), lines)))
+	for i in range(len(lines[0]))
+]
+
+for line in lines:
+	print(' | '.join(
+		col + ' ' * (pad - len(col))
+		for col, pad in zip(line, columnLengths)
+	))

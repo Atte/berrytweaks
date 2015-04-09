@@ -13,11 +13,11 @@ var self = {
 		},
 		{
 			'title': 'Other',
-			'configs': ['videoTitle', 'sync', 'linkOpener']
+			'configs': ['videoTitle', 'sync', 'linkOpener', 'rawSquees']
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['chatonlyIcons', 'hideLoggedin', 'rawSquees', 'hideFloaty']
+			'configs': ['chatonlyIcons', 'hideLoggedin', 'hideFloaty']
 		}
 	],
 	'configTitles': {
@@ -32,10 +32,10 @@ var self = {
 		'videoTitle': "Show video title in chat toolbar",
 		'sync': "Sync squees and PEP stars",
 		'linkOpener': "Open links automatically",
+		'rawSquees': "Unlimited squee editor",
 
 		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
-		'rawSquees': "Raw squee editing",
 		'hideFloaty': "Hide floaty stuff"
 	},
 	'modules': {},
