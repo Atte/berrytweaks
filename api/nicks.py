@@ -17,6 +17,7 @@ aliases = defaultdict(set, (
 	for k, v in {
 		'Ajaxtitan': ['Ajaxtitan496'],
 		'ayrl': ['aryl'],
+		'bionictigershk': ['bionictigershrk'],
 		'Chrono': ['Chrona'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
 		'Lavender': ['LavPhone'],
@@ -34,7 +35,6 @@ aliases = defaultdict(set, (
 prefixes = {
 	k: v.lower()
 	for k, v in {
-		'bionictigershk': 'bionictiger',
 		'Blueshift': 'Blue',
 		'ChocoScoots': 'Choco',
 		'discordzilla': 'disczilla',
@@ -130,7 +130,8 @@ if resolve:
 json.dump(
 	aliases, sys.stdout,
 	default=list,
+	sort_keys=True,
 	check_circular=False,
-	separators=(',', ':'),
+	separators=None if 'pretty' in form else (',', ':'),
 	indent=4 if 'pretty' in form else None
 )

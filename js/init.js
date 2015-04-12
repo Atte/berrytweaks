@@ -194,6 +194,22 @@ var self = {
 				self.unloadCSS(name);
 		}
 	},
+	'fixWindowHeight': function(win){
+		if ( !win || win.data('berrytweaked') )
+			return;
+
+		var height = Math.min(
+			win.height() + 20,
+			$(window).height() - win.offset().top
+		);
+
+		win.css({
+			'overflow-y': 'scroll',
+			'max-height': height
+		});
+
+		win.data('berrytweaked', true);
+	},
 	'settingsContainer': null,
 	'updateSettingsGUI': function(){
 		if ( !self.settingsContainer )
@@ -203,14 +219,7 @@ var self = {
 		if ( !win )
 			return;
 
-		// if just opened, do height-magic
-		if ( !win.data('berrytweaked') ){
-			win.css({
-				'overflow-y': 'scroll',
-				'max-height': win.height() + 20
-			});
-			win.data('berrytweaked', true);
-		}
+		self.fixWindowHeight(win);
 
 		var settings = self.loadSettings();
 		self.settingsContainer.empty();
@@ -284,6 +293,11 @@ var self = {
 			);
 
 			self.updateSettingsGUI();
+		});
+
+		self.patch(window, 'showPluginWindow', function(){
+			var win = $('.pluginNode').parents('.dialogContent');
+			self.fixWindowHeight(win);
 		});
 
 		self.loadCSS('init');
