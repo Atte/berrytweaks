@@ -17,7 +17,7 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['chatonlyIcons', 'hideLoggedin', 'hideFloaty']
+			'configs': ['hideLoggedin', 'hideFloaty']
 		}
 	],
 	'configTitles': {
@@ -35,7 +35,6 @@ var self = {
 		'linkOpener': "Open links automatically",
 		'rawSquees': "Unlimited squee editor",
 
-		'chatonlyIcons': "Add icons to Chat-Only mode buttons",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'hideFloaty': "Hide floaty stuff"
 	},

@@ -15,3 +15,13 @@
 .berrytweaks-dialog {
 	z-index: 2000;
 }
+
+#chatControls > .settings[style] {
+	background-position: 0% 50% !important;
+	background-repeat: no-repeat !important;
+	background-image: url(https://dl.atte.fi/famfamfam/chart_bar.png) !important;
+}
+
+#chatControls > .settings[style] + .settings[style] {
+	background-image: url(https://dl.atte.fi/famfamfam/table.png) !important;
+}
