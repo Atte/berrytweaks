@@ -13,7 +13,7 @@ var self = {
 		},
 		{
 			'title': 'Other',
-			'configs': ['videoTitle', 'sync', 'linkOpener', 'rawSquees']
+			'configs': ['requestCheck', 'videoTitle', 'sync', 'linkOpener', 'rawSquees']
 		},
 		{
 			'title': 'Nitpicking',
@@ -29,6 +29,7 @@ var self = {
 		'showLocaltimes': "Show users' local times",
 		'globalFlairs': "Show flairs",
 
+		'requestCheck': "Check requests for country restrictions",
 		'videoTitle': "Show video title in chat toolbar",
 		'sync': "Sync squees and PEP stars",
 		'linkOpener': "Open links automatically",
@@ -48,6 +49,21 @@ var self = {
 			'buttons': {
 				'Ok': function(){
 					$(this).dialog('close');
+				}
+			}
+		});
+	},
+	'confirm': function(text, callback){
+		self.dialogDOM.text(text).dialog({
+			'modal': true,
+			'buttons': {
+				'Ok': function(){
+					$(this).dialog('close');
+					callback(true);
+				},
+				'Cancel': function(){
+					$(this).dialog('close');
+					callback(false);
 				}
 			}
 		});
