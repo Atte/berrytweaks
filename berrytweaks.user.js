@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BerryTweaks
 // @namespace    https://atte.fi/berrytweaks/
-// @version      0.2
+// @version      0.3
 // @description  A collection of BerryTube tweaks
 // @author       Atte
 // @match        http://www.berrytube.tv/*
@@ -14,7 +14,7 @@
 "use strict";
 
 var script = document.createElement('script');
-script.setAttribute('src', 'https://atte.fi/berrytweaks/js/init.js');
+script.setAttribute('src', 'https://atte.fi/berrytweaks/min/js/init.js?_=' + (new Date()).getTime());
 document.head.appendChild(script);
 
 })();
