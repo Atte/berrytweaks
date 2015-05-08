@@ -3,20 +3,20 @@ BerryTweaks.modules['squeeVolume'] = (function(){
 
 var self = {
 	'css': false,
-	'getVolume': function(){
+	'loadVolume': function(){
 		var vol = BerryTweaks.loadSettings().squeeVolume;
 		if ( vol === undefined )
 			return 1.0;
 		else
 			return vol;
 	},
-	'setVolume': function(vol){
+	'saveVolume': function(vol){
 		var settings = BerryTweaks.loadSettings();
 		settings.squeeVolume = vol;
 		BerryTweaks.saveSettings(settings);
 	},
 	'enable': function(){
-		NOTIFY.volume = self.getVolume();
+		NOTIFY.volume = self.loadVolume();
 	},
 	'disable': function(){
 		NOTIFY.volume = 1.0;
@@ -25,12 +25,13 @@ var self = {
 		$('<div>', {
 
 		}).slider({
+			'range': 'min',
 			'min': 0.0,
 			'max': 1.0,
 			'step': 0.01,
-			'value': self.getVolume(),
+			'value': self.loadVolume(),
 			'stop': function(event, ui){
-				self.setVolume(ui.value);
+				self.saveVolume(ui.value);
 
 				if ( self.enabled )
 					NOTIFY.volume = ui.value;
