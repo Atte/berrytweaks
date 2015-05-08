@@ -37,7 +37,7 @@ var self = {
 
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'hideToast': "Hide ToastThemes button",
-		'squeeVolume': 'Customize squee volume'
+		'squeeVolume': 'Customize notification volumes'
 	},
 	'modules': {},
 	'lib': {},
@@ -69,7 +69,7 @@ var self = {
 		});
 	},
 	'patch': function(container, name, callback, before){
-		var original = container[name];
+		var original = container[name] || function(){};
 
 		if ( before ){
 			container[name] = function(){

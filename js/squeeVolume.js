@@ -3,6 +3,24 @@ BerryTweaks.modules['squeeVolume'] = (function(){
 
 var self = {
 	'css': false,
+	'setVolumes': function(){
+		var vol = self.enabled ? self.loadVolume() : 1.0;
+
+		// [<audio>, baseVolume=1.0]
+		[
+			[window.NOTIFY],
+			[window.DRINK],
+			[window.ATTENTION],
+			[window.PEP && window.PEP.JAM],
+			[window.OHMY, 0.5],
+			[window.SHOOBEDOO, 0.5],
+			[window.DOOT],
+			[window.welcomeToTheJam]
+		].forEach(function(el){
+			if ( el[0] )
+				el[0].volume = vol * (el[1] || 1.0);
+		});
+	},
 	'loadVolume': function(){
 		var vol = BerryTweaks.loadSettings().squeeVolume;
 		if ( vol === undefined )
@@ -16,10 +34,13 @@ var self = {
 		BerryTweaks.saveSettings(settings);
 	},
 	'enable': function(){
-		NOTIFY.volume = self.loadVolume();
+		self.setVolumes();
+
+		// in case some other scripts haven't loaded yet
+		setTimeout(self.setVolumes, 1000 * 10);
 	},
 	'disable': function(){
-		NOTIFY.volume = 1.0;
+		self.setVolumes();
 	},
 	'addSettings': function(container){
 		$('<div>', {
@@ -32,13 +53,16 @@ var self = {
 			'value': self.loadVolume(),
 			'stop': function(event, ui){
 				self.saveVolume(ui.value);
-
-				if ( self.enabled )
-					NOTIFY.volume = ui.value;
+				self.setVolumes();
 			}
 		}).appendTo(container);
 	}
 };
+
+BerryTweaks.patch(window, 'initToastThemes', function(){
+	if ( self.enabled )
+		self.setVolumes();
+});
 
 return self;
 
