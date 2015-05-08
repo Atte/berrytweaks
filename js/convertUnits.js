@@ -59,7 +59,7 @@ var self = {
 			'mul': 0.4536
 		},
 		{
-			'names': ['st', 'stone', 'stones'],
+			'names': ['stone', 'stones'],
 			'label': 'kg',
 			'mul': 6.35
 		}

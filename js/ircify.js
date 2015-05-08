@@ -4,21 +4,20 @@ BerryTweaks.modules['ircify'] = (function(){
 var self = {
 	'css': true,
 	'partTimeout': 5,
+	'verbs': {
+		'join': 'joined',
+		'part': 'left'
+	},
 	'partTimeoutHandles': {},
 	'holdJoins': true,
 	'act': function(nick, type, time){
 		if ( !nick )
 			return;
 
-		var text = ({
-			'join': 'joined',
-			'part': 'left'
-		})[type];
-
 		addChatMsg({
 			'msg': {
 				'nick': nick,
-				'msg': '<span class="berrytweaks-ircify-' + type + '">' + text + '</span>',
+				'msg': '<span class="berrytweaks-ircify-' + type + '">' + self.verbs[type] + '</span>',
 				'metadata':  {
 					'graymute': false,
 					'nameflaunt': false,

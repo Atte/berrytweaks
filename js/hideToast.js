@@ -1,4 +1,4 @@
-BerryTweaks.modules['hideFloaty'] = (function(){
+BerryTweaks.modules['hideToast'] = (function(){
 "use strict";
 
 var self = {

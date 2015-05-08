@@ -24,7 +24,7 @@ aliases = defaultdict(set, (
 		'Drywin': ['Drywinn'],
 		'lovershy': ['loversh'],
 		'maharito': ['mahaquesarito', 'Mahayro'],
-		'Malsententia': ['Malpone', 'malpone'],
+		'Malsententia': ['Malpone', 'malpone', 'Molestentia'],
 		'PonisEnvy': ['PonircEnvy'],
 		'shadowthug': ['shadowphone'],
 		'ShippingIsMagic': ['a_Nickname', 'FlutterNickname'],
