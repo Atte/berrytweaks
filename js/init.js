@@ -17,7 +17,7 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['hideLoggedin', 'hideFloaty']
+			'configs': ['hideLoggedin', 'hideToast', 'squeeVolume']
 		}
 	],
 	'configTitles': {
@@ -36,7 +36,8 @@ var self = {
 		'rawSquees': "Unlimited squee editor",
 
 		'hideLoggedin': 'Hide extra "Logged in as" label',
-		'hideFloaty': "Hide floaty stuff"
+		'hideToast': "Hide ToastThemes button",
+		'squeeVolume': 'Customize squee volume'
 	},
 	'modules': {},
 	'lib': {},
