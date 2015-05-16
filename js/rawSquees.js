@@ -12,7 +12,11 @@ var self = {
 			'title': 'Raw Squee Management',
 			'uid': 'rawsqueemanagement',
 			'center': true
-		});
+		}).append(
+			$('<span>', {
+				'text': 'Enter regular expressions to squee on. One per line.'
+			})
+		);
 
 		self.textarea = $('<textarea>', {
 			'value': HIGHLIGHT_LIST.join('\n'),
@@ -34,21 +38,24 @@ var self = {
 		}).appendTo(self.window);
 	},
 	'onSaveClick': function(){
-		var lines = self.textarea.val().split('\n').filter(function(str){
-			return str.length > 0;
-		});
+		var lines = self.textarea.val().split('\n');
 
 		var errors = [];
-		lines.forEach(function(line){
+		lines.forEach(function(line, i){
+			if ( line.length <= 0 )
+				return;
+
+			var errorPrefix = 'line ' + (i+1) + ': ';
+
 			try{
 				new RegExp(line);
 			}
 			catch(e){
-				errors.push(e);
+				errors.push(errorPrefix + e);
 			}
 
 			if ( line.indexOf(';') != -1 )
-				errors.push('; is not allowed in squees');
+				errors.push(errorPrefix + 'semicolons are not allowed in squees');
 		});
 
 		self.error.text('');

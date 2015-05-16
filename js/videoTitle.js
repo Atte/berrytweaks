@@ -34,7 +34,7 @@ var self = {
 
 		switch ( vid.videotype ){
 			case 'yt':
-				return 'https://www.youtube.com/watch?v=' + vid.videoid + (timeStr ? '?t='+timeStr : '');
+				return 'https://www.youtube.com/watch?v=' + vid.videoid + (timeStr ? '#t='+timeStr : '');
 			case 'vimeo':
 				return 'https://vimeo.com/' + vid.videoid + (timeStr ? '#t='+timeStr : '');
 			case 'dm':
