@@ -17,7 +17,7 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['hideLoggedin', 'hideToast', 'squeeVolume']
+			'configs': ['hideLoggedin', 'squeeVolume']
 		}
 	],
 	'configTitles': {
@@ -36,7 +36,6 @@ var self = {
 		'rawSquees': "Unlimited squee editor",
 
 		'hideLoggedin': 'Hide extra "Logged in as" label',
-		'hideToast': "Hide ToastThemes button",
 		'squeeVolume': 'Customize notification volumes'
 	},
 	'modules': {},
@@ -216,7 +215,7 @@ var self = {
 
 		var height = Math.min(
 			win.height() + 20,
-			$(window).height() - win.offset().top
+			$(window).height() - (win.offset().top - $(window).scrollTop()) - 20
 		);
 
 		win.css({

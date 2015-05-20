@@ -54,6 +54,8 @@ var self = {
 			'stop': function(event, ui){
 				self.saveVolume(ui.value);
 				self.setVolumes();
+				if ( window.NOTIFY )
+					window.NOTIFY.play();
 			}
 		}).appendTo(container);
 	}
