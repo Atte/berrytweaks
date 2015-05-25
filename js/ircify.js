@@ -31,8 +31,6 @@ var self = {
 		}, '#chatbuffer');
 	},
 	'addUser': function(nick){
-		console.log('add', nick);
-
 		if ( nick == window.NAME )
 			self.holdActs = false;
 

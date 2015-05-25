@@ -17,6 +17,7 @@ aliases = defaultdict(set, (
 	for k, v in {
 		'Ajaxtitan': ['Ajaxtitan496'],
 		'ayrl': ['aryl'],
+		'Bassau': ['bassphone'],
 		'bionictigershk': ['bionictigershrk'],
 		'Chrono': ['Chrona'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
