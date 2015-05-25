@@ -9,9 +9,9 @@ var self = {
 		'part': 'left'
 	},
 	'partTimeoutHandles': {},
-	'holdJoins': true,
+	'holdActs': true,
 	'act': function(nick, type, time){
-		if ( !nick )
+		if ( !nick || self.holdActs )
 			return;
 
 		addChatMsg({
@@ -31,17 +31,17 @@ var self = {
 		}, '#chatbuffer');
 	},
 	'addUser': function(nick){
+		console.log('add', nick);
+
 		if ( nick == window.NAME )
-			self.holdJoins = false;
+			self.holdActs = false;
 
 		if ( self.partTimeoutHandles[nick] ){
 			clearTimeout(self.partTimeoutHandles[nick]);
 			self.partTimeoutHandles[nick] = null;
 		}
-		else{
-			if ( !self.holdJoins )
-				self.act(nick, 'join', new Date());
-		}
+		else
+			self.act(nick, 'join', new Date());
 	},
 	'rmUser': function(nick){
 		if ( self.partTimeoutHandles[nick] )
@@ -49,17 +49,19 @@ var self = {
 
 		var time = new Date();
 		self.partTimeoutHandles[nick] = setTimeout(function(){
-			self.act(nick, 'part', time);
 			self.partTimeoutHandles[nick] = null;
+			self.act(nick, 'part', time);
 		}, self.partTimeout * 1000);
+	},
+	'enable': function(){
+		if ( window.CHATLIST.hasOwnProperty(window.NAME) )
+			self.holdActs = false;
 	}
 };
 
 BerryTweaks.patch(window, 'addUser', function(data){
-	if ( !self.enabled ){
-		self.holdJoins = false;
+	if ( !self.enabled )
 		return;
-	}
 
 	self.addUser(data.nick);
 });
@@ -70,6 +72,10 @@ BerryTweaks.patch(window, 'rmUser', function(nick){
 
 	self.rmUser(nick);
 }, true);
+
+socket.on('reconnecting', function(){
+	self.holdActs = true;
+});
 
 return self;
 
