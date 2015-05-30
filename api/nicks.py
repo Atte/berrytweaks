@@ -71,7 +71,7 @@ nonbases = set([
 
 # Load all nicks
 mongo = MongoClient()
-nicks = set(mongo.berrylog.log.distinct('nick'))
+nicks = set(mongo.berrylog.nicks.distinct('nick'))
 mongo.close()
 
 # Find prefixes/suffixes

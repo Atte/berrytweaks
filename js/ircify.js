@@ -3,7 +3,6 @@ BerryTweaks.modules['ircify'] = (function(){
 
 var self = {
 	'css': true,
-	'partTimeout': 5,
 	'verbs': {
 		'join': 'joined',
 		'part': 'left'
@@ -30,6 +29,13 @@ var self = {
 			'ghost': false
 		}, '#chatbuffer');
 	},
+	'loadTimeout': function(){
+		var secs = BerryTweaks.loadSettings().timeoutSmoothing;
+		if ( secs === undefined )
+			return 5;
+		else
+			return secs;
+	},
 	'addUser': function(nick){
 		if ( nick == window.NAME )
 			self.holdActs = false;
@@ -49,11 +55,38 @@ var self = {
 		self.partTimeoutHandles[nick] = setTimeout(function(){
 			self.partTimeoutHandles[nick] = null;
 			self.act(nick, 'part', time);
-		}, self.partTimeout * 1000);
+		}, self.loadTimeout() * 1000);
 	},
 	'enable': function(){
 		if ( window.CHATLIST.hasOwnProperty(window.NAME) )
 			self.holdActs = false;
+	},
+	'addSettings': function(container){
+		$('<div>', {
+
+		}).append(
+			$('<label>', {
+				'for': 'berrytweaks-ircify-timeout',
+				'text': 'Hide disconnects shorter than '
+			})
+		).append(
+			$('<input>', {
+				'id': 'berrytweaks-ircify-timeout',
+				'type': 'number',
+				'step': 1,
+				'min': 0,
+				'value': self.loadTimeout()
+			}).change(function(){
+				var settings = BerryTweaks.loadSettings();
+				settings.timeoutSmoothing = +$(this).val();
+				BerryTweaks.saveSettings(settings);
+			})
+		).append(
+			$('<label>', {
+				'for': 'berrytweaks-ircify-timeout',
+				'text': ' seconds'
+			})
+		).appendTo(container);
 	}
 };
 
