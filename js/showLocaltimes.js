@@ -27,9 +27,7 @@ var self = {
 			if ( !userdata )
 				return;
 
-			$.getJSON('http://api.timezonedb.com/?callback=?', {
-				'format': 'json',
-				'key': 'PLXFU6Y9V2J1',
+			$.getJSON('https://atte.fi/berrytweaks/api/time.php', {
 				'lat': userdata.lat,
 				'lng': userdata.lng
 			}, function(timedata){
@@ -44,7 +42,7 @@ var self = {
 				}
 
 				el.data('berrytweaks-localtime_offset', (+offset)*1000);
-				
+
 				self.update();
 			});
 		});

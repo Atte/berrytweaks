@@ -12,7 +12,10 @@ $context = stream_context_create([
 	]
 ]);
 
-$data = @file_get_contents(DATA_URL, false, $context);
+if ( defined('SERVE_CACHED') && SERVE_CACHED && is_readable(CACHE_FNAME) )
+	$data = null;
+else
+	$data = @file_get_contents(DATA_URL, false, $context);
 
 if ( $data ){
 	file_put_contents(CACHE_FNAME, $data);
