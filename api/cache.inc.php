@@ -18,6 +18,11 @@ else
 	$data = @file_get_contents(DATA_URL, false, $context);
 
 if ( $data ){
+	if ( function_Exists('cache_validate') && !cache_validate($data) ){
+		http_response_code(500);
+		die('invalid data');
+	}
+
 	file_put_contents(CACHE_FNAME, $data);
 }
 else{
