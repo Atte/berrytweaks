@@ -7,6 +7,14 @@ var self = {
 	'textarea': null,
 	'button': null,
 	'error': null,
+	'getRegexError': function(re){
+		try{
+			new RegExp(re);
+		}
+		catch(e){
+			return e;
+		}
+	},
 	'showWindow': function(){
 		self.window = $('body').dialogWindow({
 			'title': 'Raw Squee Management',
@@ -45,14 +53,9 @@ var self = {
 			if ( line.length <= 0 )
 				return;
 
-			var errorPrefix = 'line ' + (i+1) + ': ';
-
-			try{
-				new RegExp(line);
-			}
-			catch(e){
-				errors.push(errorPrefix + e);
-			}
+			var err = self.getRegexError(line);
+			if ( err )
+				errors.push('line ' + (i+1) + ': ' + e);
 
 			if ( line.indexOf(';') != -1 )
 				errors.push(errorPrefix + 'semicolons are not allowed in squees');

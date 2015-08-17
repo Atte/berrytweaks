@@ -1,7 +1,8 @@
 #!/bin/bash
+set -e
 
 rm -rf tmp
-mkdir tmp tmp/js tmp/js/lib
+mkdir -p tmp/js/lib
 
 cp -r ../css/ tmp/
 
