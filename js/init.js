@@ -17,7 +17,7 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['hideLoggedin', 'squeeVolume']
+			'configs': ['hideLoggedin', 'squeeVolume', 'resetFlair']
 		}
 	],
 	'configTitles': {
@@ -36,7 +36,8 @@ var self = {
 		'rawSquees': "Unlimited squee editor",
 
 		'hideLoggedin': 'Hide extra "Logged in as" label',
-		'squeeVolume': 'Customize notification volumes'
+		'squeeVolume': "Customize notification volumes",
+		'resetFlair': "Reset flair on page load"
 	},
 	'modules': {},
 	'lib': {},
@@ -194,7 +195,7 @@ var self = {
 	'disableModule': function(name){
 		if ( !self.configTitles.hasOwnProperty(name) )
 			return;
-		
+
 		var mod = self.modules[name];
 		if ( mod ){
 			if ( !mod.enabled )
@@ -247,7 +248,7 @@ var self = {
 		);
 
 		// basic toggles
-		self.settingsContainer.append.apply(self.settingsContainer, 
+		self.settingsContainer.append.apply(self.settingsContainer,
 			self.categories.map(function(cat){
 				return [$('<label>', {
 					'class': 'berrytweaks-module-category',
