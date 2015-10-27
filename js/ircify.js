@@ -75,6 +75,9 @@ var self = {
 				'type': 'number',
 				'step': 1,
 				'min': 0,
+				'css': {
+					'width': '3em'
+				},
 				'value': self.loadTimeout()
 			}).change(function(){
 				var settings = BerryTweaks.loadSettings();
