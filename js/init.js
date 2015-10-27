@@ -17,7 +17,7 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
+			'configs': ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair', 'esc']
 		}
 	],
 	'configTitles': {
@@ -38,7 +38,8 @@ var self = {
 		'stripes': "Stripe messages (requires theme support)",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'squeeVolume': "Customize notification volumes",
-		'resetFlair': "Reset flair on page load"
+		'resetFlair': "Reset flair on page load",
+		'esc': "Close dialogs with ESC"
 	},
 	'modules': {},
 	'lib': {},
