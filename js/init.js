@@ -17,7 +17,7 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['hideLoggedin', 'squeeVolume', 'resetFlair']
+			'configs': ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
 		}
 	],
 	'configTitles': {
@@ -35,6 +35,7 @@ var self = {
 		'linkOpener': "Open links automatically",
 		'rawSquees': "Unlimited squee editor",
 
+		'stripes': "Stripe messages (requires theme support)",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'squeeVolume': "Customize notification volumes",
 		'resetFlair': "Reset flair on page load"
