@@ -3,7 +3,10 @@ BerryTweaks.modules['esc'] = (function(){
 
 var self = {
 	'css': false,
-	'onEsc': function(){
+	'onEsc': function(e){
+		if ( e.which !== 27 )
+			return;
+
 		// async in case the dialog is doing stuff on keydown
 		setTimeout(function(){
 			var wins = $(document.body).data('windows');
