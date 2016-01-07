@@ -52,7 +52,8 @@ var self = {
 				'id': window.ACTIVE.videoid,
 				'length': window.ACTIVE.videolength ? self.parseTime(window.ACTIVE.videolength) : null,
 				'title': decodeURIComponent(window.ACTIVE.videotitle),
-				'link': self.videoLink(window.ACTIVE, Math.max(self.time-1, 0))
+				'link': self.videoLink(window.ACTIVE),
+				'timedLink': self.videoLink(window.ACTIVE, Math.max(self.time-1, 0))
 			};
 
 			self.callbacksChange.forEach(function(cback){
@@ -60,7 +61,7 @@ var self = {
 			});
 		}
 		else
-			self.data.link = self.videoLink(window.ACTIVE, Math.max(self.time-1, 0));
+			self.data.timedLink = self.videoLink(window.ACTIVE, Math.max(self.time-1, 0));
 
 		self.callbacksUpdate.forEach(function(cback){
 			cback(self.data);

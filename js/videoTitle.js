@@ -10,7 +10,7 @@ var self = {
 		self.link.html(video.title);
 	},
 	'onUpdate': function(video){
-		self.link.attr('href', video.link);
+		self.link.attr('href', video.timedLink);
 	},
 	'enable': function(){
 		$('#chatControls').append(
