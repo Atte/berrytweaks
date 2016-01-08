@@ -3,7 +3,7 @@ BerryTweaks.modules['userMaps'] = (function(){
 
 var self = {
 	'css': false,
-	'libs': ['nick', 'map'],
+	'libs': ['user'],
 	'addMap': function(){
 		// find window
 		var dialogContent = $('#userOps').parents('.dialogContent');
@@ -12,8 +12,8 @@ var self = {
 		if ( !dialogContent || !dialogWindow || !nick )
 			return;
 
-		BerryTweaks.lib.map.getUserData(nick, function(userdata){
-			if ( !userdata )
+		BerryTweaks.lib.user.getMap(nick, function(mapdata){
+			if ( !mapdata )
 				return;
 
 			// add map
@@ -25,7 +25,7 @@ var self = {
 					'width': 256,
 					'height': 256
 				},
-				'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+userdata.lat+','+userdata.lng
+				'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+mapdata.lat+','+mapdata.lng
 			}).appendTo(dialogContent);
 
 			// fix dialog position if it went outside the window

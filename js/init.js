@@ -9,7 +9,7 @@ var self = {
 		},
 		{
 			'title': 'User list',
-			'configs': ['userMaps', 'showLocaltimes', 'globalFlairs']
+			'configs': ['userMaps', 'showLocaltimes', 'globalFlairs', 'flags']
 		},
 		{
 			'title': 'Other',
@@ -29,6 +29,7 @@ var self = {
 		'userMaps': "Show map in user dialog",
 		'showLocaltimes': "Show users' local times",
 		'globalFlairs': "Show flairs",
+		'flags': "Show flags",
 
 		'requestCheck': "Check requests for country restrictions",
 		'videoTitle': "Show video title in chat toolbar",

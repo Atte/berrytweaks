@@ -3,7 +3,7 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 
 var self = {
 	'css': true,
-	'libs': ['nick', 'map'],
+	'libs': ['user'],
 	'clockUpdateInterval': null,
 	'update': function(){
 		var now = Date.now();
@@ -23,28 +23,20 @@ var self = {
 			return;
 
 		var el = $('#chatlist > ul > li.' + nick);
-		BerryTweaks.lib.map.getUserData(nick, function(userdata){
-			if ( !userdata )
+		BerryTweaks.lib.user.getTime(nick, function(timedata){
+			var offset = timedata && timedata.gmtOffset;
+			if ( offset == null )
 				return;
 
-			$.getJSON('https://atte.fi/berrytweaks/api/time.php', {
-				'lat': userdata.lat,
-				'lng': userdata.lng
-			}, function(timedata){
-				var offset = timedata && timedata.gmtOffset;
-				if ( offset == null )
-					return;
+			if ( !$('.berrytweaks-localtime', el).length ){
+				$('<div>', {
+					'class': 'berrytweaks-localtime'
+				}).appendTo(el);
+			}
 
-				if ( !$('.berrytweaks-localtime', el).length ){
-					$('<div>', {
-						'class': 'berrytweaks-localtime'
-					}).appendTo(el);
-				}
+			el.data('berrytweaks-localtime_offset', (+offset)*1000);
 
-				el.data('berrytweaks-localtime_offset', (+offset)*1000);
-
-				self.update();
-			});
+			self.update();
 		});
 	},
 	'enable': function(){
