@@ -4,6 +4,7 @@ BerryTweaks.modules['flags'] = (function(){
 var self = {
 	'css': true,
 	'libs': ['user'],
+	'urlPrefix': 'https://dl.atte.fi/flags/',
 	'handleUser': function(nick){
 		if ( !nick )
 			return;
@@ -14,7 +15,7 @@ var self = {
 				$('<div>', {
 					'class': 'berrytweaks-flag',
 					'css': {
-						'background-image': 'url("https://dl.atte.fi/flags/' + timedata.countryCode.toLowerCase() + '.png")'
+						'background-image': 'url("' + self.urlPrefix + timedata.countryCode + '.png")'
 					}
 				}).appendTo(el);
 			}
