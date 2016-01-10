@@ -242,6 +242,7 @@ var self = {
 		self.fixWindowHeight(win);
 
 		var settings = self.loadSettings();
+		var scroll = win.scrollTop();
 		self.settingsContainer.empty();
 
 		// title
@@ -297,6 +298,8 @@ var self = {
 				)
 			);
 		});
+
+		win.scrollTop(scroll);
 	},
 	'init': function(){
 		self.dialogDOM = $('<div>', {
