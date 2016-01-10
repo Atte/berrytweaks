@@ -45,13 +45,13 @@ var self = {
 			self.partTimeoutHandles[nick] = null;
 		}
 		else
-			self.act(nick, 'join', new Date());
+			self.act(nick, 'join', BerryTweaks.getServerTime());
 	},
 	'rmUser': function(nick){
 		if ( self.partTimeoutHandles[nick] )
 			return;
 
-		var time = new Date();
+		var time = BerryTweaks.getServerTime();
 		self.partTimeoutHandles[nick] = setTimeout(function(){
 			self.partTimeoutHandles[nick] = null;
 			self.act(nick, 'part', time);

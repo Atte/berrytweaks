@@ -6,7 +6,7 @@ var self = {
 	'libs': ['user'],
 	'clockUpdateInterval': null,
 	'update': function(){
-		var now = Date.now();
+		var now = BerryTweaks.getServerTime();
 		$('#chatlist > ul > li').each(function(){
 			var el = $(this);
 			var offset = el.data('berrytweaks-localtime_offset');

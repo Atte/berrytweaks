@@ -46,6 +46,10 @@ var self = {
 	'modules': {},
 	'lib': {},
 	'libWaiters': {},
+	'timeDiff': 0,
+	'getServerTime': function(){
+		return new Date(Date.now() + self.timeDiff);
+	},
 	'dialogDOM': null,
 	'dialog': function(text){
 		self.dialogDOM.text(text).dialog({
@@ -323,6 +327,11 @@ var self = {
 			self.fixWindowHeight(win);
 		});
 
+		socket.on('chatMsg', function(data){
+			if ( data && data.msg && data.msg.timestamp )
+				self.timeDiff = new Date(data.msg.timestamp) - new Date();
+		});
+
 		self.loadCSS('init');
 		self.applySettings();
 	}
@@ -332,6 +341,4 @@ return self;
 
 })();
 
-$(function(){
-	BerryTweaks.init();
-});
+$(BerryTweaks.init);
