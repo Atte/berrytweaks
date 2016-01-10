@@ -17,15 +17,19 @@ aliases = defaultdict(set, (
 	for k, v in {
 		'Ajaxtitan': ['Ajaxtitan496'],
 		'ayrl': ['aryl'],
-		'Bassau': ['bassphone'],
+		'Bassau': ['bassphone', 'BassPhone'],
 		'bionictigershk': ['bionictigershrk'],
 		'Chrono': ['Chrona'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
-		'Lavender': ['LavPhone'],
+		'DigitalVagrant': ['Digi'],
 		'Drywin': ['Drywinn'],
+		'Lavender': ['LavPhone'],
 		'lovershy': ['loversh'],
+		'maadneet': ['maadn'],
 		'maharito': ['mahaquesarito', 'Mahayro'],
+		'Matthies7': ['Matthies'],
 		'Malsententia': ['Malpone', 'malpone', 'Molestentia'],
+		'meat_popsiclez': ['Meat_', 'meat_'],
 		'PonisEnvy': ['PonircEnvy'],
 		'shadowthug': ['shadowphone'],
 		'ShippingIsMagic': ['a_Nickname', 'FlutterNickname'],
@@ -54,6 +58,7 @@ prefixes = {
 
 forcebases = set([
 	'LavenderFox',
+	'SnowBolt',
 	'StevenAD',
 	'Q0',
 ])
@@ -62,6 +67,7 @@ nonbases = set([
 	'Discord',
 	'Loversh',
 	'Luna',
+	'matt',
 	'meat',
 ]) | set(
 	val
