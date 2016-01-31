@@ -19,7 +19,6 @@ var self = {
 		'83A88586': 1,
 		'B319B787': 6
 	},
-	'css': false,
 	'sock': null,
 	'reconnectTimeout': null,
 	'noboozeTimeout': null,

@@ -2,7 +2,6 @@ BerryTweaks.modules['stripes'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'isEven': true,
 	'handleMessage': function(_to){
 		var msg = $(_to).children().last();

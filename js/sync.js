@@ -2,7 +2,6 @@ BerryTweaks.modules['sync'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'libs': ['crypto'],
 	'post': function(data, callback){
 		var nick = localStorage.getItem('nick');
@@ -18,9 +17,8 @@ var self = {
 		if ( !self.enabled )
 			return;
 
-		var settings = BerryTweaks.loadSettings();
 		var browser = {
-			'version': settings.sync && settings.sync.version || 0,
+			'version': BerryTweaks.getSetting('syncVersion', 0),
 			'data': {
 				'squee': localStorage.getItem('highlightList'),
 				'PEP': localStorage.getItem('PEP')
@@ -32,11 +30,7 @@ var self = {
 			'action': 'sync',
 			'payload': JSON.stringify(browser)
 		}, function(server){
-			var settings = BerryTweaks.loadSettings();
-			if ( !settings.sync )
-				settings.sync = {};
-			settings.sync.version = server.version;
-			BerryTweaks.saveSettings(settings);
+			BerryTweaks.setSetting('syncVersion', server.version);
 
 			if ( server.data.squee ){
 				localStorage.setItem('highlightList', server.data.squee);

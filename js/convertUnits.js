@@ -2,7 +2,6 @@ BerryTweaks.modules['convertUnits'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'units': [
 		{
 			'names': ['F', 'fahrenheit', 'fahrenheits', 'degrees F', 'degrees fahrenheit'],
@@ -81,12 +80,7 @@ var self = {
 		});
 	},
 	'convertAll': function(str){
-		var settings = BerryTweaks.loadSettings();
-
 		self.units.forEach(function(unit){
-			if ( settings.convertUnits && settings.convertUnits.indexOf(unit.names[unit.names.length-1]) == -1 )
-				return;
-
 			str = str.replace(unit.regex, function(m, m1){
 				var val = parseInt(m.replace(self.numbersRegex, function(m){
 					if ( m == 'a' || m == 'an' )

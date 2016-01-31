@@ -2,7 +2,6 @@ BerryTweaks.modules['hideLoggedin'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'removedNode': null,
 	'enable': function(){
 		whenExists('.loginAs', function(el){

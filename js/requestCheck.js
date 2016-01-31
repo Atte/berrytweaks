@@ -2,7 +2,6 @@ BerryTweaks.modules['requestCheck'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'accepted': [],
 	// callback({allowed:[], blocked:[]})
 	'getRestrictions': function(id, callback){

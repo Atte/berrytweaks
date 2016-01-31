@@ -2,7 +2,7 @@ BerryTweaks.modules[''] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
+	'css': true,
 	'enable': function(){
 		
 	},

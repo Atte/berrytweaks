@@ -2,14 +2,12 @@ BerryTweaks.modules['linkOpener'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'win': null,
-	'hideSpoilers': BerryTweaks.loadSettings().hideSpoilerLinks || false,
 	'handleMessage': function(msg){
 		if ( !self.win || self.win.closed || msg.emote === 'request' )
 			return;
 
-		if ( self.hideSpoilers ){
+		if ( BerryTweaks.getSetting('hideSpoilers', true) ){
 			if ( msg.msg.indexOf('spoiler') !== -1 || msg.emote === 'spoiler' )
 				return;
 		}
@@ -30,11 +28,9 @@ var self = {
 			$('<input>', {
 				'id': 'berrytweaks-linkOpener-hideSpoilers',
 				'type': 'checkbox',
-				'checked': self.hideSpoilers
+				'checked': BerryTweaks.getSetting('hideSpoilers', true)
 			}).change(function(){
-				var settings = BerryTweaks.loadSettings();
-				settings.hideSpoilerLinks = self.hideSpoilers = !!$(this).prop('checked');
-				BerryTweaks.saveSettings(settings);
+				BerryTweaks.setSetting('hideSpoilers', !!$(this).prop('checked'));
 			})
 		).appendTo(container);
 

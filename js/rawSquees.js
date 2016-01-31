@@ -2,7 +2,6 @@ BerryTweaks.modules['rawSquees'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'window': null,
 	'textarea': null,
 	'button': null,

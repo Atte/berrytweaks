@@ -2,9 +2,8 @@ BerryTweaks.modules['squeeVolume'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
-	'setVolumes': function(){
-		var vol = self.enabled ? self.loadVolume() : 1.0;
+	'applyVolume': function(){
+		var vol = self.enabled ? BerryTweaks.getSetting('squeeVolume', 1.0) : 1.0;
 
 		// [<audio>, baseVolume=1.0]
 		[
@@ -21,26 +20,14 @@ var self = {
 				el[0].volume = vol * (el[1] || 1.0);
 		});
 	},
-	'loadVolume': function(){
-		var vol = BerryTweaks.loadSettings().squeeVolume;
-		if ( vol === undefined )
-			return 1.0;
-		else
-			return vol;
-	},
-	'saveVolume': function(vol){
-		var settings = BerryTweaks.loadSettings();
-		settings.squeeVolume = vol;
-		BerryTweaks.saveSettings(settings);
-	},
 	'enable': function(){
-		self.setVolumes();
+		self.applyVolume();
 
 		// in case some other scripts haven't loaded yet
-		setTimeout(self.setVolumes, 1000 * 10);
+		setTimeout(self.applyVolume, 1000 * 10);
 	},
 	'disable': function(){
-		self.setVolumes();
+		self.applyVolume();
 	},
 	'addSettings': function(container){
 		$('<div>', {
@@ -50,10 +37,10 @@ var self = {
 			'min': 0.0,
 			'max': 1.0,
 			'step': 0.01,
-			'value': self.loadVolume(),
+			'value': BerryTweaks.getSetting('squeeVolume', 1.0),
 			'stop': function(event, ui){
-				self.saveVolume(ui.value);
-				self.setVolumes();
+				BerryTweaks.setSetting('squeeVolume', ui.value);
+				self.applyVolume();
 				if ( window.NOTIFY )
 					window.NOTIFY.play();
 			}
@@ -63,7 +50,7 @@ var self = {
 
 BerryTweaks.patch(window, 'initToastThemes', function(){
 	if ( self.enabled )
-		self.setVolumes();
+		self.applyVolume();
 });
 
 return self;

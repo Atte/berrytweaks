@@ -2,7 +2,6 @@ BerryTweaks.modules['esc'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'onEsc': function(e){
 		if ( e.which !== 27 )
 			return;

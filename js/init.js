@@ -121,10 +121,17 @@ var self = {
 		self.applySettings();
 		self.updateSettingsGUI();
 	},
-	'applySettings': function(){
+	'getSetting': function(key, defaultValue){
+		var val = self.loadSettings()[key];
+		return val === undefined ? defaultValue : val;
+	},
+	'setSetting': function(key, val){
 		var settings = self.loadSettings();
-
-		$.each(settings.enabled, function(key, val){
+		settings[key] = val;
+		self.saveSettings(settings);
+	},
+	'applySettings': function(){
+		$.each(self.loadSettings().enabled, function(key, val){
 			if ( val )
 				self.enableModule(key);
 			else

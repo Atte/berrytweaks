@@ -2,41 +2,32 @@ BerryTweaks.modules['squeeSound'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
-	'original': NOTIFY.src,
-	'setSound': function(){
-		var url = self.loadSound();
+	'original': window.NOTIFY.src,
+	'applySound': function(){
+		var url = BerryTweaks.getSetting('squeeSound');
 		if ( self.enabled && url )
-			NOTIFY.src = url;
+			window.NOTIFY.src = url;
 		else
-			NOTIFY.src = self.original;
-	},
-	'loadSound': function(){
-		return BerryTweaks.loadSettings().squeeSound || '';
-	},
-	'saveSound': function(url){
-		var settings = BerryTweaks.loadSettings();
-		settings.squeeSound = url;
-		BerryTweaks.saveSettings(settings);
+			window.NOTIFY.src = self.original;
 	},
 	'enable': function(){
-		self.setSound();
+		self.applySound();
 	},
 	'disable': function(){
-		NOTIFY.src = self.original;
+		window.NOTIFY.src = self.original;
 	},
 	'addSettings': function(container){
 		$('<input>', {
 			'type': 'text',
-			'value': self.loadSound(),
+			'value': BerryTweaks.getSetting('squeeSound', ''),
 			'placeholder': 'Sound file URL',
 			'css': {
 				'width': '100%'
 			},
 			'on': {
 				'change': function(){
-					self.saveSound($(this).val());
-					self.setSound();
+					BerryTweaks.setSetting('squeeSound', $(this).val());
+					self.applySound();
 				}
 			}
 		}).appendTo(container);

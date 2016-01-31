@@ -2,7 +2,6 @@ BerryTweaks.modules['userMaps'] = (function(){
 "use strict";
 
 var self = {
-	'css': false,
 	'libs': ['user'],
 	'addMap': function(){
 		// find window
