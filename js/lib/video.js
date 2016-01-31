@@ -101,6 +101,8 @@ var self = {
 				return 'http://www.dailymotion.com/video/' + vid.videoid;
 			case 'osmf':
 				return vid.videoid;
+			case 'soundcloud':
+				return 'https://atte.fi/soundcloud/?' + vid.videoid.substr(2);
 		}
 	},
 	'onSecondPassed': function(){

@@ -69,6 +69,7 @@ nonbases = set([
 	'Luna',
 	'matt',
 	'meat',
+	'pony',
 ]) | set(
 	val
 	for vals in aliases.values()

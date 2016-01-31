@@ -13,7 +13,7 @@ var self = {
 		},
 		{
 			'title': 'Other',
-			'configs': ['requestCheck', 'videoTitle', 'sync', 'linkOpener', 'rawSquees']
+			'configs': ['requestCheck', 'videoTitle', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
 		},
 		{
 			'title': 'Nitpicking',
@@ -36,6 +36,7 @@ var self = {
 		'sync': "Sync squees and PEP stars",
 		'linkOpener': "Open links automatically",
 		'rawSquees': "Unlimited squee editor",
+		'squeeSound': "Custom squee sound",
 
 		'stripes': "Stripe messages (requires theme support)",
 		'hideLoggedin': 'Hide extra "Logged in as" label',
