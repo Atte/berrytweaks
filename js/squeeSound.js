@@ -29,6 +29,10 @@ var self = {
 		$('<input>', {
 			'type': 'text',
 			'value': self.loadSound(),
+			'placeholder': 'Sound file URL',
+			'css': {
+				'width': '100%'
+			},
 			'on': {
 				'change': function(){
 					self.saveSound($(this).val());
