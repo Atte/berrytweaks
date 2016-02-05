@@ -74,7 +74,7 @@ var self = {
 
 			if ( unit.mul ){
 				unit.fn = function(num){
-					return (num * unit.mul).toFixed(2);
+					return (parseFloat(num) * unit.mul).toFixed(2);
 				};
 			}
 		});
@@ -82,18 +82,24 @@ var self = {
 	'convertAll': function(str){
 		self.units.forEach(function(unit){
 			str = str.replace(unit.regex, function(m, m1){
-				var val = parseInt(m.replace(self.numbersRegex, function(m){
+				var val = parseFloat(m.replace(self.numbersRegex, function(m){
 					if ( m == 'a' || m == 'an' )
 						return 1;
 
 					var index = self.numbers.indexOf(m);
 					return index < 0 ? m : index;
-				}).replace(/,/g, ''), 10);
+				}).replace(/,/g, ''));
 
 				if ( !Number.isFinite(val) )
 					return m;
 
-				val = unit.fn(val);
+				try {
+					val = unit.fn(val);
+				}
+				catch(e) {
+					console.warn('error converting unit', m, val);
+					return m;
+				}
 				if ( val == null )
 					return m;
 
