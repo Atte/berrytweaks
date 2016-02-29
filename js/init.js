@@ -24,7 +24,7 @@ var self = {
 		'convertUnits': "Convert measurements into metric",
 		'smoothenWut': "Smoothen wutColors",
 		'ircifyTitles': "Show video changes",
-		'backlog': null,
+		'backlog': "Extended backlog",
 		'ircify': "Show joins/parts",
 
 		'userMaps': "Show map in user dialog",
@@ -50,7 +50,7 @@ var self = {
 	'libWaiters': {},
 	'timeDiff': 0,
 	'getServerTime': function(){
-		return new Date(Date.now() + self.timeDiff);
+		return Date.now() + self.timeDiff;
 	},
 	'dialogDOM': null,
 	'dialog': function(text){

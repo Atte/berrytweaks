@@ -9,8 +9,8 @@ var self = {
 	},
 	'partTimeoutHandles': {},
 	'holdActs': true,
-	'act': function(nick, type, time){
-		if ( !nick || self.holdActs )
+	'act': function(nick, type, time, overrideHold){
+		if ( !nick || (self.holdActs && !overrideHold) )
 			return;
 
 		addChatMsg({
@@ -24,7 +24,7 @@ var self = {
 					'channel': 'main'
 				},
 				'emote': 'act',
-				'timestamp': time.getTime()
+				'timestamp': time
 			},
 			'ghost': false
 		}, '#chatbuffer');
