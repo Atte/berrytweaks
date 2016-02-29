@@ -8,8 +8,10 @@ print()
 
 import sys
 import json
+import glob
 from collections import defaultdict
-from pymongo import MongoClient
+
+LOG_PATH = '/home/berry/.weechat/logs'
 
 # Starting data
 aliases = defaultdict(set, (
@@ -77,9 +79,20 @@ nonbases = set([
 ) | set(prefixes.values())
 
 # Load all nicks
-mongo = MongoClient()
-nicks = set(mongo.berrylog.nicks.distinct('nick'))
-mongo.close()
+nicks = set()
+for fname in glob.iglob(LOG_PATH + '/irc.berrytube.#berrytube.*.weechatlog'):
+	with open(fname, 'r') as fh:
+		for line in fh:
+			try:
+				nick = line[20:line.index('\t', 22)]
+			except ValueError:
+				pass
+			else:
+				if nick not in ('', '--', '<--', '-->', ):
+					if nick[0] in ('@', '%', '+', ):
+						nicks.add(nick[1:])
+					else:
+						nicks.add(nick)
 
 # Find prefixes/suffixes
 for nick in nicks:
