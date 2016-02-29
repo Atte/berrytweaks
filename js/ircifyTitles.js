@@ -33,7 +33,7 @@ var self = {
 					'channel': 'main'
 				},
 				'emote': 'act',
-				'timestamp': BerryTweaks.getServerTime()
+				'timestamp': video.timestamp || BerryTweaks.getServerTime()
 			},
 			'ghost': false
 		}, '#chatbuffer');

@@ -5,7 +5,7 @@ var self = {
 	'categories': [
 		{
 			'title': 'Chat view',
-			'configs': ['convertUnits', 'smoothenWut', 'ircifyTitles', 'ircify']
+			'configs': ['convertUnits', 'smoothenWut', 'ircifyTitles', 'backlog', 'ircify']
 		},
 		{
 			'title': 'User list',
@@ -24,6 +24,7 @@ var self = {
 		'convertUnits': "Convert measurements into metric",
 		'smoothenWut': "Smoothen wutColors",
 		'ircifyTitles': "Show video changes",
+		'backlog': null,
 		'ircify': "Show joins/parts",
 
 		'userMaps': "Show map in user dialog",
@@ -272,6 +273,8 @@ var self = {
 					'text': cat.title
 				})].concat(cat.configs.map(function(key){
 					var label = self.configTitles[key];
+					if ( !label )
+						return;
 
 					return $('<div>', {
 						'class': 'berrytweaks-module-toggle-wrapper',
