@@ -7,7 +7,7 @@ print('Access-Control-Allow-Origin: *')
 print()
 
 form = cgi.FieldStorage()
-count = int(form.getfirst('count', 100))
+count = int(form.getfirst('count', 256))
 assert count > 0
 assert count <= 500
 

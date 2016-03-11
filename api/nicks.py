@@ -81,7 +81,7 @@ nonbases = set([
 # Load all nicks
 nicks = set()
 for fname in glob.iglob(LOG_PATH + '/irc.berrytube.#berrytube.*.weechatlog'):
-	with open(fname, 'r') as fh:
+	with open(fname, encoding='utf-8') as fh:
 		for line in fh:
 			try:
 				nick = line[20:line.index('\t', 22)]
