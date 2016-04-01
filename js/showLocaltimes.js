@@ -5,6 +5,8 @@ var self = {
 	'css': true,
 	'libs': ['user'],
 	'clockUpdateInterval': null,
+	'todo': [],
+	'todoFlusher': null,
 	'update': function(){
 		var now = BerryTweaks.getServerTime();
 		$('#chatlist > ul > li').each(function(){
@@ -18,12 +20,9 @@ var self = {
 			$('.berrytweaks-localtime', el).text(time.getUTCHours() + ':' + (mins<10 ? '0'+mins : mins));
 		});
 	},
-	'handleUser': function(nick){
-		if ( !nick )
-			return;
-
-		var el = $('#chatlist > ul > li.' + nick);
-		BerryTweaks.lib.user.getTime(nick, function(timedata){
+	'flushTodo': function(){
+		BerryTweaks.lib.user.getTimes(self.todo, function(nick, timedata){
+			var el = $('#chatlist > ul > li.' + nick);
 			var offset = timedata && timedata.gmtOffset;
 			if ( offset == null )
 				return;
@@ -35,9 +34,21 @@ var self = {
 			}
 
 			el.data('berrytweaks-localtime_offset', (+offset)*1000);
-
+		}, function(){
 			self.update();
 		});
+		self.todoFlusher = null;
+	},
+	'handleUser': function(nick){
+		if ( !nick )
+			return;
+
+		self.todo.push(nick);
+		if ( !self.todoFlusher ){
+			self.todoFlusher = setTimeout(function(){
+				self.flushTodo();
+			}, 1000);
+		}
 	},
 	'enable': function(){
 		$('#chatlist > ul > li').each(function(){

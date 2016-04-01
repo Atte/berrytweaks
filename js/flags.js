@@ -5,12 +5,10 @@ var self = {
 	'css': true,
 	'libs': ['user'],
 	'urlPrefix': 'https://dl.atte.fi/flags/',
-	'handleUser': function(nick){
-		if ( !nick )
-			return;
-
-		var el = $('#chatlist > ul > li.' + nick);
-		BerryTweaks.lib.user.getTime(nick, function(timedata){
+	'todo': [],
+	'flushTodo': function(){
+		BerryTweaks.lib.user.getTimes(self.todo, function(nick, timedata){
+			var el = $('#chatlist > ul > li.' + nick);
 			if ( timedata.countryCode && !$('.berrytweaks-flag', el).length ){
 				$('<div>', {
 					'class': 'berrytweaks-flag',
@@ -20,6 +18,18 @@ var self = {
 				}).appendTo(el);
 			}
 		});
+		self.todo = [];
+	},
+	'handleUser': function(nick){
+		if ( !nick )
+			return;
+
+		self.todo.push(nick);
+		if ( !self.todoFlusher ){
+			self.todoFlusher = setTimeout(function(){
+				self.flushTodo();
+			}, 1000);
+		}
 	},
 	'enable': function(){
 		$('#chatlist > ul > li').each(function(){

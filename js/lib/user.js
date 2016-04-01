@@ -69,12 +69,39 @@ var self = {
 		});
 	},
 	'getTime': function(nick, callback){
+		console.warn('Why are you calling getTime!?');
 		self.getMap(nick, function(mapdata){
 			if ( !mapdata )
 				return;
 
 			self.cacheData('lat=' + mapdata.lat + '&lng=' + mapdata.lng, function(timedata){
 				callback(timedata);
+			});
+		});
+	},
+	'getTimes': function(nicks, callback, finalCallback){
+		var datas = {};
+		nicks.forEach(function(nick){
+			self.getMap(nick, function(mapdata){
+				datas[nick] = mapdata;
+				var keys = Object.keys(datas);
+				if ( keys.length == nicks.length ){
+					var url = [];
+					keys.forEach(function(key){
+						if ( !datas[key] )
+							return;
+
+						url.push('lat[]=' + datas[key].lat + '&lng[]=' + datas[key].lng);
+					});
+					self.cacheData(url.join('&'), function(timedata){
+						keys.forEach(function(key, i){
+							if ( datas[key] )
+								callback(key, timedata.results[i]);
+						});
+						if ( finalCallback )
+							finalCallback();
+					});
+				}
 			});
 		});
 	}
