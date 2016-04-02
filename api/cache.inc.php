@@ -43,5 +43,5 @@ function do_cache($data_url, $cache_fname){
 		echo $data;
 }
 
-if ( !defined('NO_AUTO') )
+if ( !defined('NO_AUTO') || !NO_AUTO )
 	do_cache(DATA_URL, CACHE_FNAME);

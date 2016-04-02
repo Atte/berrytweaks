@@ -81,20 +81,20 @@ var self = {
 	},
 	'getTimes': function(nicks, callback, finalCallback){
 		var datas = {};
+		var left = nicks.length;
 		nicks.forEach(function(nick){
 			self.getMap(nick, function(mapdata){
-				datas[nick] = mapdata;
-				var keys = Object.keys(datas);
-				if ( keys.length == nicks.length ){
+				if ( mapdata )
+					datas[nick] = mapdata;
+				if ( --left == 0 ){
+					nicks = Object.keys(datas);
 					var url = [];
-					keys.forEach(function(key){
-						if ( !datas[key] )
-							return;
-
-						url.push('lat[]=' + datas[key].lat + '&lng[]=' + datas[key].lng);
+					nicks.forEach(function(key){
+						if ( datas[key] )
+							url.push('lat[]=' + datas[key].lat + '&lng[]=' + datas[key].lng);
 					});
 					self.cacheData(url.join('&'), function(timedata){
-						keys.forEach(function(key, i){
+						nicks.forEach(function(key, i){
 							if ( datas[key] )
 								callback(key, timedata.results[i]);
 						});

@@ -23,7 +23,7 @@ if ( count($lats) != count($lngs) ){
 $ans = [];
 function cache_callback($data){
 	global $ans;
-	$ans []= json_decode($data, true);
+	$ans []= $data ? json_decode($data, true) : null;
 }
 function cache_validate($data){
 	$json = json_decode($data, true);
