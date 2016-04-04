@@ -27,6 +27,7 @@ var self = {
 		self.todo.push(nick);
 		if ( !self.todoFlusher ){
 			self.todoFlusher = setTimeout(function(){
+				self.todoFlusher = null;
 				self.flushTodo();
 			}, 1000);
 		}
