@@ -6,17 +6,22 @@ if ( !defined('NO_AUTO') && (!defined('DATA_URL') || !defined('CACHE_FNAME')) )
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-$context = stream_context_create([
-	'http' => [
-		'timeout' => 5
-	]
-]);
+function download($url){
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+	curl_setopt($ch, CURLOPT_USERAGENT, 'BerryTweaks Server');
+	//curl_setopt($ch, CURLOPT_HTTPHEADER, ['X-BerryTweaks-IP: ' . $_SERVER['REMOTE_ADDR']]);
+	return curl_exec($ch);
+}
 
 function do_cache($data_url, $cache_fname){
 	if ( defined('SERVE_CACHED') && SERVE_CACHED && is_readable($cache_fname) )
 		$data = null;
 	else
-		$data = @file_get_contents($data_url, false, $context);
+		$data = download($data_url);
 
 	if ( $data ){
 		if ( function_exists('cache_validate') && !cache_validate($data) ){
