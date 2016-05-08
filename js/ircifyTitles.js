@@ -25,7 +25,7 @@ var self = {
 		addChatMsg({
 			'msg': {
 				'nick': 'Now Playing',
-				'msg': '<span class="berrytweaks-ircify-title"><a href="javascript:void(0)" target="_blank">' + video.title + '</a>' + length + '</span>',
+				'msg': '<span class="berrytweaks-ircify-title"><a href="javascript:void(0)" target="_blank" rel="noopener noreferrer">' + video.title + '</a>' + length + '</span>',
 				'metadata':  {
 					'graymute': false,
 					'nameflaunt': false,

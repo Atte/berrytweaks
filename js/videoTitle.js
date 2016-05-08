@@ -17,6 +17,7 @@ var self = {
 			self.link = $('<a>', {
 				'id': 'berrytweaks-video_title',
 				'target': '_blank',
+				'rel': 'noopener noreferrer',
 				'text': 'Loading...'
 			})
 		);
