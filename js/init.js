@@ -12,8 +12,12 @@ var self = {
 			'configs': ['userMaps', 'showLocaltimes', 'globalFlairs', 'flags']
 		},
 		{
+			'title': 'Video',
+			'configs': ['autoshowVideo', 'videoTitle']
+		},
+		{
 			'title': 'Other',
-			'configs': ['requestCheck', 'videoTitle', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
+			'configs': ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
 		},
 		{
 			'title': 'Nitpicking',
@@ -32,8 +36,10 @@ var self = {
 		'globalFlairs': "Show flairs",
 		'flags': "Show flags",
 
-		'requestCheck': "Check requests for country restrictions",
+		'autoshowVideo': "Expand MalTweaks video during volatiles",
 		'videoTitle': "Show video title in chat toolbar",
+
+		'requestCheck': "Check requests for country restrictions",
 		'sync': "Sync squees and PEP stars",
 		'linkOpener': "Open links automatically",
 		'rawSquees': "Unlimited squee editor",

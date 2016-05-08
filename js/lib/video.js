@@ -53,7 +53,8 @@ var self = {
 				'length': window.ACTIVE.videolength ? self.parseTime(window.ACTIVE.videolength) : null,
 				'title': decodeURIComponent(window.ACTIVE.videotitle),
 				'link': self.videoLink(window.ACTIVE),
-				'timedLink': self.videoLink(window.ACTIVE, Math.max(self.time-1, 0))
+				'timedLink': self.videoLink(window.ACTIVE, Math.max(self.time-1, 0)),
+				'isVolatile': !!window.ACTIVE.volat
 			};
 
 			self.callbacksChange.forEach(function(cback){
