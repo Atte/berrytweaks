@@ -6,6 +6,7 @@ var self = {
 	'textarea': null,
 	'button': null,
 	'error': null,
+	/** @suppress {uselessCode} */
 	'getRegexError': function(re){
 		try{
 			new RegExp(re);
