@@ -22,9 +22,12 @@ aliases = defaultdict(set, (
 		'Bassau': ['bassphone', 'BassPhone'],
 		'bionictigershk': ['bionictigershrk'],
 		'Chrono': ['Chrona'],
+		'Chryleza': ['Velvetremedy'],
 		'Cuddles_theBear': ['irCuddles_tBear'],
 		'DigitalVagrant': ['Digi'],
 		'Drywin': ['Drywinn'],
+		'GentlemanGin': ['elbows', 'butts', 'EezMaiMynd', 'Spike', 'clouds', 'Water', 'geigerrulesbig', 'DolphinButt', 'ThornInYouSide', 'AssholeGin', 'Cat', 'VodkaIsGross'],
+		'heart04winds': ['hart04winds'],
 		'Lavender': ['LavPhone'],
 		'lovershy': ['loversh'],
 		'maadneet': ['maadn'],
@@ -33,9 +36,11 @@ aliases = defaultdict(set, (
 		'Malsententia': ['Malpone', 'malpone', 'Molestentia'],
 		'meat_popsiclez': ['Meat_', 'meat_'],
 		'PonisEnvy': ['PonircEnvy'],
+		'SomeStupidGuy': ['NotSSG'],
 		'shadowthug': ['shadowphone'],
 		'ShippingIsMagic': ['a_Nickname', 'FlutterNickname'],
 		'WeedWuff': ['SpecialCoalWuff'],
+		'Yakoshi': ['Yagoshi'],
 	}.items()
 ))
 
@@ -55,6 +60,7 @@ prefixes = {
 		'stevepoppers': 'steve',
 		'Toastdeib': 'Toast',
 		'Trellmor': 'Trell',
+		'WeedWuff': 'Weed',
 	}.items()
 }
 
@@ -66,6 +72,7 @@ forcebases = set([
 ])
 
 nonbases = set([
+	'DEAD',
 	'Discord',
 	'Loversh',
 	'Luna',
