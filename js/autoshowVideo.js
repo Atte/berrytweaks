@@ -30,10 +30,8 @@ var self = {
 		}
 
 		// hide video
-		if ( !hasVolatiles ){
-			console.log('Out of volatiles; hiding video');
-			MT.butts.video.$.click();
-		}
+		console.log('Out of volatiles; hiding video');
+		MT.butts.video.$.click();
 	},
 	'enable': function(){
 		BerryTweaks.lib.video.subscribe(self.onChange);
