@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BerryTweaks
 // @namespace    https://atte.fi/berrytweaks/
-// @version      0.4
+// @version      0.5
 // @description  A collection of BerryTube tweaks
 // @author       Atte
 // @match        http://berrytube.tv/*
@@ -9,6 +9,7 @@
 // @match        http://tunnel.berrypun.ch/*
 // @match        http://tunnel.q-z.xyz/*
 // @match        http://btc.berrytube.tv:8000/*
+// @match        https://bt-proxy.atte.fi/*
 // @updateURL    https://atte.fi/berrytweaks/berrytweaks.user.js
 // @downloadURL  https://atte.fi/berrytweaks/berrytweaks.user.js
 // @grant        none
