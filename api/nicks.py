@@ -28,6 +28,7 @@ aliases = defaultdict(set, (
 		'Drywin': ['Drywinn'],
 		'GentlemanGin': ['elbows', 'butts', 'EezMaiMynd', 'Spike', 'clouds', 'Water', 'geigerrulesbig', 'DolphinButt', 'ThornInYouSide', 'AssholeGin', 'Cat', 'VodkaIsGross'],
 		'heart04winds': ['hart04winds'],
+		'Kimmychan': ['Kimkam'],
 		'Lavender': ['LavPhone'],
 		'lovershy': ['loversh'],
 		'maadneet': ['maadn'],
