@@ -1,16 +1,16 @@
 image: java:latest
 
+before_script:
+    - test -f /opt/compiler.jar || { curl -L http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xzf - -C /opt; }
+    - echo -e '#!/bin/sh\n"$JAVA_HOME/bin/java" -jar /opt/compiler.jar $@' > /usr/local/bin/closure
+
 stages:
     - build
 
 minify:
     stage: build
-    before_script:
-        - test -f /opt/compiler.jar || { curl -L http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xzf - -C /opt; }
-        - echo -e '#!/bin/sh\n"$JAVA_HOME/bin/java" -jar /opt/compiler.jar $@' > /usr/local/bin/closure
     script:
-        - cd min
-        - ./build.sh
+        - make && rm -rf /out/berrytweaks/min && cp -r min /out/berrytweaks/
     cache:
         paths:
             - /opt/compiler.jar
