@@ -18,10 +18,6 @@ minify:
             - /opt/compiler.jar
     artifacts:
         paths:
-            - ./*.js
-            - ./*.html
-            - api/*.py
-            - api/*.php
             - min/css
             - min/js
 
