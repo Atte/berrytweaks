@@ -1,6 +1,7 @@
 image: java:latest
 
 before_script:
+    - apt-get install make
     - test -f /opt/compiler.jar || { curl -L http://dl.google.com/closure-compiler/compiler-latest.tar.gz | tar -xzf - -C /opt; }
     - echo -e '#!/bin/sh\n"$JAVA_HOME/bin/java" -jar /opt/compiler.jar $@' > /usr/local/bin/closure
 
