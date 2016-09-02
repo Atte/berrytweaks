@@ -9,7 +9,7 @@ print()
 form = cgi.FieldStorage()
 count = int(form.getfirst('count', 256))
 assert count > 0
-assert count <= 500
+assert count <= 512
 
 import sys
 import json
