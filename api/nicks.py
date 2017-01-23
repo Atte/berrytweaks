@@ -7,13 +7,21 @@ print('Access-Control-Allow-Origin: *')
 print()
 
 import sys
-import json
+import time
 import glob
 from collections import defaultdict
+try:
+	import simplejson as json
+except ImportError:
+	import json
 
-LOG_PATH = '/home/berry/.weechat/logs'
+INCLUDE_DEBUG = False
+LOG_PATH = '/var/bt_logs/'  # NOTE: Must include trailing slash!
+CACHE_FNAME = './cache/nicks.json'
 
 # Starting data
+debug = []
+
 aliases = defaultdict(set, (
 	(k, set(v))
 	for k, v in {
@@ -37,9 +45,10 @@ aliases = defaultdict(set, (
 		'Malsententia': ['Malpone', 'malpone', 'Molestentia'],
 		'meat_popsiclez': ['Meat_', 'meat_'],
 		'PonisEnvy': ['PonircEnvy'],
-		'SomeStupidGuy': ['NotSSG', 'Cocoa', 'CocoaPhone'],
+		'Cocoa': ['SomeStupidGuy', 'NotSSG'],
 		'shadowthug': ['shadowphone'],
 		'ShippingIsMagic': ['a_Nickname', 'FlutterNickname'],
+		'Smidqe': ['SmidqePi'],
 		'WeedWuff': ['SpecialCoalWuff'],
 		'Yakoshi': ['Yagoshi'],
 	}.items()
@@ -86,9 +95,25 @@ nonbases = set([
 	for val in vals
 ) | set(prefixes.values())
 
-# Load all nicks
-nicks = set()
-for fname in glob.iglob(LOG_PATH + '/irc.berrytube.#berrytube.*.weechatlog'):
+# Load latest cache
+start_time = time.time()
+with open(CACHE_FNAME, encoding='utf-8') as fh:
+	try:
+		cache = json.load(fh)
+	except:
+		cache = {}
+last_file = cache.get('last_file')
+nicks = set(cache.get('nicks', set()))
+
+# Load nicks from new files
+fnames = sorted(glob.iglob(LOG_PATH + 'irc.berrytube.#berrytube.*.weechatlog'))
+cached = last_file is not None
+for fname in fnames:
+	if cached:
+		if fname != last_file:
+			continue
+		cached = False
+
 	with open(fname, encoding='utf-8') as fh:
 		for line in fh:
 			try:
@@ -96,11 +121,15 @@ for fname in glob.iglob(LOG_PATH + '/irc.berrytube.#berrytube.*.weechatlog'):
 			except ValueError:
 				pass
 			else:
-				if nick not in ('', '--', '<--', '-->', ):
-					if nick[0] in ('@', '%', '+', ):
-						nicks.add(nick[1:])
-					else:
-						nicks.add(nick)
+				nicks.add(nick[1:] if nick[0] in ('@', '%', '+', ) else nick)
+
+# Save cache
+with open(CACHE_FNAME, 'w', encoding='utf-8') as fh:
+	json.dump({
+		'last_file': fnames[-1],
+		'nicks': list(nicks),
+	}, fh)
+debug.append('file load: {}'.format(time.time() - start_time))
 
 # Find prefixes/suffixes
 for nick in nicks:
@@ -155,6 +184,9 @@ if resolve:
 			out.add(base)
 			break
 	aliases = {'aliases': out}
+elif INCLUDE_DEBUG and debug:
+	debug.append('total: {}'.format(time.time() - start_time))
+	aliases['_debug'] = debug
 
 json.dump(
 	aliases, sys.stdout,
