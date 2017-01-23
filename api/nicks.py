@@ -9,11 +9,8 @@ print()
 import sys
 import time
 import glob
+import json
 from collections import defaultdict
-try:
-	import simplejson as json
-except ImportError:
-	import json
 
 INCLUDE_DEBUG = False
 LOG_PATH = '/var/bt_logs/'  # NOTE: Must include trailing slash!
@@ -22,66 +19,61 @@ CACHE_FNAME = './cache/nicks.json'
 # Starting data
 debug = []
 
-aliases = defaultdict(set, (
-	(k, set(v))
-	for k, v in {
-		'Ajaxtitan': ['Ajaxtitan496'],
-		'ayrl': ['aryl'],
-		'Bassau': ['bassphone', 'BassPhone'],
-		'bionictigershk': ['bionictigershrk'],
-		'Chrono': ['Chrona'],
-		'Chryleza': ['Velvetremedy'],
-		'Cuddles_theBear': ['irCuddles_tBear'],
-		'DigitalVagrant': ['Digi', 'digiphone'],
-		'Drywin': ['Drywinn'],
-		'GentlemanGin': ['elbows', 'butts', 'EezMaiMynd', 'Spike', 'clouds', 'Water', 'geigerrulesbig', 'DolphinButt', 'ThornInYouSide', 'AssholeGin', 'Cat', 'VodkaIsGross'],
-		'heart04winds': ['hart04winds'],
-		'Kimmychan': ['Kimkam'],
-		'Lavender': ['LavPhone'],
-		'lovershy': ['loversh'],
-		'maadneet': ['maadn'],
-		'maharito': ['mahaquesarito', 'Mahayro'],
-		'Matthies7': ['Matthies'],
-		'Malsententia': ['Malpone', 'malpone', 'Molestentia'],
-		'meat_popsiclez': ['Meat_', 'meat_'],
-		'PonisEnvy': ['PonircEnvy'],
-		'Cocoa': ['SomeStupidGuy', 'NotSSG'],
-		'shadowthug': ['shadowphone'],
-		'ShippingIsMagic': ['a_Nickname', 'FlutterNickname'],
-		'Smidqe': ['SmidqePi'],
-		'WeedWuff': ['SpecialCoalWuff'],
-		'Yakoshi': ['Yagoshi'],
-	}.items()
-))
-
-prefixes = {
-	k: v.lower()
-	for k, v in {
-		'Blueshift': 'Blue',
-		'ChocoScoots': 'Choco',
-		'discordzilla': 'disczilla',
-		'IAmInASnuggie': 'Snuggie',
-		'Kris321': 'kris3',
-		'KKGourmet': 'KKGour',
-		'SalientBlue': 'Salient',
-		'shado_jaguar': 'shado_',
-		'ShippingIsMagic': 'ShippingIs',
-		'SomeStupidGuy': 'SomeStupid',
-		'stevepoppers': 'steve',
-		'Toastdeib': 'Toast',
-		'Trellmor': 'Trell',
-		'WeedWuff': 'Weed',
-	}.items()
+aliases = {
+	'Ajaxtitan': {'Ajaxtitan496'},
+	'ayrl': {'aryl'},
+	'Bassau': {'bassphone', 'BassPhone'},
+	'bionictigershk': {'bionictigershrk'},
+	'Chrono': {'Chrona'},
+	'Chryleza': {'Velvetremedy'},
+	'Cuddles_theBear': {'irCuddles_tBear'},
+	'DigitalVagrant': {'Digi', 'digiphone'},
+	'Drywin': {'Drywinn'},
+	'GentlemanGin': {'elbows', 'butts', 'EezMaiMynd', 'Spike', 'clouds', 'Water', 'geigerrulesbig', 'DolphinButt', 'ThornInYouSide', 'AssholeGin', 'Cat', 'VodkaIsGross'},
+	'heart04winds': {'hart04winds'},
+	'Kimmychan': {'Kimkam'},
+	'Lavender': {'LavPhone'},
+	'lovershy': {'loversh'},
+	'maadneet': {'maadn'},
+	'maharito': {'mahaquesarito', 'Mahayro'},
+	'Matthies7': {'Matthies'},
+	'Malsententia': {'Malpone', 'malpone', 'Molestentia'},
+	'meat_popsiclez': {'Meat_', 'meat_'},
+	'PonisEnvy': {'PonircEnvy'},
+	'Cocoa': {'SomeStupidGuy', 'NotSSG'},
+	'shadowthug': {'shadowphone'},
+	'ShippingIsMagic': {'a_Nickname', 'FlutterNickname'},
+	'Smidqe': {'SmidqePi'},
+	'WeedWuff': {'SpecialCoalWuff'},
+	'Yakoshi': {'Yagoshi'},
 }
 
-forcebases = set([
+# right side in lowercase!
+prefixes = {
+	'Blueshift': 'blue',
+	'ChocoScoots': 'choco',
+	'discordzilla': 'disczilla',
+	'IAmInASnuggie': 'snuggie',
+	'Kris321': 'kris3',
+	'KKGourmet': 'kkgour',
+	'SalientBlue': 'salient',
+	'shado_jaguar': 'shado_',
+	'ShippingIsMagic': 'shippingis',
+	'SomeStupidGuy': 'somestupid',
+	'stevepoppers': 'steve',
+	'Toastdeib': 'toast',
+	'Trellmor': 'trell',
+	'WeedWuff': 'weed',
+}
+
+forcebases = {
 	'LavenderFox',
 	'SnowBolt',
 	'StevenAD',
 	'Q0',
-])
+}
 
-nonbases = set([
+nonbases = {
 	'DEAD',
 	'Discord',
 	'Loversh',
@@ -89,21 +81,20 @@ nonbases = set([
 	'matt',
 	'meat',
 	'pony',
-]) | set(
-	val
-	for vals in aliases.values()
-	for val in vals
-) | set(prefixes.values())
+} | set(prefixes.values())
+for als in aliases.values():
+	nonbases.union(als)
+
+start_time = time.time()
 
 # Load latest cache
-start_time = time.time()
 with open(CACHE_FNAME, encoding='utf-8') as fh:
 	try:
 		cache = json.load(fh)
 	except:
 		cache = {}
 last_file = cache.get('last_file')
-nicks = set(cache.get('nicks', set()))
+nicks = cache.get('nicks', {})
 
 # Load nicks from new files
 fnames = sorted(glob.iglob(LOG_PATH + 'irc.berrytube.#berrytube.*.weechatlog'))
@@ -121,34 +112,37 @@ for fname in fnames:
 			except ValueError:
 				pass
 			else:
-				nicks.add(nick[1:] if nick[0] in ('@', '%', '+', ) else nick)
+				if nick[0] in ('@', '%', '+', ):
+					nick = nick[1:]
+				if len(nick) >= 4 or nick in forcebases:
+					nicks[nick] = nick.lower()
 
 # Save cache
 with open(CACHE_FNAME, 'w', encoding='utf-8') as fh:
 	json.dump({
 		'last_file': fnames[-1],
-		'nicks': list(nicks),
+		'nicks': nicks,
 	}, fh)
-debug.append('file load: {}'.format(time.time() - start_time))
+debug.append('file load time: {}'.format(time.time() - start_time))
 
 # Find prefixes/suffixes
-for nick in nicks:
-	nicklen = len(nick)
-	if nicklen < 4 and nick not in forcebases:
-		continue
-
-	lnick = nick.lower()
+EMPTY_SET = set()
+for nick, lnick in nicks.items():
 	prefix = prefixes.get(nick)
-
-	for alias in nicks:
-		lalias = alias.lower()
-		if alias != nick and alias not in forcebases and (
+	als = set(
+		alias
+		for alias, lalias in nicks.items()
+		if (
 			lalias.startswith(lnick) or
 			lalias.endswith(lnick) or
 			alias.replace('I', 'l') == nick or
 			(prefix is not None and lalias.startswith(prefix))
-		):
-			aliases[nick].add(alias)
+		) and alias != nick
+	) - forcebases
+	if als:
+		aliases[nick] = aliases.get(nick, EMPTY_SET) | als
+
+debug.append('prefix find time: {}'.format(time.time() - start_time))
 
 # Resolve recursive aliases
 for base, als in aliases.copy().items():
@@ -158,17 +152,16 @@ for base, als in aliases.copy().items():
 	news = set()
 	for al in als:
 		if al in aliases and al not in forcebases:
-			news.update(aliases[al])
-			del aliases[al]
+			news.update(aliases.pop(al))
 	news.discard(base)
 	als.update(news)
 
 # Remove any remaining non-bases
-aliases = {
-	key: val
-	for key, val in aliases.items()
-	if key not in nonbases
-}
+for key in nonbases:
+	try:
+		del aliases[key]
+	except KeyError:
+		pass
 
 # Output results
 form = cgi.FieldStorage()
@@ -185,7 +178,7 @@ if resolve:
 			break
 	aliases = {'aliases': out}
 elif INCLUDE_DEBUG and debug:
-	debug.append('total: {}'.format(time.time() - start_time))
+	debug.append('total time: {}'.format(time.time() - start_time))
 	aliases['_debug'] = debug
 
 json.dump(
