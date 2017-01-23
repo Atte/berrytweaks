@@ -141,7 +141,6 @@ for nick, lnick in nicks.items():
 	) - forcebases
 	if als:
 		aliases[nick] = aliases.get(nick, EMPTY_SET) | als
-
 debug.append('prefix find time: {}'.format(time.time() - start_time))
 
 # Resolve recursive aliases

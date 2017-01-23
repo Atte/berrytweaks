@@ -23,7 +23,7 @@ var self = {
 			else if ( type == 'map' )
 				fname = 'map.php';
 			else
-				fname = 'time.php?' + type;
+				fname = 'time.py?' + type;
 
 			$.getJSON('https://atte.fi/berrytweaks/api/' + fname, function(data){
 				self.cache[type] = data;
@@ -65,17 +65,6 @@ var self = {
 					}
 				}
 				callback(null);
-			});
-		});
-	},
-	'getTime': function(nick, callback){
-		console.warn('Why are you calling getTime!?');
-		self.getMap(nick, function(mapdata){
-			if ( !mapdata )
-				return;
-
-			self.cacheData('lat=' + mapdata.lat + '&lng=' + mapdata.lng, function(timedata){
-				callback(timedata);
 			});
 		});
 	},
