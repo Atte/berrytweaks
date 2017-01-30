@@ -10,7 +10,6 @@ import sys
 import time
 import glob
 import json
-from collections import defaultdict
 
 INCLUDE_DEBUG = False
 LOG_PATH = '/var/bt_logs/'  # NOTE: Must include trailing slash!
@@ -112,10 +111,11 @@ for fname in fnames:
 			except ValueError:
 				pass
 			else:
-				if nick[0] in ('@', '%', '+', ):
+				first = nick[0]
+				if first == '@' or first == '%' or first == '+':
 					nick = nick[1:]
 				if len(nick) >= 4 or nick in forcebases:
-					nicks[nick] = nick.lower()
+					nicks[nick] = (nick.lower(), len(nick))
 
 # Save cache
 with open(CACHE_FNAME, 'w', encoding='utf-8') as fh:
@@ -127,18 +127,16 @@ debug.append('file load time: {}'.format(time.time() - start_time))
 
 # Find prefixes/suffixes
 EMPTY_SET = set()
-for nick, lnick in nicks.items():
-	prefix = prefixes.get(nick)
+for nick, (lnick, nick_len) in nicks.items():
 	als = set(
 		alias
-		for alias, lalias in nicks.items()
-		if (
+		for alias, (lalias, alias_len) in nicks.items()
+		if alias_len >= nick_len and (
 			lalias.startswith(lnick) or
 			lalias.endswith(lnick) or
-			alias.replace('I', 'l') == nick or
-			(prefix is not None and lalias.startswith(prefix))
-		) and alias != nick
-	) - forcebases
+			(nick in prefixes and lalias.startswith(prefixes[nick]))
+		) and alias != nick and alias not in forcebases
+	)
 	if als:
 		aliases[nick] = aliases.get(nick, EMPTY_SET) | als
 debug.append('prefix find time: {}'.format(time.time() - start_time))
@@ -171,7 +169,7 @@ if resolve:
 
 	out = set([resolve])
 	for base, als in aliases.items():
-		if resolve == base.lower() or resolve in map(lambda s: s.lower(), als):
+		if resolve == base.lower() or resolve in map(str.lower, als):
 			out = als
 			out.add(base)
 			break

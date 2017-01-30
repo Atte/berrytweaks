@@ -17,20 +17,28 @@ var self = {
 
 		if ( self.callbacks[type].length == 1 ){
 			// yay ugly hacks
-			var fname;
+			var fname, data;
 			if ( type == 'nicks' )
 				fname = 'nicks.py';
 			else if ( type == 'map' )
 				fname = 'map.php';
-			else
-				fname = 'time.py?' + type;
+			else {
+				fname = 'time.py';
+				data = type;
+			}
 
-			$.getJSON('https://atte.fi/berrytweaks/api/' + fname, function(data){
-				self.cache[type] = data;
-				self.callbacks[type].forEach(function(waiter){
-					waiter(self.cache[type]);
-				});
-				self.callbacks[type] = null;
+			$.ajax({
+				method: data ? 'POST' : 'GET',
+				dataType: 'json',
+				url: 'https://atte.fi/berrytweaks/api/' + fname,
+				data: data,
+				success: function(data){
+					self.cache[type] = data;
+					self.callbacks[type].forEach(function(waiter){
+						waiter(self.cache[type]);
+					});
+					self.callbacks[type] = null;
+				}
 			});
 		}
 	},
