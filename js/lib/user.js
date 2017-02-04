@@ -28,7 +28,8 @@ var self = {
 			}
 
 			$.ajax({
-				method: data ? 'POST' : 'GET',
+				type: data ? 'POST' : 'GET',
+				contentType: data ? 'text/plain' : undefined,
 				dataType: 'json',
 				url: 'https://atte.fi/berrytweaks/api/' + fname,
 				data: data,
@@ -37,7 +38,9 @@ var self = {
 					self.callbacks[type].forEach(function(waiter){
 						waiter(self.cache[type]);
 					});
-					self.callbacks[type] = null;
+					delete self.callbacks[type];
+					if ( fname == 'time.py' )
+						delete self.cache[type];
 				}
 			});
 		}
@@ -85,12 +88,12 @@ var self = {
 					datas[nick] = mapdata;
 				if ( --left == 0 ){
 					nicks = Object.keys(datas);
-					var url = [];
+					var coords = [];
 					nicks.forEach(function(key){
 						if ( datas[key] )
-							url.push('lat[]=' + datas[key].lat + '&lng[]=' + datas[key].lng);
+							coords.push(datas[key].lat + ' ' + datas[key].lng);
 					});
-					self.cacheData(url.join('&'), function(timedata){
+					self.cacheData(coords.join('\n'), function(timedata){
 						nicks.forEach(function(key, i){
 							if ( datas[key] )
 								callback(key, timedata.results[i]);

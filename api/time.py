@@ -6,6 +6,7 @@ print('Content-Type: application/json')
 print('Access-Control-Allow-Origin: *')
 print()
 
+import os
 import sys
 import json
 from datetime import datetime
@@ -13,9 +14,18 @@ from pytz import timezone, utc, country_timezones, country_names
 from pytz.exceptions import AmbiguousTimeError
 from timezonefinder import TimezoneFinder
 
-form = cgi.FieldStorage()
-lats = map(float, form.getlist('lat[]'))
-lngs = map(float, form.getlist('lng[]'))
+if os.environ['CONTENT_TYPE'] == 'text/plain':
+    body = sys.stdin.read(int(os.environ['CONTENT_LENGTH']))
+    coords = (
+        map(float, line.split(' ', 1))
+        for line in body.split('\n')
+    )
+else:
+    form = cgi.FieldStorage()
+    coords = zip(
+        map(float, form.getlist('lat[]')),
+        map(float, form.getlist('lng[]')),
+    )
 
 now = datetime.utcnow().replace(microsecond=0)
 utc_now = now.replace(tzinfo=utc)
@@ -23,7 +33,7 @@ utc_now = now.replace(tzinfo=utc)
 tz_finder = TimezoneFinder()
 
 out = []
-for lat, lng in zip(lats, lngs):
+for lat, lng in coords:
     tz_name = tz_finder.timezone_at(lat=lat, lng=lng)
     if tz_name is None:
         out.append({
