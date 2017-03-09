@@ -5,7 +5,7 @@ var self = {
 	'categories': [
 		{
 			'title': 'Chat view',
-			'configs': ['convertUnits', 'smoothenWut', 'ircifyTitles', 'backlog', 'ircify']
+			'configs': ['convertUnits', 'noReferrer', 'smoothenWut', 'ircifyTitles', 'ircify']
 		},
 		{
 			'title': 'User list',
@@ -26,9 +26,9 @@ var self = {
 	],
 	'configTitles': {
 		'convertUnits': "Convert measurements into metric",
+		'noReferrer': "Circumvent hotlink protections",
 		'smoothenWut': "Smoothen wutColors",
 		'ircifyTitles': "Show video changes",
-		'backlog': "Extended backlog",
 		'ircify': "Show joins/parts",
 
 		'userMaps': "Show map in user dialog",
