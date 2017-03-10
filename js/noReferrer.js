@@ -8,7 +8,7 @@ var self = {
 	},
 	'enable': function(){
 		whenExists('#chatbuffer', function(el){
-			convertAll(el);
+			self.convertAll(el);
 		});
 	}
 };
