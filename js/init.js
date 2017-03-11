@@ -5,7 +5,7 @@ var self = {
 	'categories': [
 		{
 			'title': 'Chat view',
-			'configs': ['convertUnits', 'noReferrer', 'smoothenWut', 'ircifyTitles', 'ircify']
+			'configs': ['convertUnits', 'smoothenWut', 'ircifyTitles', 'ircify']
 		},
 		{
 			'title': 'User list',
@@ -21,12 +21,16 @@ var self = {
 		},
 		{
 			'title': 'Nitpicking',
-			'configs': ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair', 'esc']
+			'configs': ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
+		},
+		{
+			'title': 'Always enabled',
+			'configs': ['escClose', 'settingsFix', 'noReferrer'],
+			'hidden': true
 		}
 	],
 	'configTitles': {
 		'convertUnits': "Convert measurements into metric",
-		'noReferrer': "Circumvent hotlink protections",
 		'smoothenWut': "Smoothen wutColors",
 		'ircifyTitles': "Show video changes",
 		'ircify': "Show joins/parts",
@@ -49,7 +53,10 @@ var self = {
 		'hideLoggedin': 'Hide extra "Logged in as" label',
 		'squeeVolume': "Customize notification volumes",
 		'resetFlair': "Reset flair on page load",
-		'esc': "Close dialogs with ESC"
+
+		'escClose': "Close dialogs with esc",
+		'settingsFix': "Make settings dialog scrollable",
+		'noReferrer': "Circumvent hotlink protection on links"
 	},
 	'modules': {},
 	'lib': {},
@@ -274,6 +281,8 @@ var self = {
 		// basic toggles
 		self.settingsContainer.append.apply(self.settingsContainer,
 			self.categories.map(function(cat){
+				if ( cat.hidden )
+					return null;
 				return [$('<label>', {
 					'class': 'berrytweaks-module-category',
 					'text': cat.title
@@ -322,6 +331,25 @@ var self = {
 
 		win.scrollTop(scroll);
 	},
+	'onEsc': function(e){
+		if ( e.which !== 27 )
+			return;
+
+		// async in case the dialog is doing stuff on keydown
+		setTimeout(function(){
+			var wins = $(document.body).data('windows');
+			if ( !wins || wins.length === 0 ){
+				// MalTweaks header/motd/footer
+				$('.floatinner:visible').last().next('.mtclose').click();
+				return;
+			}
+
+			wins[wins.length-1].close();
+		}, 0);
+	},
+	'noreferrer': function(_to){
+		$('a[rel!="noopener noreferrer"]', _to).attr("rel", "noopener noreferrer");
+	},
 	'init': function(){
 		self.dialogDOM = $('<div>', {
 			'title': 'BerryTweaks',
@@ -344,10 +372,17 @@ var self = {
 			self.fixWindowHeight(win);
 		});
 
-		socket.on('chatMsg', function(data){
+		self.patch(window, 'addChatMsg', function(data, _to){
 			if ( data && data.msg && data.msg.timestamp )
 				self.timeDiff = new Date(data.msg.timestamp) - new Date();
+			self.noreferrer(_to);
 		});
+
+		whenExists('#chatbuffer', function(el){
+			self.noreferrer(el);
+		});
+
+		$(document).on('keydown', self.onEsc);
 
 		self.loadCSS('init');
 		self.applySettings();
