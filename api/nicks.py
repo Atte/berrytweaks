@@ -76,12 +76,9 @@ EMPTY_SET = set()
 last_file = None
 nicks = {}
 
-def application(environ, start_response):
-    global base_aliases, prefixes, forcebases, nonbases
+def load_nicks():
     global last_file, nicks
-    aliases = base_aliases.copy()
 
-    # Load nicks from new files
     fnames = sorted(glob.iglob(LOG_GLOB))
     cached = last_file is not None
     for fname in fnames:
@@ -103,8 +100,9 @@ def application(environ, start_response):
                         nick = nick[1:]
                     if len(nick) >= 4 or nick in forcebases:
                         nicks[nick] = (nick.lower(), len(nick))
+    return nicks
 
-    # Find prefixes/suffixes
+def add_prefixes_and_suffixes(aliases, nicks):
     for nick, (lnick, nick_len) in nicks.items():
         als = set(
             alias
@@ -118,7 +116,7 @@ def application(environ, start_response):
         if als:
             aliases[nick] = aliases.get(nick, EMPTY_SET) | als
 
-    # Resolve recursive aliases
+def flatten_recursive_aliases(aliases):
     for base, als in aliases.copy().items():
         if base in nonbases:
             continue
@@ -129,6 +127,24 @@ def application(environ, start_response):
                 news.update(aliases.pop(al))
         news.discard(base)
         als.update(news)
+
+def resolve_aliases(aliases, nick):
+    nick = nick.lower()
+
+    out = set([nick])
+    for base, als in aliases.items():
+        if nick == base.lower() or nick in map(str.lower, als):
+            out = als
+            out.add(base)
+            break
+    return out
+
+def application(environ, start_response):
+    nicks = load_nicks()
+
+    aliases = base_aliases.copy()
+    add_prefixes_and_suffixes(aliases, nicks)
+    flatten_recursive_aliases(aliases)
 
     # Remove any remaining non-bases
     for key in nonbases:
@@ -141,22 +157,19 @@ def application(environ, start_response):
     resolve = environ['query'].get('resolve', [None])[0]
 
     if resolve:
-        resolve = resolve.lower()
-
-        out = set([resolve])
-        for base, als in aliases.items():
-            if resolve == base.lower() or resolve in map(str.lower, als):
-                out = als
-                out.add(base)
-                break
-        aliases = {'aliases': out}
+        output = {
+            'query': resolve,
+            'aliases': resolve_aliases(aliases, resolve),
+        }
+    else:
+        output = aliases
 
     start_response('200 OK', [
         ('Content-Type', 'application/json'),
         ('Access-Control-Allow-Origin', '*'),
     ])
     yield json.dumps(
-        aliases,
+        output,
         default=list,
         sort_keys=True,
         check_circular=False,

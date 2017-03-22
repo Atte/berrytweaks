@@ -81,7 +81,7 @@ var self = {
 	},
 	'convertAll': function(str){
 		self.units.forEach(function(unit){
-			str = str.replace(unit.regex, function(m, m1){
+			str = str.replace(unit.regex, function(m){
 				var val = parseFloat(m.replace(self.numbersRegex, function(m){
 					if ( m == 'a' || m == 'an' )
 						return 1;
@@ -114,7 +114,7 @@ var self = {
 	}
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
+BerryTweaks.patch(window, 'addChatMsg', function(data){
 	if ( !self.enabled )
 		return;
 

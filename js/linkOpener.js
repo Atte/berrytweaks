@@ -7,8 +7,12 @@ var self = {
 		if ( !self.win || self.win.closed || msg.emote === 'request' )
 			return;
 
-		if ( BerryTweaks.getSetting('hideSpoilers', true) ){
-			if ( msg.msg.indexOf('spoiler') !== -1 || msg.emote === 'spoiler' )
+		if (
+			BerryTweaks.getSetting('hideSpoilers', true) && (
+				msg.msg.indexOf('spoiler') !== -1 ||
+				msg.emote === 'spoiler'
+			)
+		){
 				return;
 		}
 
@@ -44,7 +48,7 @@ var self = {
 	}
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
+BerryTweaks.patch(window, 'addChatMsg', function(data){
 	if ( !self.enabled )
 		return;
 

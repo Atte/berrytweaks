@@ -55,10 +55,10 @@ var self = {
 
 			var err = self.getRegexError(line);
 			if ( err )
-				errors.push('line ' + (i+1) + ': ' + e);
+				errors.push('line ' + (i+1) + ': ' + err);
 
 			if ( line.indexOf(';') != -1 )
-				errors.push(errorPrefix + 'semicolons are not allowed in squees');
+				errors.push('semicolons are not allowed in squees');
 		});
 
 		self.error.text('');

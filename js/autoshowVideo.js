@@ -13,7 +13,6 @@ var self = {
 		// if current is volatile; ensure shown, return
 		if ( video.isVolatile ){
 			if ( !isShown ){
-				console.log('Current is volatile; showing video');
 				MT.butts.video.$.click();
 			}
 			return;
@@ -30,7 +29,6 @@ var self = {
 		}
 
 		// hide video
-		console.log('Out of volatiles; hiding video');
 		MT.butts.video.$.click();
 	},
 	'enable': function(){

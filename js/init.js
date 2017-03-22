@@ -92,7 +92,7 @@ var self = {
 		});
 	},
 	'patch': function(container, name, callback, before){
-		var original = container[name] || function(){};
+		var original = container[name] || function(){/* noop */};
 
 		if ( before ){
 			container[name] = function(){

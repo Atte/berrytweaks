@@ -104,6 +104,8 @@ var self = {
 				return vid.videoid;
 			case 'soundcloud':
 				return 'https://atte.fi/soundcloud/?' + vid.videoid.substr(2);
+			default:
+				return null;
 		}
 	},
 	'onSecondPassed': function(){

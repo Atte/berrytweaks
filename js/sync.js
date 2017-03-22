@@ -23,7 +23,6 @@ var self = {
 				'squee': localStorage.getItem('highlightList'),
 				'PEP': localStorage.getItem('PEP'),
 				'squeeSound': BerryTweaks.getSetting('squeeSound')
-				//'blacklist': localStorage.getItem('cades.videoblacklist')
 			}
 		};
 
@@ -51,14 +50,10 @@ var self = {
 
 			if ( server.data.squeeSound ){
 				BerryTweaks.setSetting('squeeSound', server.data.squeeSound);
-				
+
 				if ( BerryTweaks.modules.squeeSound )
 					BerryTweaks.modules.squeeSound.applySound();
 			}
-
-			//if ( server.data.blacklist ){
-			//	localStorage.setItem('cades.videoblacklist', server.data.blacklist);
-			//}
 		});
 	},
 	'delete': function(){
@@ -80,9 +75,6 @@ var self = {
 	},
 	'enable': function(){
 		self.sync();
-	},
-	'disable': function(){
-		
 	},
 	'addSettings': function(container){
 		$('<a>', {

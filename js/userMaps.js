@@ -59,13 +59,13 @@ var self = {
 	}
 };
 
-BerryTweaks.patch(window, 'showUserActions', function(who){
+BerryTweaks.patch(window, 'showUserActions', function(){
 	if ( !self.enabled )
 		return;
 
 	setTimeout(function(){
 		self.addMap();
-	}, 200+100); // dialog fade-in
+	}, 200 + 100); // dialog fade-in
 });
 
 
