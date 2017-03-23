@@ -1,11 +1,17 @@
+CLOSURE := $(shell command -v closure-compiler 2>/dev/null)
+CLOSURE ?= $(shell command -v closure 2>/dev/null)
+
 .PHONY: all clean min/js min/css
 
 all: min/js min/css
 
 min/js: js
+ifndef CLOSURE
+	$(error "closure compiler not found")
+endif
 	mkdir -p min/js/
 	find js/ -type f -print0 | sed -z 's|^../||' | xargs -0 -n1 -P4 -i -t \
-		closure --js 'js/{}' --js_output_file 'min/js/{}' --create_source_map 'min/js/{}.map'
+		$(CLOSURE) --js 'js/{}' --js_output_file 'min/js/{}' --create_source_map 'min/js/{}.map'
 	find min/js/ -type f -name '*.js' -print0 | xargs -0 -t \
 		sed -r --in-place 's#atte.fi/berrytweaks/(css|js)/#atte.fi/berrytweaks/min/\1/#'
 
