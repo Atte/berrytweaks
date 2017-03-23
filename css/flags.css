@@ -1,19 +1,19 @@
 #chatlist > ul > li {
-	position: relative;
+    position: relative;
 }
 
 #chatlist > ul > li .berrytweaks-flag {
-	position: absolute;
-	top: 0;
-	right: 0px;
+    position: absolute;
+    top: 0;
+    right: 0px;
 
-	width: 16px;
-	height: 100%;
+    width: 16px;
+    height: 100%;
 
-	background-repeat: no-repeat;
-	background-position: 0 50%;
+    background-repeat: no-repeat;
+    background-position: 0 50%;
 }
 
 #chatlist > ul > li .berrytweaks-localtime {
-	right: 20px !important;
+    right: 20px !important;
 }

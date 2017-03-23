@@ -1,27 +1,27 @@
 .berrytweaks-module-category {
-	display: block;
-	font-weight: bold;
+    display: block;
+    font-weight: bold;
 }
 
 .berrytweaks-module-category:not(:first-of-type) {
-	margin-top: 0.5em;
+    margin-top: 0.5em;
 }
 
 .berrytweaks-module-settings {
-	margin-left: 1em;
-	font-size: 80%;
+    margin-left: 1em;
+    font-size: 80%;
 }
 
 .berrytweaks-dialog {
-	z-index: 2000;
+    z-index: 2000;
 }
 
 #chatControls > .settings[style] {
-	background-position: 0% 50% !important;
-	background-repeat: no-repeat !important;
-	background-image: url(https://dl.atte.fi/famfamfam/chart_bar.png) !important;
+    background-position: 0% 50% !important;
+    background-repeat: no-repeat !important;
+    background-image: url(https://dl.atte.fi/famfamfam/chart_bar.png) !important;
 }
 
 #chatControls > .settings[style] + .settings[style] {
-	background-image: url(https://dl.atte.fi/famfamfam/table.png) !important;
+    background-image: url(https://dl.atte.fi/famfamfam/table.png) !important;
 }

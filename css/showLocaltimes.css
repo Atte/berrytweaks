@@ -1,9 +1,9 @@
 #chatlist > ul > li {
-	position: relative;
+    position: relative;
 }
 
 #chatlist > ul > li .berrytweaks-localtime {
-	position: absolute;
-	top: 0;
-	right: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
