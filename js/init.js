@@ -58,6 +58,7 @@ var self = {
         'settingsFix': "Make settings dialog scrollable",
         'noReferrer': "Circumvent hotlink protection on links"
     },
+    'deprecatedModules': ['noReferrer'],
     'modules': {},
     'lib': {},
     'libWaiters': {},
@@ -186,7 +187,7 @@ var self = {
         });
     },
     'enableModule': function(name){
-        if ( !self.configTitles.hasOwnProperty(name) )
+        if ( !self.configTitles.hasOwnProperty(name) || self.deprecatedModules.indexOf(name) !== -1 )
             return;
 
         var mod = self.modules[name];
