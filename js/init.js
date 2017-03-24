@@ -30,7 +30,7 @@ var self = {
         }
     ],
     'configTitles': {
-        'convertUnits': "Convert measurements into metric",
+        'convertUnits': "Convert measurements",
         'smoothenWut': "Smoothen wutColors",
         'ircifyTitles': "Show video changes",
         'ircify': "Show joins/parts",
@@ -58,7 +58,7 @@ var self = {
         'settingsFix': "Make settings dialog scrollable",
         'noReferrer': "Circumvent hotlink protection on links"
     },
-    'deprecatedModules': ['noReferrer'],
+    'deprecatedModules': ['escClose', 'settingsFix', 'noReferrer', 'esc'],
     'modules': {},
     'lib': {},
     'libWaiters': {},
@@ -175,7 +175,13 @@ var self = {
             if ( first ){
                 self.libWaiters[name] = [after];
 
-                $.getScript('https://atte.fi/berrytweaks/js/lib/'+name+'.js', function(){
+                var isAbsolute = name.indexOf('://') !== -1;
+                var url = isAbsolute ? name : ('https://atte.fi/berrytweaks/js/lib/' + name + '.js');
+
+                $.getScript(url, function(){
+                    if ( isAbsolute )
+                        self.lib[name] = true;
+
                     self.libWaiters[name].forEach(function(fn){
                         fn();
                     });

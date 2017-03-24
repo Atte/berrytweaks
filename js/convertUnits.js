@@ -2,115 +2,106 @@ BerryTweaks.modules['convertUnits'] = (function(){
 "use strict";
 
 var self = {
-    'units': [
-        {
-            'names': ['F', 'fahrenheit', 'fahrenheits', 'degrees F', 'degrees fahrenheit'],
-            'label': "\u2103",
-            'fn': function(num){
-                return ((num - 32) / 1.8).toFixed(2);
-            }
-        },
-        {
-            'names': ['in', "''", 'inch', 'inches'],
-            'label': 'cm',
-            'mul': 2.54
-        },
-        {
-            'names': ['ft', 'foot', 'feet'],
-            'label': 'm',
-            'mul': 0.3048
-        },
-        {
-            'names': ['yd', 'yard', 'yards'],
-            'label': 'm',
-            'mul': 0.9144
-        },
-        {
-            'names': ['mi', 'mile', 'miles'],
-            'label': 'km',
-            'mul': 1.609
-        },
-        {
-            'names': ['acre', 'acres'],
-            'label': "m\u00B2",
-            'mul': 4047
-        },
-        {
-            'names': ['pt', 'pint', 'pints'],
-            'label': 'l',
-            'mul': 0.4732
-        },
-        {
-            'names': ['gal', 'gallon', 'gallons'],
-            'label': 'l',
-            'mul': 3.785
-        },
-        {
-            'names': ['oz', 'ounce', 'ounces'],
-            'label': 'g',
-            'fn': function(num){
-                return (num*0.2957).toFixed(2) + ' dl / ' + (num*28.35).toFixed(2);
-            }
-        },
-        {
-            'names': ['lb', 'pound', 'pounds'],
-            'label': 'kg',
-            'mul': 0.4536
-        },
-        {
-            'names': ['stone', 'stones'],
-            'label': 'kg',
-            'mul': 6.35
-        }
+    'libs': [
+        'https://dl.atte.fi/lib/quantities.min.js',
+        'https://dl.atte.fi/lib/compromise.min.js'
     ],
-    'numbers': ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'],
-    'numbersRegex': null,
-    'preprocessUnits': function(){
-        self.numbersRegex = new RegExp('\\b(?:' + self.numbers.join('|') + ')\\b', 'gi');
-
-        self.units.forEach(function(unit){
-            if ( unit.names )
-                unit.regex = new RegExp('(?:^|\\s)(-?(?:[\\d,]*\\.)?\\d+|an?|' + self.numbersRegex.source + ')\\s*(?:' + unit.names.join('|') + ')\\b', 'gi');
-
-            if ( unit.mul ){
-                unit.fn = function(num){
-                    return (parseFloat(num) * unit.mul).toFixed(2);
-                };
-            }
+    'preferred': {},
+    'rates': null,
+    'loadRates': function(){
+        $.getJSON('https://api.fixer.io/latest?base=USD', function(data){
+            self.rates = data.rates;
         });
     },
     'convertAll': function(str){
-        self.units.forEach(function(unit){
-            str = str.replace(unit.regex, function(m){
-                var val = parseFloat(m.replace(self.numbersRegex, function(m){
-                    if ( m == 'a' || m == 'an' )
-                        return 1;
+        if ( !str || str[0] === '<' )
+            return str;
 
-                    var index = self.numbers.indexOf(m);
-                    return index < 0 ? m : index;
-                }).replace(/,/g, ''));
+        let matched = false;
+        let phrase = nlp(str);
+        let terms = phrase.terms();
+        phrase.values().list.forEach(function(value){
+            let qty = Qty.parse(value.data()[0].normal);
+            let unit = null;
+            if ( !qty || !qty.units() ){
+                unit = terms.get(value.index() + 1).data()[0];
+                if ( !unit )
+                    return;
 
-                if ( !Number.isFinite(val) )
-                    return m;
-
-                try {
-                    val = unit.fn(val);
+                try{
+                    qty = new Qty(value.number(), unit.normal);
                 }
-                catch(e) {
-                    console.warn('error converting unit', m, val);
-                    return m;
+                catch(e){
+                    return;
                 }
-                if ( val == null )
-                    return m;
+            }
 
-                return m + ' (' + val + ' ' + unit.label + ')';
-            });
+            let preferred = self.preferred[qty.kind()];
+            if ( !preferred || preferred === qty.units() )
+                return;
+
+            phrase.insertAt(
+                value.index() + (unit ? 2 : 1),
+                '(' + qty.to(preferred).format() + ')'
+            );
+            matched = true;
         });
 
-        return str;
+        return matched ? phrase.out() : str;
     },
     'enable': function(){
-        self.preprocessUnits();
+        self.preferred = BerryTweaks.getSetting('preferredUnits', {});
+    },
+    'showUnitsDialog': function(){
+        let win = $('body').dialogWindow({
+            'title': 'Preferred Units',
+            'uid': 'preferredunits',
+            'center': true
+        });
+        $('<table>').append(
+            Qty.getKinds().sort().map(function(kind){
+                return $('<tr>').append(
+                    $('<td>', {
+                        'text': kind.replace('_', ' ')
+                    })
+                ).append(
+                    $('<td>').append(
+                        $('<select>', {
+                            'on': {
+                                'change': function(){
+                                    self.preferred[kind] = $(this).val();
+                                    BerryTweaks.setSetting('preferredUnits', self.preferred);
+                                }
+                            }
+                        }).append(
+                            $('<option>', {
+                                'value': '',
+                                'text': '<ignore>',
+                                'selected': !self.preferred[kind]
+                            })
+                        ).append(
+                            Qty.getUnits(kind).map(function(unit){
+                                return $('<option>', {
+                                    'value': unit,
+                                    'text': unit,
+                                    'selected': self.preferred[kind] === unit
+                                });
+                            })
+                        )
+                    )
+                )
+            }).filter(function(row){
+                return row.find('select').children('option').length > 2;
+            })
+        ).appendTo(win);
+        BerryTweaks.fixWindowHeight(win);
+    },
+    'addSettings': function(container){
+        $('<a>', {
+            'href': 'javascript:void(0)',
+            'click': self.showUnitsDialog,
+            'text': 'Set preferred units'
+        }).appendTo(container);
     }
 };
 
