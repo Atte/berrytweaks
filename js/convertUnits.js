@@ -6,11 +6,22 @@ var self = {
         'https://dl.atte.fi/lib/quantities.min.js',
         'https://dl.atte.fi/lib/compromise.min.js'
     ],
+    'symbols': {
+        '€': 'EUR',
+        '£': 'GBP',
+        '$': 'USD'
+    },
     'preferred': {},
     'rates': null,
+    'currencyRegex': null,
     'loadRates': function(){
-        $.getJSON('https://api.fixer.io/latest?base=USD', function(data){
+        self.rates = null;
+        $.getJSON('https://api.fixer.io/latest', {
+            'base': self.preferred.currency || undefined
+        }, function(data){
+            data.rates[data.base] = 1;
             self.rates = data.rates;
+            self.currencyRegex = new RegExp(Object.keys(self.rates).concat('[' + Object.keys(self.symbols).join('') + ']').join('|'), 'i');
         });
     },
     'convertAll': function(str){
@@ -19,12 +30,15 @@ var self = {
 
         let matched = false;
         let phrase = nlp(str);
-        let terms = phrase.terms();
+        let terms = phrase.terms().list;
+
+        // convert measurements
         phrase.values().list.forEach(function(value){
-            let qty = Qty.parse(value.data()[0].normal);
+            let qty = Qty.parse(terms[value.index()].data().normal);
             let unit = null;
             if ( !qty || !qty.units() ){
-                unit = terms.get(value.index() + 1).data()[0];
+                let unit = terms[value.index() + 1];
+                unit = unit && unit.data();
                 if ( !unit )
                     return;
 
@@ -36,21 +50,62 @@ var self = {
                 }
             }
 
+            unit = qty.units();
+            if ( unit === 'USD' || unit === 'cents' )
+                return;
+
             let preferred = self.preferred[qty.kind()];
-            if ( !preferred || preferred === qty.units() )
+            if ( !preferred || preferred === unit )
                 return;
 
             phrase.insertAt(
                 value.index() + (unit ? 2 : 1),
-                '(' + qty.to(preferred).format() + ')'
+                '(' + qty.format(preferred) + ')'
             );
             matched = true;
         });
+
+        // convert currencies
+        if ( self.currencyRegex ){
+            terms.forEach(function(term){
+                let text = term.data().normal;
+                let unit = self.currencyRegex.exec(text);
+                unit = unit && unit[0];
+                if ( !unit )
+                    return;
+
+                text = text.replace(unit, '');
+                unit = (self.symbols[unit] || unit).toUpperCase();
+                if ( unit === self.preferred.currency || !self.rates[unit] )
+                    return;
+
+                let trailingNumber = false;
+                let qty = Qty.parse(text);
+                if ( !qty ){
+                    let qtyTerm = terms[term.index() - 1];
+                    qty = qtyTerm && Qty.parse(qtyTerm.data().normal);
+                }
+                if ( !qty ){
+                    let qtyTerm = terms[term.index() + 1];
+                    qty = qtyTerm && Qty.parse(qtyTerm.data().normal);
+                    trailingNumber = true;
+                }
+                if ( !qty )
+                    return;
+
+                phrase.insertAt(
+                    term.index() + (trailingNumber ? 2 : 1),
+                    '(' + qty.div(self.rates[unit]).toPrec(0.01).format() + ' ' + self.preferred.currency + ')'
+                )
+                matched = true;
+            });
+        }
 
         return matched ? phrase.out() : str;
     },
     'enable': function(){
         self.preferred = BerryTweaks.getSetting('preferredUnits', {});
+        self.loadRates();
     },
     'showUnitsDialog': function(){
         let win = $('body').dialogWindow({
@@ -71,6 +126,8 @@ var self = {
                                 'change': function(){
                                     self.preferred[kind] = $(this).val();
                                     BerryTweaks.setSetting('preferredUnits', self.preferred);
+                                    if ( kind === 'currency' )
+                                        self.loadRates();
                                 }
                             }
                         }).append(
@@ -80,7 +137,11 @@ var self = {
                                 'selected': !self.preferred[kind]
                             })
                         ).append(
-                            Qty.getUnits(kind).map(function(unit){
+                            (
+                                kind === 'currency' ?
+                                Object.keys(self.rates || {}).sort() :
+                                Qty.getUnits(kind).filter(function(unit){ return !unit.startsWith('temp-'); })
+                            ).map(function(unit){
                                 return $('<option>', {
                                     'value': unit,
                                     'text': unit,
