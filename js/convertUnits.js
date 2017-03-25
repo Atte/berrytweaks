@@ -29,8 +29,8 @@ var self = {
             return str;
 
         let matched = false;
-        let phrase = nlp(str);
-        let terms = phrase.terms().list;
+        const phrase = nlp(str);
+        const terms = phrase.terms().list;
 
         // convert measurements
         phrase.values().list.forEach(function(value){
@@ -54,7 +54,7 @@ var self = {
             if ( unit === 'USD' || unit === 'cents' )
                 return;
 
-            let preferred = self.preferred[qty.kind()];
+            const preferred = self.preferred[qty.kind()];
             if ( !preferred || preferred === unit )
                 return;
 
@@ -82,11 +82,11 @@ var self = {
                 let trailingNumber = false;
                 let qty = Qty.parse(text);
                 if ( !qty ){
-                    let qtyTerm = terms[term.index() - 1];
+                    const qtyTerm = terms[term.index() - 1];
                     qty = qtyTerm && Qty.parse(qtyTerm.data().normal);
                 }
                 if ( !qty ){
-                    let qtyTerm = terms[term.index() + 1];
+                    const qtyTerm = terms[term.index() + 1];
                     qty = qtyTerm && Qty.parse(qtyTerm.data().normal);
                     trailingNumber = true;
                 }
@@ -108,7 +108,7 @@ var self = {
         self.loadRates();
     },
     'showUnitsDialog': function(){
-        let win = $('body').dialogWindow({
+        const win = $('body').dialogWindow({
             'title': 'Preferred Units',
             'uid': 'preferredunits',
             'center': true

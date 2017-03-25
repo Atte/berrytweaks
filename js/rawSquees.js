@@ -75,7 +75,7 @@ var self = {
     }
 };
 
-BerryTweaks.patch(window, 'showCustomSqueesWindow', function(data, _to){
+BerryTweaks.patch(window, 'showCustomSqueesWindow', function(){
     if ( !self.enabled )
         return;
 
