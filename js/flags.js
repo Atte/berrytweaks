@@ -13,7 +13,7 @@ const self = {
                 $('<div>', {
                     'class': 'berrytweaks-flag',
                     'css': {
-                        'background-image': `'url("${self.urlPrefix}${timedata.countryCode}.png")`
+                        'background-image': `url("${self.urlPrefix}${timedata.countryCode}.png")`
                     }
                 }).appendTo(el);
             }
