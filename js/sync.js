@@ -2,15 +2,14 @@ BerryTweaks.modules['sync'] = (function(){
 "use strict";
 
 var self = {
-    'libs': ['crypto'],
+    'libs': ['https://dl.atte.fi/lib/sha1.min.js'],
     'post': function(data, callback){
         var nick = localStorage.getItem('nick');
         var pass = localStorage.getItem('pass');
         if ( !nick || !pass )
             return;
 
-        data['id'] = BerryTweaks.lib.crypto.sha1(nick+'|'+pass);
-
+        data['id'] = sha1(nick + '|' + pass);
         $.post('https://atte.fi/berrytweaks/api/sync.php', data, callback, 'json');
     },
     'sync': function(){
