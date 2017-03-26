@@ -11,9 +11,10 @@ var self = {
         '£': 'GBP',
         '$': 'USD'
     },
-    'preferred': {},
-    'rates': null,
+    'preferred': null,
     'currencyRegex': null,
+    'prefixRegex': /^[kdcm]/,
+    'rates': null,
     'loadRates': function(){
         self.rates = null;
         $.getJSON('https://api.fixer.io/latest', {
@@ -21,7 +22,13 @@ var self = {
         }, function(data){
             data.rates[data.base] = 1;
             self.rates = data.rates;
-            self.currencyRegex = new RegExp(Object.keys(self.rates).concat('[' + Object.keys(self.symbols).join('') + ']').join('|'), 'i');
+            self.currencyRegex = new RegExp(
+                '(?:\b|\d)(?:' +
+                Object.keys(self.rates).concat(
+                    '[' + Object.keys(self.symbols).join('') + ']'
+                ).join('|') +
+                ')(?:\b|\d)'
+            , 'i');
         });
     },
     'convertAll': function(str){
@@ -35,7 +42,7 @@ var self = {
         // convert measurements
         phrase.values().list.forEach(function(value){
             let qty = Qty.parse(terms[value.index()].data().normal);
-            let unit = null;
+            let twoParter = false;
             if ( !qty || !qty.units() ){
                 let unit = terms[value.index() + 1];
                 unit = unit && unit.data();
@@ -44,23 +51,26 @@ var self = {
 
                 try{
                     qty = new Qty(value.number(), unit.normal);
+                    twoParter = true;
                 }
                 catch(e){
                     return;
                 }
             }
 
-            unit = qty.units();
+            let unit = qty.units();
             if ( unit === 'USD' || unit === 'cents' )
                 return;
+            unit = unit.replace(self.prefixRegex, '');
 
-            const preferred = self.preferred[qty.kind()];
-            if ( !preferred || preferred === unit )
+            let preferred = self.preferred[qty.kind()];
+            preferred = preferred && Qty.parse(preferred);
+            if ( !preferred || preferred.units() === unit )
                 return;
 
             phrase.insertAt(
-                value.index() + (unit ? 2 : 1),
-                '(' + qty.format(preferred) + ')'
+                value.index() + (twoParter ? 2 : 1),
+                '(' + qty.to(preferred).toPrec(0.01).format() + ')'
             );
             matched = true;
         });
@@ -140,7 +150,7 @@ var self = {
                             (
                                 kind === 'currency' ?
                                 Object.keys(self.rates || {}).sort() :
-                                Qty.getUnits(kind).filter(function(unit){ return !unit.startsWith('temp-'); })
+                                Qty.getUnits(kind).filter(unit => !unit.startsWith('temp-'))
                             ).map(function(unit){
                                 return $('<option>', {
                                     'value': unit,
@@ -151,9 +161,7 @@ var self = {
                         )
                     )
                 )
-            }).filter(function(row){
-                return row.find('select').children('option').length > 2;
-            })
+            }).filter(row => row.find('select').children('option').length > 2)
         ).appendTo(win);
         BerryTweaks.fixWindowHeight(win);
     },
@@ -167,7 +175,7 @@ var self = {
 };
 
 BerryTweaks.patch(window, 'addChatMsg', function(data){
-    if ( !self.enabled )
+    if ( !self.enabled || !self.preferred )
         return;
 
     data.msg.msg = self.convertAll(data.msg.msg);
