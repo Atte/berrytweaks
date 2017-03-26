@@ -1,13 +1,13 @@
 BerryTweaks.modules['userMaps'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'libs': ['user'],
     'addMap': function(){
         // find window
-        var dialogContent = $('#userOps').parents('.dialogContent');
-        var dialogWindow = dialogContent.parents('.dialogWindow');
-        var nick = $('h1', dialogContent).text();
+        const dialogContent = $('#userOps').parents('.dialogContent');
+        const dialogWindow = dialogContent.parents('.dialogWindow');
+        const nick = $('h1', dialogContent).text();
         if ( !dialogContent || !dialogWindow || !nick )
             return;
 
@@ -24,23 +24,23 @@ var self = {
                     'width': 256,
                     'height': 256
                 },
-                'src': 'https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q='+mapdata.lat+','+mapdata.lng
+                'src': `https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q=${mapdata.lat},${mapdata.lng}`
             }).appendTo(dialogContent);
 
             // fix dialog position if it went outside the window
-            var diaMargin = 8;
-            var offset = dialogWindow.offset();
-            var diaSize = {
+            const diaMargin = 8;
+            const offset = dialogWindow.offset();
+            const diaSize = {
                 'height': dialogWindow.height() + diaMargin,
                 'width': dialogWindow.width() + diaMargin
             };
 
-            var win = $(window);
-            var scroll = {
+            const win = $(window);
+            const scroll = {
                 'top': win.scrollTop(),
                 'left': win.scrollLeft()
             };
-            var winSize = {
+            const winSize = {
                 'height': win.height(),
                 'width': win.width()
             };

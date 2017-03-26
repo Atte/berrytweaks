@@ -1,7 +1,7 @@
 BerryTweaks.modules['ircify'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'verbs': {
         'join': 'joined',
@@ -16,7 +16,7 @@ var self = {
         addChatMsg({
             'msg': {
                 'nick': nick,
-                'msg': '<span class="berrytweaks-ircify-' + type + '">' + self.verbs[type] + '</span>',
+                'msg': `<span class="berrytweaks-ircify-${type}">${self.verbs[type]}</span>`,
                 'metadata':  {
                     'graymute': false,
                     'nameflaunt': false,
@@ -30,7 +30,7 @@ var self = {
         }, '#chatbuffer');
     },
     'addUser': function(nick){
-        if ( nick == window.NAME )
+        if ( nick === window.NAME )
             self.holdActs = false;
 
         if ( self.partTimeoutHandles[nick] ){
@@ -44,7 +44,7 @@ var self = {
         if ( self.partTimeoutHandles[nick] )
             return;
 
-        var time = BerryTweaks.getServerTime();
+        const time = BerryTweaks.getServerTime();
         self.partTimeoutHandles[nick] = setTimeout(function(){
             self.partTimeoutHandles[nick] = null;
             self.act(nick, 'part', time);

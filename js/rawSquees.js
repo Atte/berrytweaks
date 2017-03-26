@@ -1,12 +1,11 @@
 BerryTweaks.modules['rawSquees'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'window': null,
     'textarea': null,
     'button': null,
     'error': null,
-    /** @suppress {uselessCode} */
     'getRegexError': function(re){
         try{
             new RegExp(re);
@@ -14,6 +13,7 @@ var self = {
         catch(e){
             return e;
         }
+        return null;
     },
     'showWindow': function(){
         self.window = $('body').dialogWindow({
@@ -46,18 +46,18 @@ var self = {
         }).appendTo(self.window);
     },
     'onSaveClick': function(){
-        var lines = self.textarea.val().split('\n');
+        const lines = self.textarea.val().split('\n');
 
-        var errors = [];
+        const errors = [];
         lines.forEach(function(line, i){
             if ( line.length <= 0 )
                 return;
 
-            var err = self.getRegexError(line);
+            const err = self.getRegexError(line);
             if ( err )
-                errors.push('line ' + (i+1) + ': ' + err);
+                errors.push(`line ${i+1}: ${err}`);
 
-            if ( line.indexOf(';') != -1 )
+            if ( line.indexOf(';') !== -1 )
                 errors.push('semicolons are not allowed in squees');
         });
 
@@ -77,7 +77,7 @@ var self = {
 
 BerryTweaks.patch(window, 'showCustomSqueesWindow', function(){
     if ( !self.enabled )
-        return;
+        return true;
 
     self.showWindow();
     return false;

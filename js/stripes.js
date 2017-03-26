@@ -1,10 +1,10 @@
 BerryTweaks.modules['stripes'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'isEven': true,
     'handleMessage': function(_to){
-        var msg = $(_to).children().last();
+        const msg = $(_to).children().last();
         msg.addClass(self.isEven ? 'even' : 'odd');
         self.isEven = !self.isEven;
     },

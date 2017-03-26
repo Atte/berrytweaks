@@ -1,13 +1,13 @@
 BerryTweaks.modules['globalFlairs'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'ensureFlair': function(nick, flair){
         if ( !nick )
             return;
 
-        var el = $('#chatlist > ul > li.' + nick);
+        const el = $('#chatlist > ul > li.' + nick);
         if ( !el )
             return;
 

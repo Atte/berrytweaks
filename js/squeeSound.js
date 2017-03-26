@@ -1,10 +1,10 @@
 BerryTweaks.modules['squeeSound'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'original': window.NOTIFY.src,
     'applySound': function(){
-        var url = BerryTweaks.getSetting('squeeSound');
+        const url = BerryTweaks.getSetting('squeeSound');
         if ( self.enabled && url )
             window.NOTIFY.src = url;
         else

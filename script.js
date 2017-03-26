@@ -1,17 +1,17 @@
 window.$ = function(){
 "use strict";
 
-var list = document.getElementById('feature-list');
+const list = document.getElementById('feature-list');
 list.removeChild(list.firstChild);
 
 BerryTweaks.categories.forEach(function(cat){
-    var title = document.createElement('h4');
+    const title = document.createElement('h4');
     title.textContent = cat.title;
 
-    var li = document.createElement('li');
+    let li = document.createElement('li');
     list.appendChild(li);
 
-    var ul = document.createElement('ul');
+    const ul = document.createElement('ul');
     li.appendChild(title);
     li.appendChild(ul);
 

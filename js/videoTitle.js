@@ -1,7 +1,7 @@
 BerryTweaks.modules['videoTitle'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'libs': ['video'],
     'time': 0,
@@ -13,14 +13,12 @@ var self = {
         self.link.attr('href', video.timedLink);
     },
     'enable': function(){
-        $('#chatControls').append(
-            self.link = $('<a>', {
-                'id': 'berrytweaks-video_title',
-                'target': '_blank',
-                'rel': 'noopener noreferrer',
-                'text': 'Loading...'
-            })
-        );
+        self.link = $('<a>', {
+            'id': 'berrytweaks-video_title',
+            'target': '_blank',
+            'rel': 'noopener noreferrer',
+            'text': 'Loading...'
+        }).appendTo('#chatControls');
 
         BerryTweaks.lib.video.subscribe(self.onChange, self.onUpdate);
     },

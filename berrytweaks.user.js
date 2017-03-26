@@ -16,9 +16,9 @@
 // ==/UserScript==
 
 (function(){
-"use strict";
+'use strict';
 
-var script = document.createElement('script');
+const script = document.createElement('script');
 script.setAttribute('src', 'https://atte.fi/berrytweaks/min/js/init.js?_=' + (new Date()).getTime());
 document.head.appendChild(script);
 

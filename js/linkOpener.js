@@ -1,7 +1,7 @@
 BerryTweaks.modules['linkOpener'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'win': null,
     'handleMessage': function(msg){
         if ( !self.win || self.win.closed || msg.emote === 'request' )
@@ -16,7 +16,7 @@ var self = {
                 return;
         }
 
-        var m = msg.msg.match(/\bhttps?:\/\/[^\s]+/i);
+        const m = msg.msg.match(/\bhttps?:\/\/[^\s]+/i);
         if ( m )
             self.win.location.href = m[0];
     },

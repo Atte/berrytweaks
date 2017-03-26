@@ -1,7 +1,7 @@
 BerryTweaks.lib['video'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'enabled': false,
     'interval': null,
     'data': {},
@@ -16,11 +16,11 @@ var self = {
         self.updateInternalCallbacks();
     },
     'unsubscribe': function(change, update, updateInternals){
-        var changeIndex = self.callbacksChange.indexOf(change);
+        const changeIndex = self.callbacksChange.indexOf(change);
         if ( changeIndex >= 0 )
             self.callbacksChange.splice(changeIndex, 1);
 
-        var updateIndex = self.callbacksUpdate.indexOf(update);
+        const updateIndex = self.callbacksUpdate.indexOf(update);
         if ( updateIndex >= 0 )
             self.callbacksUpdate.splice(updateIndex, 1);
 
@@ -28,9 +28,9 @@ var self = {
             self.updateInternalCallbacks();
     },
     'updateInternalCallbacks': function(){
-        var lastEnabled = self.enabled;
+        const lastEnabled = self.enabled;
         self.enabled = self.callbacksChange.length > 0 || self.callbacksUpdate.length > 0;
-        if ( lastEnabled == self.enabled )
+        if ( lastEnabled === self.enabled )
             return;
 
         if ( self.enabled ){
@@ -46,7 +46,7 @@ var self = {
         }
     },
     'callCallbacks': function(){
-        if ( window.ACTIVE.videoid != self.prevID ){
+        if ( window.ACTIVE.videoid !== self.prevID ){
             self.prevID = window.ACTIVE.videoid;
             self.data = {
                 'id': window.ACTIVE.videoid,
@@ -77,21 +77,21 @@ var self = {
     },
     'timeString': function(time){
         if ( !time )
-            return;
+            return '';
 
         time = self.parseTime(time);
         if ( time.h > 0 )
             return time.h+'h' + time.m+'m' + time.s+'s';
         else if ( time.m > 0 )
             return time.m+'m' + time.s+'s';
-        else if ( time.s > 0 )
+        else
             return time.s+'s';
     },
     'videoLink': function(vid, time){
         if ( vid.meta && vid.meta.permalink )
             return vid.meta.permalink;
 
-        var timeStr = self.timeString(time);
+        const timeStr = self.timeString(time);
 
         switch ( vid.videotype ){
             case 'yt':

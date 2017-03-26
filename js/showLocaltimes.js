@@ -1,29 +1,29 @@
 BerryTweaks.modules['showLocaltimes'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'libs': ['user'],
     'clockUpdateInterval': null,
     'todo': [],
     'todoFlusher': null,
     'update': function(){
-        var now = BerryTweaks.getServerTime();
+        const now = BerryTweaks.getServerTime();
         $('#chatlist > ul > li').each(function(){
-            var el = $(this);
-            var offset = el.data('berrytweaks-localtime_offset');
+            const el = $(this);
+            const offset = el.data('berrytweaks-localtime_offset');
             if ( offset == null )
                 return;
 
-            var time = new Date(now + offset);
-            var mins = time.getUTCMinutes();
+            const time = new Date(now + offset);
+            const mins = time.getUTCMinutes();
             $('.berrytweaks-localtime', el).text(time.getUTCHours() + ':' + (mins<10 ? '0'+mins : mins));
         });
     },
     'flushTodo': function(){
         BerryTweaks.lib.user.getTimes(self.todo, function(nick, timedata){
-            var el = $('#chatlist > ul > li.' + nick);
-            var offset = timedata && timedata.gmtOffset;
+            const el = $('#chatlist > ul > li.' + nick);
+            const offset = timedata && timedata.gmtOffset;
             if ( offset == null )
                 return;
 

@@ -1,9 +1,9 @@
 BerryTweaks.modules['squeeVolume'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'applyVolume': function(){
-        var vol = self.enabled ? BerryTweaks.getSetting('squeeVolume', 1.0) : 1.0;
+        const vol = self.enabled ? BerryTweaks.getSetting('squeeVolume', 1.0) : 1.0;
 
         // [<audio>, baseVolume=1.0]
         [

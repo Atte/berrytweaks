@@ -1,11 +1,11 @@
 BerryTweaks.modules['sync'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'libs': ['https://dl.atte.fi/lib/sha1.min.js'],
     'post': function(data, callback){
-        var nick = localStorage.getItem('nick');
-        var pass = localStorage.getItem('pass');
+        const nick = localStorage.getItem('nick');
+        const pass = localStorage.getItem('pass');
         if ( !nick || !pass )
             return;
 
@@ -16,7 +16,7 @@ var self = {
         if ( !self.enabled )
             return;
 
-        var browser = {
+        const browser = {
             'version': BerryTweaks.getSetting('syncVersion', 0),
             'data': {
                 'squee': localStorage.getItem('highlightList'),
@@ -70,7 +70,7 @@ var self = {
                 BerryTweaks.dialog('Data found and deleted successfully');
             else
                 BerryTweaks.dialog('Data found, but deletion failed! Please contact Atte');
-        })
+        });
     },
     'enable': function(){
         self.sync();
@@ -96,7 +96,7 @@ BerryTweaks.patch(window, 'showCustomSqueesWindow', function(){
 whenExists('#manageAlarms', function(){
     BerryTweaks.patch(PEP, 'setStorage', function(){
         self.sync();
-    })
+    });
 });
 
 return self;

@@ -1,14 +1,14 @@
 BerryTweaks.modules['autoshowVideo'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': false,
     'libs': ['video'],
     'onChange': function(video){
         if ( !window.MT || !MT.loaded )
             return;
 
-        var isShown = MT.storage.state.video;
+        const isShown = MT.storage.state.video;
 
         // if current is volatile; ensure shown, return
         if ( video.isVolatile ){
@@ -23,7 +23,7 @@ var self = {
             return;
 
         // if volatiles on list; return
-        for ( var vid = window.ACTIVE; vid != window.PLAYLIST.first; vid = vid.next ){
+        for ( let vid = window.ACTIVE; vid !== window.PLAYLIST.first; vid = vid.next ){
             if ( vid.volat )
                 return;
         }

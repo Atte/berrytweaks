@@ -1,19 +1,19 @@
 BerryTweaks.modules['flags'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'libs': ['user'],
     'urlPrefix': 'https://dl.atte.fi/flags/',
     'todo': [],
     'flushTodo': function(){
         BerryTweaks.lib.user.getTimes(self.todo, function(nick, timedata){
-            var el = $('#chatlist > ul > li.' + nick);
+            const el = $('#chatlist > ul > li.' + nick);
             if ( timedata.countryCode && !$('.berrytweaks-flag', el).length ){
                 $('<div>', {
                     'class': 'berrytweaks-flag',
                     'css': {
-                        'background-image': 'url("' + self.urlPrefix + timedata.countryCode + '.png")'
+                        'background-image': `'url("${self.urlPrefix}${timedata.countryCode}.png")`
                     }
                 }).appendTo(el);
             }

@@ -1,7 +1,7 @@
 BerryTweaks.modules['ircifyTitles'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'libs': ['video'],
     'addZeroes': function(num){
@@ -10,7 +10,7 @@ var self = {
         return ''+num;
     },
     'onChange': function(video){
-        var length = '';
+        let length = '';
         if ( video.length ){
             length = self.addZeroes(video.length.s||0);
 
@@ -25,7 +25,7 @@ var self = {
         addChatMsg({
             'msg': {
                 'nick': 'Now Playing',
-                'msg': '<span class="berrytweaks-ircify-title"><a href="javascript:void(0)" target="_blank" rel="noopener noreferrer">' + video.title + '</a>' + length + '</span>',
+                'msg': `<span class="berrytweaks-ircify-title"><a href="javascript:void(0)" target="_blank" rel="noopener noreferrer">${video.title}</a>${length}</span>`,
                 'metadata':  {
                     'graymute': false,
                     'nameflaunt': false,

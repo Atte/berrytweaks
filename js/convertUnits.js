@@ -1,7 +1,7 @@
 BerryTweaks.modules['convertUnits'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'libs': [
         'https://dl.atte.fi/lib/quantities.min.js',
         'https://dl.atte.fi/lib/compromise.min.js'
@@ -106,7 +106,7 @@ var self = {
                 phrase.insertAt(
                     term.index() + (trailingNumber ? 2 : 1),
                     '(' + qty.div(self.rates[unit]).toPrec(0.01).format() + ' ' + self.preferred.currency + ')'
-                )
+                );
                 matched = true;
             });
         }
@@ -160,7 +160,7 @@ var self = {
                             })
                         )
                     )
-                )
+                );
             }).filter(row => row.find('select').children('option').length > 2)
         ).appendTo(win);
         BerryTweaks.fixWindowHeight(win);

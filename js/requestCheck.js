@@ -1,7 +1,7 @@
 BerryTweaks.modules['requestCheck'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'accepted': [],
     // callback({allowed:[], blocked:[]})
     'getRestrictions': function(id, callback){
@@ -10,7 +10,7 @@ var self = {
             'part': 'contentDetails',
             'id': id
         }, function(data){
-            var res = data && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.regionRestriction || {};
+            const res = data && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.regionRestriction || {};
             callback({
                 'allowed': res.allowed || null,
                 'blocked': res.blocked || []
@@ -18,22 +18,21 @@ var self = {
         });
     },
     'formatCountries': function(lst){
-        lst.sort();
-        return lst.join(', ');
+        return lst.sort().join(', ');
     },
     'handleRequest': function(msg){
-        var m = msg.match(/\bhttps?:\/\/(?:www\.)?youtube\.com\/watch.*[?&]v=([^?&\s]+)/);
+        let m = msg.match(/\bhttps?:\/\/(?:www\.)?youtube\.com\/watch.*[?&]v=([^?&\s]+)/);
         if ( !m )
             m = msg.match(/\bhttps?:\/\/youtu\.be\/([^?\s]+)/);
         if ( !m )
-            return;
+            return false;
 
-        var id = m[1];
+        const id = m[1];
         if ( self.accepted.indexOf(id) !== -1 )
-            return;
+            return false;
 
-        var tis = this;
-        var args = arguments;
+        const tis = this;
+        const args = arguments;
 
         self.getRestrictions(id, function(res){
             if ( !res.allowed && res.blocked.length === 0 ){
@@ -42,7 +41,7 @@ var self = {
                 return;
             }
 
-            var msg = 'The requested video is ';
+            let msg = 'The requested video is ';
             if ( res.allowed )
                 msg += 'only viewable in: ' + self.formatCountries(res.allowed);
             else
@@ -56,16 +55,17 @@ var self = {
                 sendChatMsg.apply(tis, args);
             });
         });
-        return false;
+        return true;
     }
 };
 
 BerryTweaks.patch(window, 'sendChatMsg', function(msg){
     if ( !self.enabled )
-        return;
+        return true;
 
     if ( /^\s*\/r/.test(msg) )
-        return self.handleRequest.apply(this, arguments);
+        return !self.handleRequest.apply(this, arguments);
+    return true;
 }, true);
 
 return self;

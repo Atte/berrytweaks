@@ -1,5 +1,3 @@
-import os
-import sys
 import json
 from datetime import datetime
 from pytz import timezone, utc, country_timezones, country_names
@@ -69,4 +67,4 @@ def application(environ, start_response):
         ('Content-Type', 'application/json'),
         ('Access-Control-Allow-Origin', '*'),
     ])
-    yield json.dumps({ 'results': out }, sort_keys=True, check_circular=False)
+    yield json.dumps({'results': out}, sort_keys=True, check_circular=False)

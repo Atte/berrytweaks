@@ -1,13 +1,13 @@
 BerryTweaks.modules[''] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'enable': function(){
-        
+
     },
     'disable': function(){
-        
+
     }
 };
 

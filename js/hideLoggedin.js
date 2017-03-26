@@ -1,12 +1,12 @@
 BerryTweaks.modules['hideLoggedin'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'removedNode': null,
     'enable': function(){
         whenExists('.loginAs', function(el){
-            var node = el.contents()[0];
-            if ( node.nodeType == Element.TEXT_NODE ){
+            const node = el.contents()[0];
+            if ( node.nodeType === Element.TEXT_NODE ){
                 self.removedNode = node;
                 node.remove();
             }

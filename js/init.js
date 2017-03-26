@@ -1,7 +1,7 @@
 window.BerryTweaks = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'categories': [
         {
             'title': 'Chat view',
@@ -93,38 +93,32 @@ var self = {
         });
     },
     'patch': function(container, name, callback, before){
-        var original = container[name] || function(){/* noop */};
+        const original = container[name] || function(){/* noop */};
 
         if ( before ){
             container[name] = function(){
                 if ( callback.apply(this, arguments) !== false )
                     return original.apply(this, arguments);
+                return undefined;
             };
         }
         else{
             container[name] = function(){
-                var retu = original.apply(this, arguments);
+                const retu = original.apply(this, arguments);
                 callback.apply(this, arguments);
                 return retu;
             };
         }
     },
     'loadCSS': function(name){
-        var url;
-        if ( /^https?:/.test(name) )
-            url = name;
-        else
-            url = 'https://atte.fi/berrytweaks/css/'+name+'.css';
-
-
         $('<link>', {
             'data-berrytweaks_module': name,
             'rel': 'stylesheet',
-            'href': url
+            'href': /^https?:/.test(name) ? name : `https://atte.fi/berrytweaks/css/${name}.css`
         }).appendTo(document.head);
     },
     'unloadCSS': function(name){
-        $('link[data-berrytweaks_module='+name+']').remove();
+        $(`link[data-berrytweaks_module=${name}]`).remove();
     },
     'loadSettings': function(){
         return $.extend(true, {
@@ -137,11 +131,11 @@ var self = {
         self.updateSettingsGUI();
     },
     'getSetting': function(key, defaultValue){
-        var val = self.loadSettings()[key];
+        const val = self.loadSettings()[key];
         return val === undefined ? defaultValue : val;
     },
     'setSetting': function(key, val){
-        var settings = self.loadSettings();
+        const settings = self.loadSettings();
         settings[key] = val;
         self.saveSettings(settings);
     },
@@ -158,27 +152,23 @@ var self = {
             return !self.lib[name];
         });
 
-        var left = names.length;
-        if ( left == 0 ){
+        let left = names.length;
+        if ( left === 0 ){
             callback();
             return;
         }
 
-        var after = function(){
+        const after = function(){
             if ( --left == 0 )
                 callback();
         };
 
         names.forEach(function(name){
-            var first = !self.libWaiters[name];
-
-            if ( first ){
+            if ( !self.libWaiters[name] ){
                 self.libWaiters[name] = [after];
 
-                var isAbsolute = name.indexOf('://') !== -1;
-                var url = isAbsolute ? name : ('https://atte.fi/berrytweaks/js/lib/' + name + '.js');
-
-                $.getScript(url, function(){
+                const isAbsolute = name.indexOf('://') !== -1;
+                $.getScript(isAbsolute ? name : `https://atte.fi/berrytweaks/js/lib/${name}.js`, function(){
                     if ( isAbsolute )
                         self.lib[name] = true;
 
@@ -196,7 +186,7 @@ var self = {
         if ( !self.configTitles.hasOwnProperty(name) || self.deprecatedModules.indexOf(name) !== -1 )
             return;
 
-        var mod = self.modules[name];
+        const mod = self.modules[name];
         if ( mod ){
             if ( mod.enabled )
                 return;
@@ -215,8 +205,8 @@ var self = {
             return;
         }
 
-        $.getScript('https://atte.fi/berrytweaks/js/'+name+'.js', function(){
-            var mod = self.modules[name];
+        $.getScript(`https://atte.fi/berrytweaks/js/${name}.js`, function(){
+            const mod = self.modules[name];
             if ( !mod )
                 return;
 
@@ -233,7 +223,7 @@ var self = {
         if ( !self.configTitles.hasOwnProperty(name) )
             return;
 
-        var mod = self.modules[name];
+        const mod = self.modules[name];
         if ( mod ){
             if ( !mod.enabled )
                 return;
@@ -251,7 +241,7 @@ var self = {
         if ( !win || win.data('berrytweaked') )
             return;
 
-        var height = Math.min(
+        const height = Math.min(
             win.height() + 20,
             $(window).height() - (win.offset().top - $(window).scrollTop()) - 20
         );
@@ -268,14 +258,14 @@ var self = {
         if ( !self.settingsContainer )
             return;
 
-        var win = self.settingsContainer.parents('.dialogContent');
+        const win = self.settingsContainer.parents('.dialogContent');
         if ( !win )
             return;
 
         self.fixWindowHeight(win);
 
-        var settings = self.loadSettings();
-        var scroll = win.scrollTop();
+        const settings = self.loadSettings();
+        const scroll = win.scrollTop();
         self.settingsContainer.empty();
 
         // title
@@ -294,9 +284,9 @@ var self = {
                     'class': 'berrytweaks-module-category',
                     'text': cat.title
                 })].concat(cat.configs.map(function(key){
-                    var label = self.configTitles[key];
+                    const label = self.configTitles[key];
                     if ( !label )
-                        return;
+                        return null;
 
                     return $('<div>', {
                         'class': 'berrytweaks-module-toggle-wrapper',
@@ -312,7 +302,7 @@ var self = {
                             'type': 'checkbox',
                             'checked': !!settings.enabled[key]
                         }).change(function(){
-                            var settings = self.loadSettings();
+                            const settings = self.loadSettings();
                             settings.enabled[key] = !!$(this).prop('checked');
                             self.saveSettings(settings);
                         })
@@ -331,7 +321,7 @@ var self = {
                     'class': 'berrytweaks-module-settings',
                     'data-key': key
                 }).insertAfter(
-                    $('.berrytweaks-module-toggle-wrapper[data-key='+key+']', self.settingsContainer)
+                    $(`.berrytweaks-module-toggle-wrapper[data-key=${key}]`, self.settingsContainer)
                 )
             );
         });
@@ -344,7 +334,7 @@ var self = {
 
         // async in case the dialog is doing stuff on keydown
         setTimeout(function(){
-            var wins = $(document.body).data('windows');
+            const wins = $(document.body).data('windows');
             if ( !wins || wins.length === 0 ){
                 // MalTweaks header/motd/footer
                 $('.floatinner:visible').last().next('.mtclose').click();
@@ -375,8 +365,7 @@ var self = {
         });
 
         self.patch(window, 'showPluginWindow', function(){
-            var win = $('.pluginNode').parents('.dialogContent');
-            self.fixWindowHeight(win);
+            self.fixWindowHeight($('.pluginNode').parents('.dialogContent'));
         });
 
         self.patch(window, 'addChatMsg', function(data, _to){

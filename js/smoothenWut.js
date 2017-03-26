@@ -1,7 +1,7 @@
 BerryTweaks.modules['smoothenWut'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'css': true,
     'patchDone': false,
     'enable': function(){
@@ -16,10 +16,10 @@ var self = {
                 if ( !self.enabled )
                     return;
 
-                var sheet = document.getElementById('wutColorStyles').sheet;
-                var color = wutGetUsercolor(nick);
+                const sheet = document.getElementById('wutColorStyles').sheet;
+                const color = wutGetUsercolor(nick);
 
-                sheet.insertRule('.msg-'+nick+' { border-image: linear-gradient(to right, '+color+', transparent) 1 100%; }', sheet.cssRules.length);
+                sheet.insertRule(`.msg-${nick} { border-image: linear-gradient(to right, ${color}, transparent) 1 100%; }`, sheet.cssRules.length);
             });
             wutReloadUserColors();
         });
@@ -28,9 +28,9 @@ var self = {
         wutReloadUserColors();
     },
     'concatContinuous': function(_to){
-        var container = $(_to).children().last();
-        var previousContainer = container.prev();
-        if ( container[0] && previousContainer[0] && container[0].className == previousContainer[0].className ){
+        const container = $(_to).children().last();
+        const previousContainer = container.prev();
+        if ( container[0] && previousContainer[0] && container[0].className === previousContainer[0].className ){
             previousContainer.append(container.children());
             container.remove();
         }

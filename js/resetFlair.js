@@ -1,7 +1,7 @@
 BerryTweaks.modules['resetFlair'] = (function(){
-"use strict";
+'use strict';
 
-var self = {
+const self = {
     'flair': 0,
     'enable': function(){
         window.MY_FLAIR_ID = self.flair;
