@@ -25,7 +25,7 @@ const self = {
         },
         {
             'title': 'Always enabled',
-            'configs': ['escClose', 'settingsFix', 'noReferrer'],
+            'configs': ['escClose', 'settingsFix', 'noReferrer', 'onEuro'],
             'hidden': true
         }
     ],
@@ -56,7 +56,8 @@ const self = {
 
         'escClose': "Close dialogs with esc",
         'settingsFix': "Make settings dialog scrollable",
-        'noReferrer': "Circumvent hotlink protection on links"
+        'noReferrer': "Circumvent hotlink protection on links",
+        'onEuro': "Fix Alt Gr when using BerryMotes"
     },
     'deprecatedModules': ['escClose', 'settingsFix', 'noReferrer', 'esc'],
     'modules': {},
@@ -344,6 +345,21 @@ const self = {
             wins[wins.length-1].close();
         }, 0);
     },
+    'onEuro': function(e){
+        if ( window.Bem && e.ctrlKey && (e.altKey || e.shiftKey) && (
+                e.keyCode === 69 ||
+                (Bem.drunkMode && (e.keyCode === 87 || e.keyCode === 82))
+            )
+        ){
+            e.stopImmediatePropagation();
+            const bemWin = $('.dialogWindow.berrymotes');
+            if ( bemWin[0] ){
+                bemWin.remove();
+                if ( Bem.lastFocus )
+                    Bem.lastFocus.focus();
+            }
+        }
+    },
     'noreferrer': function(_to){
         $('a[rel!="noopener noreferrer"]', _to).attr("rel", "noopener noreferrer");
     },
@@ -379,6 +395,7 @@ const self = {
         });
 
         $(document).on('keydown', self.onEsc);
+        $(window).on('keydown', self.onEuro);
 
         self.loadCSS('init');
         self.applySettings();
