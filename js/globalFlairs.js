@@ -2,8 +2,8 @@ BerryTweaks.modules['globalFlairs'] = (function(){
 'use strict';
 
 const self = {
-    'css': true,
-    'ensureFlair': function(nick, flair){
+    css: true,
+    ensureFlair(nick, flair) {
         if ( !nick )
             return;
 
@@ -15,16 +15,16 @@ const self = {
 
         if ( +flair ){
             $('<div>', {
-                'class': 'berrytweaks-flair flair_' + flair
+                class: 'berrytweaks-flair flair_' + flair
             }).appendTo(el);
         }
     },
-    'disable': function(){
+    disable() {
         $('#chatlist > ul > li .berrytweaks-flair').remove();
     }
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data){
+BerryTweaks.patch(window, 'addChatMsg', data => {
     if ( !self.enabled )
         return;
 

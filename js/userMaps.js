@@ -2,8 +2,8 @@ BerryTweaks.modules['userMaps'] = (function(){
 'use strict';
 
 const self = {
-    'libs': ['user'],
-    'addMap': function(){
+    libs: ['user'],
+    addMap() {
         // find window
         const dialogContent = $('#userOps').parents('.dialogContent');
         const dialogWindow = dialogContent.parents('.dialogWindow');
@@ -11,38 +11,38 @@ const self = {
         if ( !dialogContent || !dialogWindow || !nick )
             return;
 
-        BerryTweaks.lib.user.getMap(nick, function(mapdata){
+        BerryTweaks.lib.user.getMap(nick, mapdata => {
             if ( !mapdata )
                 return;
 
             // add map
             $('<iframe>', {
-                'class': 'berrytweaks-usermap',
-                'frameborder': 0,
-                'css': {
-                    'border': 'none',
-                    'width': 256,
-                    'height': 256
+                class: 'berrytweaks-usermap',
+                frameborder: 0,
+                css: {
+                    border: 'none',
+                    width: 256,
+                    height: 256
                 },
-                'src': `https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q=${mapdata.lat},${mapdata.lng}`
+                src: `https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q=${mapdata.lat},${mapdata.lng}`
             }).appendTo(dialogContent);
 
             // fix dialog position if it went outside the window
             const diaMargin = 8;
             const offset = dialogWindow.offset();
             const diaSize = {
-                'height': dialogWindow.height() + diaMargin,
-                'width': dialogWindow.width() + diaMargin
+                height: dialogWindow.height() + diaMargin,
+                width: dialogWindow.width() + diaMargin
             };
 
             const win = $(window);
             const scroll = {
-                'top': win.scrollTop(),
-                'left': win.scrollLeft()
+                top: win.scrollTop(),
+                left: win.scrollLeft()
             };
             const winSize = {
-                'height': win.height(),
-                'width': win.width()
+                height: win.height(),
+                width: win.width()
             };
 
             if ( offset.top + diaSize.height > scroll.top + winSize.height )
@@ -54,16 +54,16 @@ const self = {
             dialogWindow.offset(offset);
         });
     },
-    'disable': function(){
+    disable() {
         $('.berrytweaks-usermap').remove();
     }
 };
 
-BerryTweaks.patch(window, 'showUserActions', function(){
+BerryTweaks.patch(window, 'showUserActions', () => {
     if ( !self.enabled )
         return;
 
-    setTimeout(function(){
+    setTimeout(() => {
         self.addMap();
     }, 200 + 100); // dialog fade-in
 });

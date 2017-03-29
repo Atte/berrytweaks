@@ -2,24 +2,24 @@ BerryTweaks.modules['convertUnits'] = (function(){
 'use strict';
 
 const self = {
-    'libs': [
+    libs: [
         'https://dl.atte.fi/lib/quantities.min.js',
         'https://dl.atte.fi/lib/compromise.min.js'
     ],
-    'symbols': {
+    symbols: {
         '€': 'EUR',
         '£': 'GBP',
         '$': 'USD'
     },
-    'preferred': null,
-    'currencyRegex': null,
-    'prefixRegex': /^[kdcm]/,
-    'rates': null,
-    'loadRates': function(){
+    preferred: null,
+    currencyRegex: null,
+    prefixRegex: /^[kdcm]/,
+    rates: null,
+    loadRates() {
         self.rates = null;
         $.getJSON('https://api.fixer.io/latest', {
-            'base': self.preferred.currency || undefined
-        }, function(data){
+            base: self.preferred.currency || undefined
+        }, data => {
             data.rates[data.base] = 1;
             self.rates = data.rates;
             self.currencyRegex = new RegExp(
@@ -31,7 +31,7 @@ const self = {
             , 'i');
         });
     },
-    'convertAll': function(str){
+    convertAll(str) {
         if ( !str || str[0] === '<' )
             return str;
 
@@ -40,7 +40,7 @@ const self = {
         const terms = phrase.terms().list;
 
         // convert measurements
-        phrase.values().list.forEach(function(value){
+        phrase.values().list.forEach(value => {
             let qty = Qty.parse(terms[value.index()].data().normal);
             let twoParter = false;
             if ( !qty || !qty.units() ){
@@ -77,7 +77,7 @@ const self = {
 
         // convert currencies
         if ( self.currencyRegex ){
-            terms.forEach(function(term){
+            terms.forEach(term => {
                 let text = term.data().normal;
                 let unit = self.currencyRegex.exec(text);
                 unit = unit && unit[0];
@@ -113,27 +113,27 @@ const self = {
 
         return matched ? phrase.out() : str;
     },
-    'enable': function(){
+    enable() {
         self.preferred = BerryTweaks.getSetting('preferredUnits', {});
         self.loadRates();
     },
-    'showUnitsDialog': function(){
+    showUnitsDialog() {
         const win = $('body').dialogWindow({
-            'title': 'Preferred Units',
-            'uid': 'preferredunits',
-            'center': true
+            title: 'Preferred Units',
+            uid: 'preferredunits',
+            center: true
         });
         $('<table>').append(
             Qty.getKinds().sort().map(function(kind){
                 return $('<tr>').append(
                     $('<td>', {
-                        'text': kind.replace('_', ' ')
+                        text: kind.replace('_', ' ')
                     })
                 ).append(
                     $('<td>').append(
                         $('<select>', {
-                            'on': {
-                                'change': function(){
+                            on: {
+                                change() {
                                     self.preferred[kind] = $(this).val();
                                     BerryTweaks.setSetting('preferredUnits', self.preferred);
                                     if ( kind === 'currency' )
@@ -142,22 +142,20 @@ const self = {
                             }
                         }).append(
                             $('<option>', {
-                                'value': '',
-                                'text': '<ignore>',
-                                'selected': !self.preferred[kind]
+                                value: '',
+                                text: '<ignore>',
+                                selected: !self.preferred[kind]
                             })
                         ).append(
                             (
                                 kind === 'currency' ?
                                 Object.keys(self.rates || {}).sort() :
                                 Qty.getUnits(kind).filter(unit => !unit.startsWith('temp-'))
-                            ).map(function(unit){
-                                return $('<option>', {
-                                    'value': unit,
-                                    'text': unit,
-                                    'selected': self.preferred[kind] === unit
-                                });
-                            })
+                            ).map(unit => $('<option>', {
+                                value: unit,
+                                text: unit,
+                                selected: self.preferred[kind] === unit
+                            }))
                         )
                     )
                 );
@@ -165,16 +163,16 @@ const self = {
         ).appendTo(win);
         BerryTweaks.fixWindowHeight(win);
     },
-    'addSettings': function(container){
+    addSettings(container) {
         $('<a>', {
-            'href': 'javascript:void(0)',
-            'click': self.showUnitsDialog,
-            'text': 'Set preferred units'
+            href: 'javascript:void(0)',
+            click: self.showUnitsDialog,
+            text: 'Set preferred units'
         }).appendTo(container);
     }
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data){
+BerryTweaks.patch(window, 'addChatMsg', data => {
     if ( !self.enabled || !self.preferred )
         return;
 

@@ -2,8 +2,8 @@ BerryTweaks.modules['sync'] = (function(){
 'use strict';
 
 const self = {
-    'libs': ['https://dl.atte.fi/lib/sha1.min.js'],
-    'post': function(data, callback){
+    libs: ['https://dl.atte.fi/lib/sha1.min.js'],
+    post(data, callback) {
         const nick = localStorage.getItem('nick');
         const pass = localStorage.getItem('pass');
         if ( !nick || !pass )
@@ -12,23 +12,23 @@ const self = {
         data['id'] = sha1(nick + '|' + pass);
         $.post('https://atte.fi/berrytweaks/api/sync.php', data, callback, 'json');
     },
-    'sync': function(){
+    sync() {
         if ( !self.enabled )
             return;
 
         const browser = {
-            'version': BerryTweaks.getSetting('syncVersion', 0),
-            'data': {
-                'squee': localStorage.getItem('highlightList'),
-                'PEP': localStorage.getItem('PEP'),
-                'squeeSound': BerryTweaks.getSetting('squeeSound')
+            version: BerryTweaks.getSetting('syncVersion', 0),
+            data: {
+                squee: localStorage.getItem('highlightList'),
+                PEP: localStorage.getItem('PEP'),
+                squeeSound: BerryTweaks.getSetting('squeeSound')
             }
         };
 
         self.post({
-            'action': 'sync',
-            'payload': JSON.stringify(browser)
-        }, function(server){
+            action: 'sync',
+            payload: JSON.stringify(browser)
+        }, server => {
             BerryTweaks.setSetting('syncVersion', server.version);
 
             if ( server.data.squee ){
@@ -55,12 +55,12 @@ const self = {
             }
         });
     },
-    'delete': function(){
+    delete() {
         $('#berrytweaks-module-toggle-sync').prop('checked', false);
 
         self.post({
-            'action': 'delete'
-        }, function(data){
+            action: 'delete'
+        }, data => {
             if ( !data.found ){
                 BerryTweaks.dialog('No data found on server! Have you already deleted it?');
                 return;
@@ -72,29 +72,29 @@ const self = {
                 BerryTweaks.dialog('Data found, but deletion failed! Please contact Atte');
         });
     },
-    'enable': function(){
+    enable() {
         self.sync();
     },
-    'addSettings': function(container){
+    addSettings(container) {
         $('<a>', {
-            'href': 'javascript:void(0)',
-            'click': self['delete'],
-            'text': 'Delete synced data from server'
+            href: 'javascript:void(0)',
+            click: self['delete'],
+            text: 'Delete synced data from server'
         }).appendTo(container);
     }
 };
 
-BerryTweaks.patch(window, 'showCustomSqueesWindow', function(){
+BerryTweaks.patch(window, 'showCustomSqueesWindow', () => {
     if ( !self.enabled )
         return;
 
-    $('.controlWindow > div > .button:nth-child(2)').click(function(){
+    $('.controlWindow > div > .button:nth-child(2)').click(() => {
         self.sync();
     });
 });
 
-whenExists('#manageAlarms', function(){
-    BerryTweaks.patch(PEP, 'setStorage', function(){
+whenExists('#manageAlarms', () => {
+    BerryTweaks.patch(PEP, 'setStorage', () => {
         self.sync();
     });
 });

@@ -2,7 +2,7 @@ BerryTweaks.modules['squeeVolume'] = (function(){
 'use strict';
 
 const self = {
-    'applyVolume': function(){
+    applyVolume() {
         const vol = self.enabled ? BerryTweaks.getSetting('squeeVolume', 1.0) : 1.0;
 
         // [<audio>, baseVolume=1.0]
@@ -15,30 +15,30 @@ const self = {
             [window.SHOOBEDOO, 0.5],
             [window.DOOT],
             [window.welcomeToTheJam]
-        ].forEach(function(el){
+        ].forEach(el => {
             if ( el[0] )
                 el[0].volume = vol * (el[1] || 1.0);
         });
     },
-    'enable': function(){
+    enable() {
         self.applyVolume();
 
         // in case some other scripts haven't loaded yet
         setTimeout(self.applyVolume, 1000 * 10);
     },
-    'disable': function(){
+    disable() {
         self.applyVolume();
     },
-    'addSettings': function(container){
+    addSettings(container) {
         $('<div>', {
 
         }).slider({
-            'range': 'min',
-            'min': 0.0,
-            'max': 1.0,
-            'step': 0.01,
-            'value': BerryTweaks.getSetting('squeeVolume', 1.0),
-            'stop': function(event, ui){
+            range: 'min',
+            min: 0.0,
+            max: 1.0,
+            step: 0.01,
+            value: BerryTweaks.getSetting('squeeVolume', 1.0),
+            stop(event, ui) {
                 BerryTweaks.setSetting('squeeVolume', ui.value);
                 self.applyVolume();
                 if ( window.NOTIFY )
@@ -48,7 +48,7 @@ const self = {
     }
 };
 
-BerryTweaks.patch(window, 'initToastThemes', function(){
+BerryTweaks.patch(window, 'initToastThemes', () => {
     if ( self.enabled )
         self.applyVolume();
 });

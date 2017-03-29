@@ -2,25 +2,25 @@ BerryTweaks.modules['requestCheck'] = (function(){
 'use strict';
 
 const self = {
-    'accepted': [],
+    accepted: [],
     // callback({allowed:[], blocked:[]})
-    'getRestrictions': function(id, callback){
+    getRestrictions(id, callback) {
         $.getJSON('https://www.googleapis.com/youtube/v3/videos', {
-            'key': '***REMOVED***',
-            'part': 'contentDetails',
-            'id': id
-        }, function(data){
+            key: '***REMOVED***',
+            part: 'contentDetails',
+            id
+        }, data => {
             const res = data && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.regionRestriction || {};
             callback({
-                'allowed': res.allowed || null,
-                'blocked': res.blocked || []
+                allowed: res.allowed || null,
+                blocked: res.blocked || []
             });
         });
     },
-    'formatCountries': function(lst){
+    formatCountries(lst) {
         return lst.sort().join(', ');
     },
-    'handleRequest': function(msg){
+    handleRequest(msg) {
         let m = msg.match(/\bhttps?:\/\/(?:www\.)?youtube\.com\/watch.*[?&]v=([^?&\s]+)/);
         if ( !m )
             m = msg.match(/\bhttps?:\/\/youtu\.be\/([^?\s]+)/);
@@ -34,7 +34,7 @@ const self = {
         const tis = this;
         const args = arguments;
 
-        self.getRestrictions(id, function(res){
+        self.getRestrictions(id, res => {
             if ( !res.allowed && res.blocked.length === 0 ){
                 self.accepted.push(id);
                 sendChatMsg.apply(tis, args);
@@ -47,7 +47,7 @@ const self = {
             else
                 msg += 'not viewable in: ' + self.formatCountries(res.blocked);
 
-            BerryTweaks.confirm(msg, function(ok){
+            BerryTweaks.confirm(msg, ok => {
                 if ( !ok )
                     return;
 

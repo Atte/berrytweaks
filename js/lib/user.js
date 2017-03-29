@@ -2,9 +2,9 @@ BerryTweaks.lib['user'] = (function(){
 'use strict';
 
 const self = {
-    'callbacks': {},
-    'cache': {},
-    'cacheData': function(type, callback){
+    callbacks: {},
+    cache: {},
+    cacheData(type, callback) {
         if ( self.cache[type] ){
             callback(self.cache[type]);
             return;
@@ -32,10 +32,10 @@ const self = {
                 contentType: data ? 'text/plain' : undefined,
                 dataType: 'json',
                 url: 'https://atte.fi/berrytweaks/api/' + fname,
-                data: data,
-                success: function(data){
+                data,
+                success(data) {
                     self.cache[type] = data;
-                    self.callbacks[type].forEach(function(waiter){
+                    self.callbacks[type].forEach(waiter => {
                         waiter(self.cache[type]);
                     });
                     delete self.callbacks[type];
@@ -45,8 +45,8 @@ const self = {
             });
         }
     },
-    'getAliases': function(nick, callback){
-        self.cacheData('nicks', function(data){
+    getAliases(nick, callback) {
+        self.cacheData('nicks', data => {
             if ( data.hasOwnProperty(nick) ){
                 callback([nick].concat(data[nick]));
                 return;
@@ -65,9 +65,9 @@ const self = {
             callback([nick]);
         });
     },
-    'getMap': function(nick, callback){
-        self.cacheData('map', function(data){
-            self.getAliases(nick, function(keys){
+    getMap(nick, callback) {
+        self.cacheData('map', data => {
+            self.getAliases(nick, keys => {
                 for ( let i=0; i<keys.length; ++i ){
                     const mapdata = data[keys[i].toLowerCase()];
                     if ( mapdata ){
@@ -79,22 +79,22 @@ const self = {
             });
         });
     },
-    'getTimes': function(nicks, callback, finalCallback){
+    getTimes(nicks, callback, finalCallback) {
         const datas = {};
         let left = nicks.length;
-        nicks.forEach(function(nick){
-            self.getMap(nick, function(mapdata){
+        nicks.forEach(nick => {
+            self.getMap(nick, mapdata => {
                 if ( mapdata )
                     datas[nick] = mapdata;
                 if ( --left === 0 ){
                     nicks = Object.keys(datas);
                     const coords = [];
-                    nicks.forEach(function(key){
+                    nicks.forEach(key => {
                         if ( datas[key] )
                             coords.push(datas[key].lat + ' ' + datas[key].lng);
                     });
-                    self.cacheData(coords.join('\n'), function(timedata){
-                        nicks.forEach(function(key, i){
+                    self.cacheData(coords.join('\n'), timedata => {
+                        nicks.forEach((key, i) => {
                             if ( datas[key] )
                                 callback(key, timedata.results[i]);
                         });

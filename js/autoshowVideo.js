@@ -2,9 +2,9 @@ BerryTweaks.modules['autoshowVideo'] = (function(){
 'use strict';
 
 const self = {
-    'css': false,
-    'libs': ['video'],
-    'onChange': function(video){
+    css: false,
+    libs: ['video'],
+    onChange(video) {
         if ( !window.MT || !MT.loaded )
             return;
 
@@ -31,10 +31,10 @@ const self = {
         // hide video
         MT.butts.video.$.click();
     },
-    'enable': function(){
+    enable() {
         BerryTweaks.lib.video.subscribe(self.onChange);
     },
-    'disable': function(){
+    disable() {
         BerryTweaks.lib.video.unsubscribe(self.onChange);
     }
 };

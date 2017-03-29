@@ -2,98 +2,98 @@ window.BerryTweaks = (function(){
 'use strict';
 
 const self = {
-    'categories': [
+    categories: [
         {
-            'title': 'Chat view',
-            'configs': ['convertUnits', 'smoothenWut', 'ircifyTitles', 'ircify']
+            title: 'Chat view',
+            configs: ['convertUnits', 'smoothenWut', 'ircifyTitles', 'ircify']
         },
         {
-            'title': 'User list',
-            'configs': ['userMaps', 'showLocaltimes', 'globalFlairs', 'flags']
+            title: 'User list',
+            configs: ['userMaps', 'showLocaltimes', 'globalFlairs', 'flags']
         },
         {
-            'title': 'Video',
-            'configs': ['autoshowVideo', 'videoTitle']
+            title: 'Video',
+            configs: ['autoshowVideo', 'videoTitle']
         },
         {
-            'title': 'Other',
-            'configs': ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
+            title: 'Other',
+            configs: ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
         },
         {
-            'title': 'Nitpicking',
-            'configs': ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
+            title: 'Nitpicking',
+            configs: ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
         },
         {
-            'title': 'Always enabled',
-            'configs': ['escClose', 'settingsFix', 'noReferrer', 'onEuro'],
-            'hidden': true
+            title: 'Always enabled',
+            configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro'],
+            hidden: true
         }
     ],
-    'configTitles': {
-        'convertUnits': "Convert measurements",
-        'smoothenWut': "Smoothen wutColors",
-        'ircifyTitles': "Show video changes",
-        'ircify': "Show joins/parts",
+    configTitles: {
+        convertUnits: "Convert measurements",
+        smoothenWut: "Smoothen wutColors",
+        ircifyTitles: "Show video changes",
+        ircify: "Show joins/parts",
 
-        'userMaps': "Show map in user dialog",
-        'showLocaltimes': "Show users' local times",
-        'globalFlairs': "Show flairs",
-        'flags': "Show flags",
+        userMaps: "Show map in user dialog",
+        showLocaltimes: "Show users' local times",
+        globalFlairs: "Show flairs",
+        flags: "Show flags",
 
-        'autoshowVideo': "Expand MalTweaks video during volatiles",
-        'videoTitle': "Show video title in chat toolbar",
+        autoshowVideo: "Expand MalTweaks video during volatiles",
+        videoTitle: "Show video title in chat toolbar",
 
-        'requestCheck': "Check requests for country restrictions",
-        'sync': "Sync squees and PEP stars",
-        'linkOpener': "Open links automatically",
-        'rawSquees': "Unlimited squee editor",
-        'squeeSound': "Custom squee sound",
+        requestCheck: "Check requests for country restrictions",
+        sync: "Sync squees and PEP stars",
+        linkOpener: "Open links automatically",
+        rawSquees: "Unlimited squee editor",
+        squeeSound: "Custom squee sound",
 
-        'stripes': "Stripe messages (requires theme support)",
-        'hideLoggedin': 'Hide extra "Logged in as" label',
-        'squeeVolume': "Customize notification volumes",
-        'resetFlair': "Reset flair on page load",
+        stripes: "Stripe messages (requires theme support)",
+        hideLoggedin: 'Hide extra "Logged in as" label',
+        squeeVolume: "Customize notification volumes",
+        resetFlair: "Reset flair on page load",
 
-        'escClose': "Close dialogs with esc",
-        'settingsFix': "Make settings dialog scrollable",
-        'noReferrer': "Circumvent hotlink protection on links",
-        'onEuro': "Fix Alt Gr when using BerryMotes"
+        escClose: "Close dialogs with esc",
+        settingsFix: "Make settings dialog scrollable",
+        noReferrer: "Circumvent hotlink protection on links",
+        onEuro: "Fix Alt Gr when using BerryMotes"
     },
-    'deprecatedModules': ['escClose', 'settingsFix', 'noReferrer', 'esc'],
-    'modules': {},
-    'lib': {},
-    'libWaiters': {},
-    'timeDiff': 0,
-    'getServerTime': function(){
+    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc'],
+    modules: {},
+    lib: {},
+    libWaiters: {},
+    timeDiff: 0,
+    getServerTime() {
         return Date.now() + self.timeDiff;
     },
-    'dialogDOM': null,
-    'dialog': function(text){
+    dialogDOM: null,
+    dialog(text) {
         self.dialogDOM.text(text).dialog({
-            'modal': true,
-            'buttons': {
-                'Ok': function(){
+            modal: true,
+            buttons: {
+                Ok() {
                     $(this).dialog('close');
                 }
             }
         });
     },
-    'confirm': function(text, callback){
+    confirm(text, callback) {
         self.dialogDOM.text(text).dialog({
-            'modal': true,
-            'buttons': {
-                'Ok': function(){
+            modal: true,
+            buttons: {
+                Ok() {
                     $(this).dialog('close');
                     callback(true);
                 },
-                'Cancel': function(){
+                Cancel() {
                     $(this).dialog('close');
                     callback(false);
                 }
             }
         });
     },
-    'patch': function(container, name, callback, before){
+    patch(container, name, callback, before) {
         const original = container[name] || function(){/* noop */};
 
         if ( before ){
@@ -111,47 +111,45 @@ const self = {
             };
         }
     },
-    'loadCSS': function(name){
+    loadCSS(name) {
         $('<link>', {
             'data-berrytweaks_module': name,
-            'rel': 'stylesheet',
-            'href': /^https?:/.test(name) ? name : `https://atte.fi/berrytweaks/css/${name}.css`
+            rel: 'stylesheet',
+            href: /^https?:/.test(name) ? name : `https://atte.fi/berrytweaks/css/${name}.css`
         }).appendTo(document.head);
     },
-    'unloadCSS': function(name){
+    unloadCSS(name) {
         $(`link[data-berrytweaks_module=${name}]`).remove();
     },
-    'loadSettings': function(){
+    loadSettings() {
         return $.extend(true, {
-            'enabled': {}
+            enabled: {}
         }, JSON.parse(localStorage['BerryTweaks'] || '{}'));
     },
-    'saveSettings': function(settings){
+    saveSettings(settings) {
         localStorage['BerryTweaks'] = JSON.stringify(settings);
         self.applySettings();
         self.updateSettingsGUI();
     },
-    'getSetting': function(key, defaultValue){
+    getSetting(key, defaultValue) {
         const val = self.loadSettings()[key];
         return val === undefined ? defaultValue : val;
     },
-    'setSetting': function(key, val){
+    setSetting(key, val) {
         const settings = self.loadSettings();
         settings[key] = val;
         self.saveSettings(settings);
     },
-    'applySettings': function(){
-        $.each(self.loadSettings().enabled, function(key, val){
+    applySettings() {
+        $.each(self.loadSettings().enabled, (key, val) => {
             if ( val )
                 self.enableModule(key);
             else
                 self.disableModule(key);
         });
     },
-    'loadLibs': function(names, callback){
-        names = names.filter(function(name){
-            return !self.lib[name];
-        });
+    loadLibs(names, callback) {
+        names = names.filter(name => !self.lib[name]);
 
         let left = names.length;
         if ( left === 0 ){
@@ -164,16 +162,16 @@ const self = {
                 callback();
         };
 
-        names.forEach(function(name){
+        names.forEach(name => {
             if ( !self.libWaiters[name] ){
                 self.libWaiters[name] = [after];
 
                 const isAbsolute = name.indexOf('://') !== -1;
-                $.getScript(isAbsolute ? name : `https://atte.fi/berrytweaks/js/lib/${name}.js`, function(){
+                $.getScript(isAbsolute ? name : `https://atte.fi/berrytweaks/js/lib/${name}.js`, () => {
                     if ( isAbsolute )
                         self.lib[name] = true;
 
-                    self.libWaiters[name].forEach(function(fn){
+                    self.libWaiters[name].forEach(fn => {
                         fn();
                     });
                     delete self.libWaiters[name];
@@ -183,7 +181,7 @@ const self = {
                 self.libWaiters[name].push(after);
         });
     },
-    'enableModule': function(name){
+    enableModule(name) {
         if ( !self.configTitles.hasOwnProperty(name) || self.deprecatedModules.indexOf(name) !== -1 )
             return;
 
@@ -206,13 +204,13 @@ const self = {
             return;
         }
 
-        $.getScript(`https://atte.fi/berrytweaks/js/${name}.js`, function(){
+        $.getScript(`https://atte.fi/berrytweaks/js/${name}.js`, () => {
             const mod = self.modules[name];
             if ( !mod )
                 return;
 
             if ( mod.libs ){
-                self.loadLibs(mod.libs, function(){
+                self.loadLibs(mod.libs, () => {
                     self.enableModule(name);
                 });
             }
@@ -220,7 +218,7 @@ const self = {
                 self.enableModule(name);
         });
     },
-    'disableModule': function(name){
+    disableModule(name) {
         if ( !self.configTitles.hasOwnProperty(name) )
             return;
 
@@ -238,7 +236,7 @@ const self = {
                 self.unloadCSS(name);
         }
     },
-    'fixWindowHeight': function(win){
+    fixWindowHeight(win) {
         if ( !win || win.data('berrytweaked') )
             return;
 
@@ -254,8 +252,8 @@ const self = {
 
         win.data('berrytweaked', true);
     },
-    'settingsContainer': null,
-    'updateSettingsGUI': function(){
+    settingsContainer: null,
+    updateSettingsGUI() {
         if ( !self.settingsContainer )
             return;
 
@@ -272,36 +270,36 @@ const self = {
         // title
         self.settingsContainer.append(
             $('<legend>', {
-                'text': 'BerryTweaks'
+                text: 'BerryTweaks'
             })
         );
 
         // basic toggles
         self.settingsContainer.append.apply(self.settingsContainer,
-            self.categories.map(function(cat){
+            self.categories.map(cat => {
                 if ( cat.hidden )
                     return null;
                 return [$('<label>', {
-                    'class': 'berrytweaks-module-category',
-                    'text': cat.title
+                    class: 'berrytweaks-module-category',
+                    text: cat.title
                 })].concat(cat.configs.map(function(key){
                     const label = self.configTitles[key];
                     if ( !label )
                         return null;
 
                     return $('<div>', {
-                        'class': 'berrytweaks-module-toggle-wrapper',
+                        class: 'berrytweaks-module-toggle-wrapper',
                         'data-key': key
                     }).append(
                         $('<label>', {
-                            'for': 'berrytweaks-module-toggle-' + key,
-                            'text': label + ': '
+                            for: 'berrytweaks-module-toggle-' + key,
+                            text: label + ': '
                         })
                     ).append(
                         $('<input>', {
-                            'id': 'berrytweaks-module-toggle-' + key,
-                            'type': 'checkbox',
-                            'checked': !!settings.enabled[key]
+                            id: 'berrytweaks-module-toggle-' + key,
+                            type: 'checkbox',
+                            checked: !!settings.enabled[key]
                         }).change(function(){
                             const settings = self.loadSettings();
                             settings.enabled[key] = !!$(this).prop('checked');
@@ -313,13 +311,13 @@ const self = {
         );
 
         // mod specific
-        $.each(self.modules, function(key, mod){
+        $.each(self.modules, (key, mod) => {
             if ( !mod.addSettings )
                 return;
 
             mod.addSettings(
                 $('<div>', {
-                    'class': 'berrytweaks-module-settings',
+                    class: 'berrytweaks-module-settings',
                     'data-key': key
                 }).insertAfter(
                     $(`.berrytweaks-module-toggle-wrapper[data-key=${key}]`, self.settingsContainer)
@@ -329,12 +327,12 @@ const self = {
 
         win.scrollTop(scroll);
     },
-    'onEsc': function(e){
+    onEsc(e) {
         if ( e.which !== 27 )
             return;
 
         // async in case the dialog is doing stuff on keydown
-        setTimeout(function(){
+        setTimeout(() => {
             const wins = $(document.body).data('windows');
             if ( !wins || wins.length === 0 ){
                 // MalTweaks header/motd/footer
@@ -345,7 +343,7 @@ const self = {
             wins[wins.length-1].close();
         }, 0);
     },
-    'onEuro': function(e){
+    onEuro(e) {
         if ( window.Bem && e.ctrlKey && (e.altKey || e.shiftKey) && (
                 e.keyCode === 69 ||
                 (Bem.drunkMode && (e.keyCode === 87 || e.keyCode === 82))
@@ -360,16 +358,16 @@ const self = {
             }
         }
     },
-    'noreferrer': function(_to){
+    noreferrer(_to) {
         $('a[rel!="noopener noreferrer"]', _to).attr("rel", "noopener noreferrer");
     },
-    'init': function(){
+    init() {
         self.dialogDOM = $('<div>', {
-            'title': 'BerryTweaks',
-            'class': 'berrytweaks-dialog'
+            title: 'BerryTweaks',
+            class: 'berrytweaks-dialog'
         }).hide().appendTo(document.body);
 
-        self.patch(window, 'showConfigMenu', function(){
+        self.patch(window, 'showConfigMenu', () => {
             self.settingsContainer = $('<fieldset>');
             $('#settingsGui > ul').append(
                 $('<li>').append(
@@ -380,17 +378,17 @@ const self = {
             self.updateSettingsGUI();
         });
 
-        self.patch(window, 'showPluginWindow', function(){
+        self.patch(window, 'showPluginWindow', () => {
             self.fixWindowHeight($('.pluginNode').parents('.dialogContent'));
         });
 
-        self.patch(window, 'addChatMsg', function(data, _to){
+        self.patch(window, 'addChatMsg', (data, _to) => {
             if ( data && data.msg && data.msg.timestamp )
                 self.timeDiff = new Date(data.msg.timestamp) - new Date();
             self.noreferrer(_to);
         });
 
-        whenExists('#chatbuffer', function(el){
+        whenExists('#chatbuffer', el => {
             self.noreferrer(el);
         });
 

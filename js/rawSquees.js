@@ -2,11 +2,11 @@ BerryTweaks.modules['rawSquees'] = (function(){
 'use strict';
 
 const self = {
-    'window': null,
-    'textarea': null,
-    'button': null,
-    'error': null,
-    'getRegexError': function(re){
+    window: null,
+    textarea: null,
+    button: null,
+    error: null,
+    getRegexError(re) {
         try{
             new RegExp(re);
         }
@@ -15,41 +15,41 @@ const self = {
         }
         return null;
     },
-    'showWindow': function(){
+    showWindow() {
         self.window = $('body').dialogWindow({
-            'title': 'Raw Squee Management',
-            'uid': 'rawsqueemanagement',
-            'center': true
+            title: 'Raw Squee Management',
+            uid: 'rawsqueemanagement',
+            center: true
         }).append(
             $('<span>', {
-                'text': 'Enter regular expressions to squee on. One per line.'
+                text: 'Enter regular expressions to squee on. One per line.'
             })
         );
 
         self.textarea = $('<textarea>', {
-            'value': HIGHLIGHT_LIST.join('\n'),
-            'class': 'berrytweaks-rawsquees-textarea',
-            'rows': 10,
-            'css': {
-                'width': '97%'
+            value: HIGHLIGHT_LIST.join('\n'),
+            class: 'berrytweaks-rawsquees-textarea',
+            rows: 10,
+            css: {
+                width: '97%'
             }
         }).appendTo(self.window);
 
         self.button = $('<div>', {
-            'class': 'button',
-            'text': 'Save',
-            'click': self.onSaveClick
+            class: 'button',
+            text: 'Save',
+            click: self.onSaveClick
         }).appendTo(self.window);
 
         self.error = $('<pre>', {
 
         }).appendTo(self.window);
     },
-    'onSaveClick': function(){
+    onSaveClick() {
         const lines = self.textarea.val().split('\n');
 
         const errors = [];
-        lines.forEach(function(line, i){
+        lines.forEach((line, i) => {
             if ( line.length <= 0 )
                 return;
 
@@ -75,7 +75,7 @@ const self = {
     }
 };
 
-BerryTweaks.patch(window, 'showCustomSqueesWindow', function(){
+BerryTweaks.patch(window, 'showCustomSqueesWindow', () => {
     if ( !self.enabled )
         return true;
 

@@ -2,12 +2,12 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 'use strict';
 
 const self = {
-    'css': true,
-    'libs': ['user'],
-    'clockUpdateInterval': null,
-    'todo': [],
-    'todoFlusher': null,
-    'update': function(){
+    css: true,
+    libs: ['user'],
+    clockUpdateInterval: null,
+    todo: [],
+    todoFlusher: null,
+    update() {
         const now = BerryTweaks.getServerTime();
         $('#chatlist > ul > li').each(function(){
             const el = $(this);
@@ -20,8 +20,8 @@ const self = {
             $('.berrytweaks-localtime', el).text(time.getUTCHours() + ':' + (mins<10 ? '0'+mins : mins));
         });
     },
-    'flushTodo': function(){
-        BerryTweaks.lib.user.getTimes(self.todo, function(nick, timedata){
+    flushTodo() {
+        BerryTweaks.lib.user.getTimes(self.todo, (nick, timedata) => {
             const el = $('#chatlist > ul > li.' + nick);
             const offset = timedata && timedata.gmtOffset;
             if ( offset == null )
@@ -29,34 +29,34 @@ const self = {
 
             if ( !$('.berrytweaks-localtime', el).length ){
                 $('<div>', {
-                    'class': 'berrytweaks-localtime'
+                    class: 'berrytweaks-localtime'
                 }).appendTo(el);
             }
 
             el.data('berrytweaks-localtime_offset', (+offset)*1000);
-        }, function(){
+        }, () => {
             self.update();
         });
         self.todoFlusher = null;
     },
-    'handleUser': function(nick){
+    handleUser(nick) {
         if ( !nick )
             return;
 
         self.todo.push(nick);
         if ( !self.todoFlusher ){
-            self.todoFlusher = setTimeout(function(){
+            self.todoFlusher = setTimeout(() => {
                 self.flushTodo();
             }, 1000);
         }
     },
-    'enable': function(){
+    enable() {
         $('#chatlist > ul > li').each(function(){
             self.handleUser($(this).data('nick'));
         });
         self.clockUpdateInterval = setInterval(self.update, 1000*60);
     },
-    'disable': function(){
+    disable() {
         if ( self.clockUpdateInterval ){
             clearInterval(self.clockUpdateInterval);
             self.clockUpdateInterval = null;
@@ -66,7 +66,7 @@ const self = {
     }
 };
 
-BerryTweaks.patch(window, 'addUser', function(data){
+BerryTweaks.patch(window, 'addUser', data => {
     if ( !self.enabled )
         return;
 

@@ -2,8 +2,8 @@ BerryTweaks.modules['linkOpener'] = (function(){
 'use strict';
 
 const self = {
-    'win': null,
-    'handleMessage': function(msg){
+    win: null,
+    handleMessage(msg) {
         if ( !self.win || self.win.closed || msg.emote === 'request' )
             return;
 
@@ -20,35 +20,35 @@ const self = {
         if ( m )
             self.win.location.href = m[0];
     },
-    'addSettings': function(container){
+    addSettings(container) {
         $('<div>', {
 
         }).append(
             $('<label>', {
-                'for': 'berrytweaks-linkOpener-hideSpoilers',
-                'text': "Don't open spoiler links"
+                for: 'berrytweaks-linkOpener-hideSpoilers',
+                text: "Don't open spoiler links"
             })
         ).append(
             $('<input>', {
-                'id': 'berrytweaks-linkOpener-hideSpoilers',
-                'type': 'checkbox',
-                'checked': BerryTweaks.getSetting('hideSpoilers', true)
+                id: 'berrytweaks-linkOpener-hideSpoilers',
+                type: 'checkbox',
+                checked: BerryTweaks.getSetting('hideSpoilers', true)
             }).change(function(){
                 BerryTweaks.setSetting('hideSpoilers', !!$(this).prop('checked'));
             })
         ).appendTo(container);
 
         $('<a>', {
-            'href': 'javascript:void(0)',
-            'click': function(){
+            href: 'javascript:void(0)',
+            click() {
                 self.win = window.open('about:blank', 'linkOpener', 'menubar=no,toolbar=no,personalbar=no,location=yes');
             },
-            'text': 'Open link opener window'
+            text: 'Open link opener window'
         }).appendTo(container);
     }
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data){
+BerryTweaks.patch(window, 'addChatMsg', data => {
     if ( !self.enabled )
         return;
 

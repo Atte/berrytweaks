@@ -2,24 +2,24 @@ BerryTweaks.modules['stripes'] = (function(){
 'use strict';
 
 const self = {
-    'isEven': true,
-    'handleMessage': function(_to){
+    isEven: true,
+    handleMessage(_to) {
         const msg = $(_to).children().last();
         msg.addClass(self.isEven ? 'even' : 'odd');
         self.isEven = !self.isEven;
     },
-    'enable': function(){
+    enable() {
         self.isEven = true;
-        $('#chatbuffer > div').each(function(_to){
+        $('#chatbuffer > div').each(_to => {
             self.handleMessage(_to);
         });
     },
-    'disable': function(){
+    disable() {
         $('#chatbuffer > div').removeClass('even odd');
     }
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
+BerryTweaks.patch(window, 'addChatMsg', (data, _to) => {
     if ( !self.enabled )
         return;
 

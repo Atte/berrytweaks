@@ -2,17 +2,17 @@ BerryTweaks.modules['smoothenWut'] = (function(){
 'use strict';
 
 const self = {
-    'css': true,
-    'patchDone': false,
-    'enable': function(){
+    css: true,
+    patchDone: false,
+    enable() {
         if ( self.patchDone ){
             wutReloadUserColors();
             return;
         }
 
         self.patchDone = true;
-        whenExists('#wutColorStyles', function(){
-            BerryTweaks.patch(window, 'wutProcessUsername', function(nick){
+        whenExists('#wutColorStyles', () => {
+            BerryTweaks.patch(window, 'wutProcessUsername', nick => {
                 if ( !self.enabled )
                     return;
 
@@ -24,10 +24,10 @@ const self = {
             wutReloadUserColors();
         });
     },
-    'disable': function(){
+    disable() {
         wutReloadUserColors();
     },
-    'concatContinuous': function(_to){
+    concatContinuous(_to) {
         const container = $(_to).children().last();
         const previousContainer = container.prev();
         if ( container[0] && previousContainer[0] && container[0].className === previousContainer[0].className ){
@@ -37,7 +37,7 @@ const self = {
     }
 };
 
-BerryTweaks.patch(window, 'addChatMsg', function(data, _to){
+BerryTweaks.patch(window, 'addChatMsg', (data, _to) => {
     if ( !self.enabled )
         return;
 

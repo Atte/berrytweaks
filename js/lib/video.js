@@ -2,12 +2,12 @@ BerryTweaks.lib['video'] = (function(){
 'use strict';
 
 const self = {
-    'enabled': false,
-    'interval': null,
-    'data': {},
-    'callbacksChange': [],
-    'callbacksUpdate': [],
-    'subscribe': function(change, update){
+    enabled: false,
+    interval: null,
+    data: {},
+    callbacksChange: [],
+    callbacksUpdate: [],
+    subscribe(change, update) {
         self.unsubscribe(change, update, false);
         if ( change )
             self.callbacksChange.push(change);
@@ -15,7 +15,7 @@ const self = {
             self.callbacksUpdate.push(update);
         self.updateInternalCallbacks();
     },
-    'unsubscribe': function(change, update, updateInternals){
+    unsubscribe(change, update, updateInternals) {
         const changeIndex = self.callbacksChange.indexOf(change);
         if ( changeIndex >= 0 )
             self.callbacksChange.splice(changeIndex, 1);
@@ -27,7 +27,7 @@ const self = {
         if ( updateInternals !== false )
             self.updateInternalCallbacks();
     },
-    'updateInternalCallbacks': function(){
+    updateInternalCallbacks() {
         const lastEnabled = self.enabled;
         self.enabled = self.callbacksChange.length > 0 || self.callbacksUpdate.length > 0;
         if ( lastEnabled === self.enabled )
@@ -45,37 +45,37 @@ const self = {
             self.prevID = null;
         }
     },
-    'callCallbacks': function(){
+    callCallbacks() {
         if ( window.ACTIVE.videoid !== self.prevID ){
             self.prevID = window.ACTIVE.videoid;
             self.data = {
-                'id': window.ACTIVE.videoid,
-                'length': window.ACTIVE.videolength ? self.parseTime(window.ACTIVE.videolength) : null,
-                'title': decodeURIComponent(window.ACTIVE.videotitle),
-                'link': self.videoLink(window.ACTIVE),
-                'timedLink': self.videoLink(window.ACTIVE, Math.max(self.time-1, 0)),
-                'isVolatile': !!window.ACTIVE.volat
+                id: window.ACTIVE.videoid,
+                length: window.ACTIVE.videolength ? self.parseTime(window.ACTIVE.videolength) : null,
+                title: decodeURIComponent(window.ACTIVE.videotitle),
+                link: self.videoLink(window.ACTIVE),
+                timedLink: self.videoLink(window.ACTIVE, Math.max(self.time-1, 0)),
+                isVolatile: !!window.ACTIVE.volat
             };
 
-            self.callbacksChange.forEach(function(cback){
+            self.callbacksChange.forEach(cback => {
                 cback(self.data);
             });
         }
         else
             self.data.timedLink = self.videoLink(window.ACTIVE, Math.max(self.time-1, 0));
 
-        self.callbacksUpdate.forEach(function(cback){
+        self.callbacksUpdate.forEach(cback => {
             cback(self.data);
         });
     },
-    'parseTime': function(time){
+    parseTime(time) {
         return {
-            'h': Math.floor(time / 60 / 60),
-            'm': Math.floor((time / 60) % 60),
-            's': Math.floor(time % 60)
+            h: Math.floor(time / 60 / 60),
+            m: Math.floor((time / 60) % 60),
+            s: Math.floor(time % 60)
         };
     },
-    'timeString': function(time){
+    timeString(time) {
         if ( !time )
             return '';
 
@@ -87,7 +87,7 @@ const self = {
         else
             return time.s+'s';
     },
-    'videoLink': function(vid, time){
+    videoLink(vid, time) {
         if ( vid.meta && vid.meta.permalink )
             return vid.meta.permalink;
 
@@ -108,22 +108,22 @@ const self = {
                 return null;
         }
     },
-    'onSecondPassed': function(){
+    onSecondPassed() {
         self.time += 1;
         self.callCallbacks();
     },
-    'handleVideoDetails': function(data){
+    handleVideoDetails(data) {
         self.time = data.time;
         self.callCallbacks();
     }
 };
 
-socket.on('hbVideoDetail', function(data){
+socket.on('hbVideoDetail', data => {
     if ( self.enabled )
         self.handleVideoDetails(data);
 });
 
-socket.on('forceVideoChange', function(data){
+socket.on('forceVideoChange', data => {
     if ( self.enabled )
         self.handleVideoDetails(data);
 });
