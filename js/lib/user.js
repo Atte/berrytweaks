@@ -25,6 +25,11 @@ const self = {
             else {
                 fname = 'time.py';
                 data = type;
+                if ( !data ){
+                    self.callbacks[type][0]();
+                    delete self.callbacks[type];
+                    return;
+                }
             }
 
             $.ajax({
