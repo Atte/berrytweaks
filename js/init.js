@@ -71,26 +71,35 @@ const self = {
     dialog(text) {
         self.dialogDOM.text(text).dialog({
             modal: true,
-            buttons: {
-                Ok() {
-                    $(this).dialog('close');
+            buttons: [
+                {
+                    text: 'Ok',
+                    click() {
+                        $(this).dialog('close');
+                    }
                 }
-            }
+            ]
         });
     },
     confirm(text, callback) {
         self.dialogDOM.text(text).dialog({
             modal: true,
-            buttons: {
-                Ok() {
-                    $(this).dialog('close');
-                    callback(true);
+            buttons: [
+                {
+                    text: 'Ok',
+                    click() {
+                        $(this).dialog('close');
+                        callback(true);
+                    }
                 },
-                Cancel() {
-                    $(this).dialog('close');
-                    callback(false);
+                {
+                    text: 'Cancel',
+                    click() {
+                        $(this).dialog('close');
+                        callback(false);
+                    }
                 }
-            }
+            ]
         });
     },
     patch(container, name, callback, before) {

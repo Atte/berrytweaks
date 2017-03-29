@@ -15,8 +15,7 @@ if ( !preg_match('/^[a-z0-9]+$/', $id) )
 
 $fname = "sync/$id.json";
 
-switch ( param('action') ){
-case 'sync':
+function sync_file($fname){
     $browser = json_decode(param('payload'), true);
 
     $server = [
@@ -37,22 +36,31 @@ case 'sync':
     }
 
     $data = json_encode($server, JSON_FORCE_OBJECT);
-    echo $data;
     file_put_contents($fname, $data);
-    break;
-case 'delete':
+    return $data;
+}
+
+function delete_file($fname){
     if ( file_exists($fname) ){
-        echo json_encode([
+        return json_encode([
             'found' => true,
             'deleted' => unlink($fname)
         ]);
     }
     else{
-        echo json_encode([
+        return json_encode([
             'found' => false,
             'deleted' => false
         ]);
     }
+}
+
+switch ( param('action') ){
+case 'sync':
+    echo sync_file($fname);
+    break;
+case 'delete':
+    echo delete_file($fname);
     break;
 default:
     die('invalid action');

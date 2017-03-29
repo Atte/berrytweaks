@@ -28,11 +28,11 @@ const self = {
             }
 
             $.ajax({
+                data,
                 type: data ? 'POST' : 'GET',
                 contentType: data ? 'text/plain' : undefined,
                 dataType: 'json',
                 url: 'https://atte.fi/berrytweaks/api/' + fname,
-                data,
                 success(data) {
                     self.cache[type] = data;
                     self.callbacks[type].forEach(waiter => {
