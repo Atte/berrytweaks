@@ -16,6 +16,9 @@ const self = {
                 return;
         }
 
+        if ( msg.msg.indexOf('berrytweaks-ircify-title') !== -1 )
+            return;
+
         const m = msg.msg.match(/\bhttps?:\/\/[^\s]+/i);
         if ( m )
             self.win.location.href = m[0];

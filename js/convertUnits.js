@@ -1,120 +1,159 @@
 BerryTweaks.modules['convertUnits'] = (function(){
 'use strict';
 
+function each(obj, callback){
+    Object.keys(obj).forEach(key => {
+        callback(key, obj[key]);
+    });
+}
+
 const self = {
     libs: [
-        'https://dl.atte.fi/lib/quantities.min.js',
-        'https://dl.atte.fi/lib/compromise.min.js'
+        'https://dl.atte.fi/lib/quantities.min.js'
     ],
     symbols: {
-        '€': 'EUR',
-        '£': 'GBP',
-        '$': 'USD'
+        'EUR': /[€]/,
+        'GBP': /[£]/,
+        'USD': /[\u0024]/
+    },
+    units: {
+        'length': {
+            'metric': {
+                regex: /(?:kilo|centi|mili)?met(er|re)s?|[kcm]?m/,
+                units: ['m', 'cm', 'mm']
+            },
+            'imperial': {
+                regex: /miles?|mi|yards?|yd|foot|feet|ft|inch|inches|in/,
+                units: ['mile', 'yard', 'foot', 'inch']
+            }
+        },
+        'area': {
+            'metric': {
+                regex: /hectares?|sq[kc]?m|[ck]?m\^2/,
+                units: ['km^2', 'm^2', 'cm^2'],
+            },
+            'imperial': {
+                regex: /squaremiles?|sqmi|mi^2|square(?:feet|foot)|sqft|ft^2|squareinch(?:es)?|sqin|in^2|acres?/,
+                units: ['mile^2', 'foot^2', 'inch^2']
+            }
+        },
+        'mass': {
+            'metric': {
+                regex: /tonnes?|kilos?|(?:kilo)?grams?|k?g/,
+                units: ['tonne', 'kg', 'g']
+            },
+            'imperial': {
+                regex: /tons?|stones?|pounds?|lbs?|ounces?|oz/,
+                units: ['ton', 'stone', 'pound', 'ounce']
+            }
+        },
+        'volume': {
+            'metric': {
+                regex: /(?:desi)?lit(?:er|re)s?/,
+                units: ['l', 'dl']
+            },
+            'imperial': {
+                regex: /gallons?|gal|fluidounces?|floz|cups?|cp|quarts?|qt/,
+                units: ['gallon', 'floz']
+            }
+        },
+        'temperature': {
+            'Celsius': {
+                regex: /°?C|celsius|centigrades?/,
+                units: ['tempC']
+            },
+            'Fahrenheit': {
+                regex: /°?F|fahrenheits?/,
+                units: ['tempF']
+            }
+        },
+        'currency': {/* filled by loadRates() */}
     },
     preferred: null,
-    currencyRegex: null,
-    prefixRegex: /^[kdcm]/,
     rates: null,
+    preProcess() {
+        const num = /((?:\d+[., ])*\d+)/.source;
+        each(self.units, (kind, options) => {
+            each(options, (name, params) => {
+                if ( !params.re ){
+                    const source = [];
+                    if ( params.prefix === true )
+                        source.push(`\\b(?:${params.regex.source})\\s*${num}`);
+                    if ( params.suffix !== false )
+                        source.push(`${num}\\s*(?:${params.regex.source})\\b`);
+                    params.re = new RegExp(source.join('|'), 'gi');
+                }
+            });
+        });
+    },
     loadRates() {
-        self.rates = null;
-        $.getJSON('https://api.fixer.io/latest', {
-            base: self.preferred.currency || undefined
-        }, data => {
+        $.getJSON('https://api.fixer.io/latest', data => {
             data.rates[data.base] = 1;
             self.rates = data.rates;
-            self.currencyRegex = new RegExp(
-                '(?:\b|\d)(?:' +
-                Object.keys(self.rates).concat(
-                    '[' + Object.keys(self.symbols).join('') + ']'
-                ).join('|') +
-                ')(?:\b|\d)'
-            , 'i');
+            self.units['currency'] = {}
+            Object.keys(self.rates).forEach(unit => {
+                self.units['currency'][unit] = {
+                    regex: new RegExp(self.symbols[unit] ? `${self.symbols[unit].source}|${unit}` : unit),
+                    units: [unit],
+                    prefix: true
+                };
+            });
+            self.cleanPreferred();
+            self.preProcess();
         });
     },
     convertAll(str) {
         if ( !str || str[0] === '<' )
             return str;
 
-        let matched = false;
-        const phrase = nlp(str);
-        const terms = phrase.terms().list;
-
-        // convert measurements
-        phrase.values().list.forEach(value => {
-            let qty = Qty.parse(terms[value.index()].data().normal);
-            let twoParter = false;
-            if ( !qty || !qty.units() ){
-                let unit = terms[value.index() + 1];
-                unit = unit && unit.data();
-                if ( !unit )
-                    return;
-
-                try{
-                    qty = new Qty(value.number(), unit.normal);
-                    twoParter = true;
-                }
-                catch(e){
-                    return;
-                }
-            }
-
-            let unit = qty.units();
-            if ( unit === 'USD' || unit === 'cents' )
-                return;
-            unit = unit.replace(self.prefixRegex, '');
-
-            let preferred = self.preferred[qty.kind()];
-            preferred = preferred && Qty.parse(preferred);
-            if ( !preferred || preferred.units() === unit )
+        each(self.preferred, (kind, preferred) => {
+            if ( !preferred )
                 return;
 
-            phrase.insertAt(
-                value.index() + (twoParter ? 2 : 1),
-                '(' + qty.to(preferred).toPrec(0.01).format() + ')'
-            );
-            matched = true;
-        });
-
-        // convert currencies
-        if ( self.currencyRegex ){
-            terms.forEach(term => {
-                let text = term.data().normal;
-                let unit = self.currencyRegex.exec(text);
-                unit = unit && unit[0];
-                if ( !unit )
+            each(self.units[kind], (name, params) => {
+                if ( name === preferred || !params.re )
                     return;
 
-                text = text.replace(unit, '');
-                unit = (self.symbols[unit] || unit).toUpperCase();
-                if ( unit === self.preferred.currency || !self.rates[unit] )
-                    return;
-
-                let trailingNumber = false;
-                let qty = Qty.parse(text);
-                if ( !qty ){
-                    const qtyTerm = terms[term.index() - 1];
-                    qty = qtyTerm && Qty.parse(qtyTerm.data().normal);
+                if ( kind === 'currency' ){
+                    str = str.replace(params.re, (match, number1, number2) => {
+                        const number = number1 === undefined ? number2 : number1;
+                        const converted = number / self.rates[name] * self.rates[self.preferred[kind]];
+                        return `${match} (${converted.toFixed(2)} ${self.preferred[kind]})`;
+                    });
                 }
-                if ( !qty ){
-                    const qtyTerm = terms[term.index() + 1];
-                    qty = qtyTerm && Qty.parse(qtyTerm.data().normal);
-                    trailingNumber = true;
-                }
-                if ( !qty )
-                    return;
+                else {
+                    str = str.replace(params.re, match => {
+                        const qty = Qty.parse(match);
+                        if ( !qty )
+                            return match;
 
-                phrase.insertAt(
-                    term.index() + (trailingNumber ? 2 : 1),
-                    '(' + qty.div(self.rates[unit]).toPrec(0.01).format() + ' ' + self.preferred.currency + ')'
-                );
-                matched = true;
+                        let best = null;
+                        for ( const target of self.units[kind][self.preferred[kind]].units ){
+                            const candidate = qty.to(target);
+                            if ( candidate.scalar > 1.0 ){
+                                best = candidate;
+                                break;
+                            }
+                            else if ( best === null )
+                                best = candidate;
+                        }
+                        return `${match} (${best.toPrec(0.01).format()})`;
+                    });
+                }
             });
-        }
-
-        return matched ? phrase.out() : str;
+        });
+        return str;
+    },
+    cleanPreferred() {
+        Object.keys(self.preferred).forEach(kind => {
+            if ( kind !== 'currency' && (!self.units.hasOwnProperty(kind) || !self.units[kind].hasOwnProperty(self.preferred[kind])) )
+                delete self.preferred[kind];
+        });
     },
     enable() {
         self.preferred = BerryTweaks.getSetting('preferredUnits', {});
+        self.cleanPreferred();
+        self.preProcess();
         self.loadRates();
     },
     showUnitsDialog() {
@@ -124,10 +163,10 @@ const self = {
             center: true
         });
         $('<table>').append(
-            Qty.getKinds().sort().map(function(kind){
+            Object.keys(self.units).sort().map(kind => {
                 return $('<tr>').append(
                     $('<td>', {
-                        text: kind.replace('_', ' ')
+                        text: kind
                     })
                 ).append(
                     $('<td>').append(
@@ -135,9 +174,8 @@ const self = {
                             on: {
                                 change() {
                                     self.preferred[kind] = $(this).val();
+                                    self.cleanPreferred();
                                     BerryTweaks.setSetting('preferredUnits', self.preferred);
-                                    if ( kind === 'currency' )
-                                        self.loadRates();
                                 }
                             }
                         }).append(
@@ -147,11 +185,7 @@ const self = {
                                 selected: !self.preferred[kind]
                             })
                         ).append(
-                            (
-                                kind === 'currency' ?
-                                Object.keys(self.rates || {}).sort() :
-                                Qty.getUnits(kind).filter(unit => !unit.startsWith('temp-'))
-                            ).map(unit => $('<option>', {
+                            Object.keys(self.units[kind]).sort().map(unit => $('<option>', {
                                 value: unit,
                                 text: unit,
                                 selected: self.preferred[kind] === unit
