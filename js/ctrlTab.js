@@ -6,7 +6,7 @@ const self = {
         if ( e.ctrlKey && !e.altKey && e.keyCode === 9 ){
             e.stopImmediatePropagation();
             e.preventDefault();
-            cycleChatTab(e.shiftKey);
+            window.cycleChatTab(e.shiftKey);
         }
     },
     enable() {

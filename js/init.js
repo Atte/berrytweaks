@@ -407,6 +407,12 @@ const self = {
             self.noreferrer(_to);
         });
 
+        self.patch(window, 'showEditNote', () => {
+            const area = $('.dialogWindow .controlWindow textarea');
+            area.attr('rows', 20);
+            fixWindowHeight(area.parents('.dialogContent'));
+        });
+
         whenExists('#chatbuffer', el => {
             self.noreferrer(el);
         });
