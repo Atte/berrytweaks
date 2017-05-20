@@ -24,6 +24,11 @@ const self = {
             configs: ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
         },
         {
+            title: 'Mod stuff',
+            configs: ['tabHighlight', 'ctrlTab'],
+            minType: 1
+        },
+        {
             title: 'Always enabled',
             configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro'],
             hidden: true
@@ -54,10 +59,13 @@ const self = {
         squeeVolume: "Customize notification volumes",
         resetFlair: "Reset flair on page load",
 
-        escClose: "Close dialogs with esc",
+        tabHighlight: "Highlight chat tabs with new messages",
+        ctrlTab: "Cycle chat tabs with Ctrl + Tab",
+
+        escClose: "Close dialogs with Esc",
         settingsFix: "Make settings dialog scrollable",
         noReferrer: "Circumvent hotlink protection on links",
-        onEuro: "Fix Alt Gr when using BerryMotes"
+        onEuro: "Fix AltGr when using BerryMotes"
     },
     deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc'],
     modules: {},
@@ -287,6 +295,8 @@ const self = {
         self.settingsContainer.append.apply(self.settingsContainer,
             self.categories.map(cat => {
                 if ( cat.hidden )
+                    return null;
+                if ( cat.minType !== undefined && window.TYPE < cat.minType )
                     return null;
                 return [$('<label>', {
                     class: 'berrytweaks-module-category',

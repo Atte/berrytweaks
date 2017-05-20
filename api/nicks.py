@@ -53,6 +53,7 @@ forcebases = {
     'SnowBolt',
     'StevenAD',
     'Q0',
+    'SalientBlue',
 }
 
 nonbases = {
@@ -63,6 +64,8 @@ nonbases = {
     'matt',
     'meat',
     'pony',
+    'Blue',
+    'fire',
 } | set(prefixes.values())
 for als in base_aliases.values():
     nonbases.union(als)

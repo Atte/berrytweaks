@@ -5,6 +5,9 @@ const list = document.getElementById('feature-list');
 list.removeChild(list.firstChild);
 
 BerryTweaks.categories.forEach(function(cat){
+    if ( cat.minType !== undefined && cat.minType > 0 )
+        return;
+
     const title = document.createElement('h4');
     title.textContent = cat.title;
 
