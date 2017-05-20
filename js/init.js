@@ -410,7 +410,7 @@ const self = {
         self.patch(window, 'showEditNote', () => {
             const area = $('.dialogWindow .controlWindow textarea');
             area.attr('rows', 20);
-            fixWindowHeight(area.parents('.dialogContent'));
+            self.fixWindowHeight(area.parents('.dialogContent'));
         });
 
         whenExists('#chatbuffer', el => {

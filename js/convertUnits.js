@@ -30,7 +30,7 @@ const self = {
         'area': {
             'metric': {
                 regex: /hectares?|sq[kc]?m|[ck]?m\^2/,
-                units: ['km^2', 'm^2', 'cm^2'],
+                units: ['km^2', 'm^2', 'cm^2']
             },
             'imperial': {
                 regex: /squaremiles?|sqmi|mi^2|square(?:feet|foot)|sqft|ft^2|squareinch(?:es)?|sqin|in^2|acres?/,
@@ -137,7 +137,7 @@ const self = {
                             else if ( best === null )
                                 best = candidate;
                         }
-                        return `${match} (${best.toPrec(0.01).format()})`;
+                        return best !== null ? `${match} (${best.toPrec(0.01).format()})` : match;
                     });
                 }
             });
