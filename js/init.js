@@ -25,8 +25,8 @@ const self = {
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'ctrlTab', 'ircifyModlog'],
-            minType: 1
+            configs: ['tabHighlight', 'ctrlTab', 'ircifyModlog', 'queuePlaylist'],
+            minType: 2
         },
         {
             title: 'Always enabled',
@@ -63,6 +63,7 @@ const self = {
         tabHighlight: "Highlight chat tabs with new messages",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
         ircifyModlog: "Show mod log in chat",
+        queuePlaylist: "Playlist queuing",
 
         escClose: "Close dialogs with Esc",
         settingsFix: "Make settings dialog scrollable",
