@@ -17,7 +17,7 @@ const self = {
         },
         {
             title: 'Other',
-            configs: ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
+            configs: ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']//, 'pollStats']
         },
         {
             title: 'Nitpicking',
@@ -25,7 +25,7 @@ const self = {
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'ctrlTab'],
+            configs: ['tabHighlight', 'ctrlTab', 'ircifyModlog'],
             minType: 1
         },
         {
@@ -53,6 +53,7 @@ const self = {
         linkOpener: "Open links automatically",
         rawSquees: "Unlimited squee editor",
         squeeSound: "Custom squee sound",
+        //pollStats: "Show poll stats",
 
         stripes: "Stripe messages (requires theme support)",
         hideLoggedin: 'Hide extra "Logged in as" label',
@@ -61,6 +62,7 @@ const self = {
 
         tabHighlight: "Highlight chat tabs with new messages",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
+        ircifyModlog: "Show mod log in chat",
 
         escClose: "Close dialogs with Esc",
         settingsFix: "Make settings dialog scrollable",
@@ -252,6 +254,11 @@ const self = {
             if ( mod.css )
                 self.unloadCSS(name);
         }
+    },
+    reloadModule(name) {
+        self.disableModule(name);
+        delete self.modules[name];
+        self.enableModule(name);
     },
     fixWindowHeight(win) {
         if ( !win || win.data('berrytweaked') )
