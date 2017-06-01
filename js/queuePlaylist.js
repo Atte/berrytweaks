@@ -55,12 +55,12 @@ const self = {
                         };
                     });
                     if ( !videos || videos.length === 0 ){
-                        BerryTweaks.dialog("That playlist doesn't seem to be empty, but didn't contain any videos either.");
+                        BerryTweaks.dialog("That playlist doesn't seem to be empty, but it didn't contain any videos either. What did you even do?");
                         return;
                     }
 
                     const titleList = videos.map(video => video.title).join(', ');
-                    BerryTweaks.confirm('Going to queue the following videos:\n' + titleList, ok => {
+                    BerryTweaks.confirm('Going to queue the following videos: ' + titleList, ok => {
                         if ( !ok )
                             return;
 

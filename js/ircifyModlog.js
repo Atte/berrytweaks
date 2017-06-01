@@ -3,10 +3,13 @@ BerryTweaks.modules['ircifyModlog'] = (function(){
 
 const self = {
     css: true,
+    previous: null,
     addLogMsg(data) {
-        if ( data.nick === 'Server' )
+        const key = data.nick + '|' + data.msg;
+        if ( data.nick === 'Server' || key === self.previous )
             return;
 
+        self.previous = key;
         addChatMsg({
             msg: {
                 nick: data.nick,
