@@ -16,7 +16,7 @@ const self = {
         let allNumeric = true;
 
         poll.find('.btn').each(function(){
-            let i = $(this).data('op');
+            const i = $(this).data('op');
             let key = window.POLL_OPTIONS[parseInt(i, 10)];
             const numKey = parseInt(key, 10);
             const val = parseInt($(this).text(), 10);

@@ -67,7 +67,7 @@ const self = {
                         self.queue = videos;
                         self.queueNext();
                     });
-                })
+                });
             }).insertBefore(clear);
         });
     },

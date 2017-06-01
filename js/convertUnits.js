@@ -90,7 +90,7 @@ const self = {
         $.getJSON('https://api.fixer.io/latest', data => {
             data.rates[data.base] = 1;
             self.rates = data.rates;
-            self.units['currency'] = {}
+            self.units['currency'] = {};
             Object.keys(self.rates).forEach(unit => {
                 self.units['currency'][unit] = {
                     regex: new RegExp(self.symbols[unit] ? `${self.symbols[unit].source}|${unit}` : unit),
