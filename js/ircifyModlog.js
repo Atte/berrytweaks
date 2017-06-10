@@ -5,7 +5,7 @@ const self = {
     css: true,
     previous: null,
     addLogMsg(data) {
-        const key = data.nick + '|' + data.msg;
+        const key = `${data.timestamp}|${data.nick}|${data.msg}`;
         if ( data.nick === 'Server' || key === self.previous )
             return;
 

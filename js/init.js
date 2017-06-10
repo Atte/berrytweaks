@@ -17,7 +17,7 @@ const self = {
         },
         {
             title: 'Other',
-            configs: ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']//, 'pollStats']
+            configs: ['requestCheck', 'sortComplete', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']//, 'pollStats']
         },
         {
             title: 'Nitpicking',
@@ -49,6 +49,7 @@ const self = {
         videoTitle: "Show video title in chat toolbar",
 
         requestCheck: "Check requests for country restrictions",
+        sortComplete: "Sort tab completion based on squees",
         sync: "Sync squees and PEP stars",
         linkOpener: "Open links automatically",
         rawSquees: "Unlimited squee editor",
