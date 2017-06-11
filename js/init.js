@@ -30,7 +30,7 @@ const self = {
         },
         {
             title: 'Always enabled',
-            configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro'],
+            configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro', 'fixDialogPosition'],
             hidden: true
         }
     ],
@@ -69,7 +69,8 @@ const self = {
         escClose: "Close dialogs with Esc",
         settingsFix: "Make settings dialog scrollable",
         noReferrer: "Circumvent hotlink protection on links",
-        onEuro: "Fix AltGr when using BerryMotes"
+        onEuro: "Fix AltGr when using BerryMotes",
+        fixDialogPosition: "Fix user dialogs falling off the screen"
     },
     deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc'],
     modules: {},
@@ -278,6 +279,39 @@ const self = {
 
         win.data('berrytweaked', true);
     },
+    fixWindowPosition(dialogContent) {
+        if ( !dialogContent )
+            return;
+
+        const dialogWindow = dialogContent.parents('.dialogWindow');
+        if ( !dialogWindow || !dialogWindow.length )
+            return;
+
+        const diaMargin = 8;
+        const offset = dialogWindow.offset();
+        const diaSize = {
+            height: dialogWindow.height() + diaMargin,
+            width: dialogWindow.width() + diaMargin
+        };
+
+        const win = $(window);
+        const scroll = {
+            top: win.scrollTop(),
+            left: win.scrollLeft()
+        };
+        const winSize = {
+            height: win.height(),
+            width: win.width()
+        };
+
+        if ( offset.top + diaSize.height > scroll.top + winSize.height )
+            offset.top = scroll.top + winSize.height - diaSize.height;
+
+        if ( offset.left + diaSize.width > scroll.left + winSize.width )
+            offset.left = scroll.left + winSize.width - diaSize.width;
+
+        dialogWindow.offset(offset);
+    },
     settingsContainer: null,
     updateSettingsGUI() {
         if ( !self.settingsContainer )
@@ -420,6 +454,12 @@ const self = {
             const area = $('.dialogWindow .controlWindow textarea');
             area.attr('rows', 20);
             self.fixWindowHeight(area.parents('.dialogContent'));
+        });
+
+        BerryTweaks.patch(window, 'showUserActions', () => {
+            setTimeout(() => {
+                self.fixWindowPosition($('#userOps').parents('.dialogContent'));
+            }, 200 + 100); // dialog fade-in
         });
 
         whenExists('#chatbuffer', el => {
