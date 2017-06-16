@@ -445,8 +445,6 @@ const self = {
         });
 
         self.patch(window, 'addChatMsg', (data, _to) => {
-            if ( data && data.msg && data.msg.timestamp )
-                self.timeDiff = new Date(data.msg.timestamp) - new Date();
             self.noreferrer(_to);
         });
 
@@ -456,11 +454,25 @@ const self = {
             self.fixWindowHeight(area.parents('.dialogContent'));
         });
 
-        BerryTweaks.patch(window, 'showUserActions', () => {
+        self.patch(window, 'showUserActions', () => {
             setTimeout(() => {
                 self.fixWindowPosition($('#userOps').parents('.dialogContent'));
             }, 200 + 100); // dialog fade-in
         });
+
+        self.patch(window, 'handleACL', () => {
+            if ( window.MT )
+                window.MT.fixPlaylistHeight();
+        });
+
+        setTimeout(() => {
+            self.patch(window, 'addChatMsg', (data, _to) => {
+                if ( data && data.msg && data.msg.timestamp )
+                    self.timeDiff = new Date(data.msg.timestamp) - new Date();
+            });
+            if ( window.MT )
+                window.MT.fixPlaylistHeight();
+        }, 5000);
 
         whenExists('#chatbuffer', el => {
             self.noreferrer(el);
