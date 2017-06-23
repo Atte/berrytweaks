@@ -17,7 +17,7 @@ const self = {
         },
         {
             title: 'Other',
-            configs: ['requestCheck', 'sortComplete', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']//, 'pollStats']
+            configs: ['requestCheck', 'sortComplete', 'sync', 'linkOpener', 'rawSquees', 'squeeSound'],
         },
         {
             title: 'Nitpicking',
@@ -25,12 +25,12 @@ const self = {
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'ctrlTab', 'ircifyModlog', 'queuePlaylist'],
+            configs: ['tabHighlight', 'ctrlTab',/* 'queueDrop',*/ 'ircifyModlog', 'queuePlaylist'],
             minType: 2
         },
         {
             title: 'Always enabled',
-            configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro', 'fixDialogPosition'],
+            configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro', 'fixDialogs'],
             hidden: true
         }
     ],
@@ -54,7 +54,6 @@ const self = {
         linkOpener: "Open links automatically",
         rawSquees: "Unlimited squee editor",
         squeeSound: "Custom squee sound",
-        //pollStats: "Show poll stats",
 
         stripes: "Stripe messages (requires theme support)",
         hideLoggedin: 'Hide extra "Logged in as" label',
@@ -63,6 +62,7 @@ const self = {
 
         tabHighlight: "Highlight chat tabs with new messages",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
+        queueDrop: "Drag 'n drop links into queue",
         ircifyModlog: "Show mod log in chat",
         queuePlaylist: "Playlist queuing",
 
@@ -70,7 +70,7 @@ const self = {
         settingsFix: "Make settings dialog scrollable",
         noReferrer: "Circumvent hotlink protection on links",
         onEuro: "Fix AltGr when using BerryMotes",
-        fixDialogPosition: "Fix user dialogs falling off the screen"
+        fixDialogs: "Fix various dialog behaviors"
     },
     deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc'],
     modules: {},

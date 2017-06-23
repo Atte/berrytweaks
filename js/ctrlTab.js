@@ -10,10 +10,10 @@ const self = {
         }
     },
     enable() {
-        $(window).on('keydown', self.handler);
+        $(window).on('keydown.btweaksCtrlTab', self.handler);
     },
     disable() {
-        $(window).off('keydown', self.handler);
+        $(window).off('.btweaksCtrlTab');
     }
 };
 

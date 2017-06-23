@@ -5,6 +5,12 @@ const self = {
     css: false,
     queue: [],
     queueTimeout: null,
+    queueVideo(id) {
+        const input = $('.import > div:nth-child(2) input');
+        const button = $('.import > div:nth-child(2) > div#addVolatButton');
+        input.val(id);
+        button.click();
+    },
     queueNext() {
         if ( self.queueTimeout !== null ){
             clearTimeout(self.queueTimeout);
@@ -18,10 +24,7 @@ const self = {
             if ( !video )
                 return;
 
-            const input = $('.import > div:nth-child(2) input');
-            const button = $('.import > div:nth-child(2) > div#addVolatButton');
-            input.val(video.id);
-            button.click();
+            self.queueVideo(video.id);
         }, 1000);
     },
     enable() {
