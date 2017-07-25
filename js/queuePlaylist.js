@@ -34,7 +34,7 @@ const self = {
                 'text': 'P'
             }).click(() => {
                 const url = $('.import > div:nth-child(2) input').val();
-                const m = url.match(/youtube\.com\/playlist.*?[&?]list=([a-zA-Z0-9_-]+)/);
+                const m = url.match(/youtube\.com\/.*?[&?]list=([a-zA-Z0-9_-]+)/);
                 const id = m ? m[1] : url;
                 $.getJSON('https://www.googleapis.com/youtube/v3/playlistItems', {
                     key: '***REMOVED***',

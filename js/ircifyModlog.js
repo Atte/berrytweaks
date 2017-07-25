@@ -13,7 +13,7 @@ const self = {
         addChatMsg({
             msg: {
                 nick: data.nick,
-                msg: `<span class="berrytweaks-ircify-modlog">${data.msg}</span>`,
+                msg: `<span class="berrytweaks-ircify-modlog">${data.msg} </span>`,
                 metadata:  {
                     graymute: false,
                     nameflaunt: false,
