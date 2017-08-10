@@ -25,7 +25,7 @@ const self = {
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'ctrlTab',/* 'queueDrop',*/ 'ircifyModlog', 'queuePlaylist'],
+            configs: ['tabHighlight', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
             minType: 2
         },
         {
@@ -62,7 +62,7 @@ const self = {
 
         tabHighlight: "Highlight chat tabs with new messages",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
-        queueDrop: "Drag 'n drop links into queue",
+        filterDrag: "Reorder filters by dragging",
         ircifyModlog: "Show mod log in chat",
         queuePlaylist: "Playlist queuing",
 
