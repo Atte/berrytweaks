@@ -21,11 +21,11 @@ const self = {
         },
         {
             title: 'Nitpicking',
-            configs: ['stripes', 'hideLoggedin', 'squeeVolume', 'resetFlair']
+            configs: ['stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair']
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
+            configs: ['tabHighlight', 'altTab', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
             minType: 2
         },
         {
@@ -56,11 +56,12 @@ const self = {
         squeeSound: "Custom squee sound",
 
         stripes: "Stripe messages (requires theme support)",
-        hideLoggedin: 'Hide extra "Logged in as" label',
         squeeVolume: "Customize notification volumes",
+        hideLoggedin: 'Hide extra "Logged in as" label',
         resetFlair: "Reset flair on page load",
 
         tabHighlight: "Highlight chat tabs with new messages",
+        altTab: "Change chat tabs with Alt + 1/2",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
         filterDrag: "Reorder filters by dragging",
         ircifyModlog: "Show mod log in chat",
