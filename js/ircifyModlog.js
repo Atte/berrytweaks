@@ -29,7 +29,7 @@ const self = {
 };
 
 socket.on('adminLog', data => {
-    if ( self.enabled )
+    if ( self.enabled && window.TYPE >= 2 )
         self.addLogMsg(data);
 });
 

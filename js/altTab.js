@@ -3,6 +3,9 @@ BerryTweaks.modules['altTab'] = (function(){
 
 const self = {
     handler(e) {
+        if ( window.TYPE < 2 )
+            return;
+
         if ( e.altKey && !e.shiftKey && !e.ctrlKey ){
             let target = null;
             switch ( e.keyCode ){

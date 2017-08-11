@@ -33,6 +33,9 @@ const self = {
                 'class': 'impele btn berrytweaks-queue-playlist',
                 'text': 'P'
             }).click(() => {
+                if ( window.TYPE < 2 )
+                    return;
+
                 const url = $('.import > div:nth-child(2) input').val();
                 const m = url.match(/youtube\.com\/.*?[&?]list=([a-zA-Z0-9_-]+)/);
                 const id = m ? m[1] : url;

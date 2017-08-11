@@ -52,10 +52,8 @@ const self = {
 };
 
 BerryTweaks.patch(window, 'showAdminFilterWindow', () => {
-    if ( !self.enabled )
-        return;
-
-    self.enhanceWindow();
+    if ( self.enabled && window.TYPE >= 2 )
+        self.enhanceWindow();
 });
 
 return self;
