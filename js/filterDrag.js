@@ -29,7 +29,7 @@ const self = {
         }, 1000 * 10);
     },
     enhanceWindow() {
-        let win = self.getControlWindow();
+        const win = self.getControlWindow();
         if ( !win ) {
             console.log("Can't find filter list");
             return;

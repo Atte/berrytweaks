@@ -17,7 +17,7 @@ const self = {
         },
         {
             title: 'Other',
-            configs: ['requestCheck', 'sortComplete', 'sync', 'linkOpener', 'rawSquees', 'squeeSound'],
+            configs: ['requestCheck', 'sortComplete', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
         },
         {
             title: 'Nitpicking',
@@ -467,7 +467,7 @@ const self = {
         });
 
         setTimeout(() => {
-            self.patch(window, 'addChatMsg', (data, _to) => {
+            self.patch(window, 'addChatMsg', data => {
                 if ( data && data.msg && data.msg.timestamp )
                     self.timeDiff = new Date(data.msg.timestamp) - new Date();
             });

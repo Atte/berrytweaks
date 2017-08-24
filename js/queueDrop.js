@@ -20,7 +20,7 @@ const self = {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'link';
 
-        let after = self.posCache.find(el => el.y > event.pageY);
+        const after = self.posCache.find(el => el.y > event.pageY);
         if ( !after )
             return;
 
