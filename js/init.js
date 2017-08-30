@@ -138,11 +138,19 @@ const self = {
         $('<link>', {
             'data-berrytweaks_module': name,
             rel: 'stylesheet',
-            href: /^https?:/.test(name) ? name : `https://atte.fi/berrytweaks/css/${name}.css`
+            href: name.indexOf('://') === -1 ? `https://atte.fi/berrytweaks/css/${name}.css` : name
         }).appendTo(document.head);
     },
     unloadCSS(name) {
         $(`link[data-berrytweaks_module=${name}]`).remove();
+    },
+    loadScript(name, callback) {
+        $.ajax({
+            url: name.indexOf('://') === -1 ? `https://atte.fi/berrytweaks/js/${name}.js` : name,
+            dataType: 'script',
+            success: callback,
+            cache: true
+        });
     },
     loadSettings() {
         return $.extend(true, {
@@ -190,7 +198,7 @@ const self = {
                 self.libWaiters[name] = [after];
 
                 const isAbsolute = name.indexOf('://') !== -1;
-                $.getScript(isAbsolute ? name : `https://atte.fi/berrytweaks/js/lib/${name}.js`, () => {
+                self.loadScript(isAbsolute ? name : `https://atte.fi/berrytweaks/js/lib/${name}.js`, () => {
                     if ( isAbsolute )
                         self.lib[name] = true;
 
@@ -227,7 +235,7 @@ const self = {
             return;
         }
 
-        $.getScript(`https://atte.fi/berrytweaks/js/${name}.js`, () => {
+        self.loadScript(`https://atte.fi/berrytweaks/js/${name}.js`, () => {
             const mod = self.modules[name];
             if ( !mod )
                 return;
