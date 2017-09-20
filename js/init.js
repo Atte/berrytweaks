@@ -21,7 +21,7 @@ const self = {
         },
         {
             title: 'Nitpicking',
-            configs: ['stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair']
+            configs: ['stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair', 'hideTitle']
         },
         {
             title: 'Mod stuff',
@@ -59,6 +59,7 @@ const self = {
         squeeVolume: "Customize notification volumes",
         hideLoggedin: 'Hide extra "Logged in as" label',
         resetFlair: "Reset flair on page load",
+        hideTitle: "Hide tab title",
 
         tabHighlight: "Highlight chat tabs with new messages",
         altTab: "Change chat tabs with Alt + 1/2",
@@ -138,7 +139,7 @@ const self = {
         $('<link>', {
             'data-berrytweaks_module': name,
             rel: 'stylesheet',
-            href: name.indexOf('://') === -1 ? `https://atte.fi/berrytweaks/css/${name}.css` : name
+            href: name.indexOf('//') === -1 ? `https://atte.fi/berrytweaks/css/${name}.css` : name
         }).appendTo(document.head);
     },
     unloadCSS(name) {
@@ -146,7 +147,7 @@ const self = {
     },
     loadScript(name, callback) {
         $.ajax({
-            url: name.indexOf('://') === -1 ? `https://atte.fi/berrytweaks/js/${name}.js` : name,
+            url: name.indexOf('//') === -1 ? `https://atte.fi/berrytweaks/js/${name}.js` : name,
             dataType: 'script',
             success: callback,
             cache: true
