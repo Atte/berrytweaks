@@ -25,7 +25,7 @@ const self = {
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'altTab', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
+            configs: ['tabHighlight', 'hoverNotes', 'altTab', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
             minType: 2
         },
         {
@@ -62,6 +62,7 @@ const self = {
         hideTitle: "Hide tab title",
 
         tabHighlight: "Highlight chat tabs with new messages",
+        hoverNotes: "Only show notes on userlist hover",
         altTab: "Change chat tabs with Alt + 1/2",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
         filterDrag: "Reorder filters by dragging",
