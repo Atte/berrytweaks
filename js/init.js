@@ -41,7 +41,7 @@ const self = {
         ircify: "Show joins/parts",
 
         userMaps: "Show map in user dialog",
-        showLocaltimes: "Show users' local times",
+        showLocaltimes: "Show local times",
         globalFlairs: "Show flairs",
         flags: "Show flags",
 

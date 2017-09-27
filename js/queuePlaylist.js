@@ -27,6 +27,39 @@ const self = {
             self.queueVideo(video.id);
         }, 1000);
     },
+    getPage(id, token, callback) {
+        const params = {
+            key: '***REMOVED***',
+            playlistId: id,
+            part: 'snippet',
+            maxResults: '50'
+        };
+        if ( token )
+            params.pageToken = token;
+
+        $.getJSON('https://www.googleapis.com/youtube/v3/playlistItems', params, data => {
+            if ( !data || (!data.items && self.queue.length === 0) ){
+                BerryTweaks.dialog("That doesn't seem like a valid playlist URL or ID");
+                return;
+            }
+
+            self.queue = self.queue.concat(
+                data.items
+                .filter(item => item.kind === 'youtube#playlistItem' && item.snippet && item.snippet.resourceId.kind === 'youtube#video')
+                .map(item => {
+                    return {
+                        title: item.snippet.title,
+                        id: item.snippet.resourceId.videoId
+                    };
+                })
+            );
+
+            if ( data.nextPageToken )
+                self.getPage(id, data.nextPageToken, callback);
+            else
+                callback();
+        });
+    },
     enable() {
         whenExists('.import > div:nth-child(2) > .clear', clear => {
             $('<div>', {
@@ -39,39 +72,17 @@ const self = {
                 const url = $('.import > div:nth-child(2) input').val();
                 const m = url.match(/youtube\.com\/.*?[&?]list=([a-zA-Z0-9_-]+)/);
                 const id = m ? m[1] : url;
-                $.getJSON('https://www.googleapis.com/youtube/v3/playlistItems', {
-                    key: '***REMOVED***',
-                    playlistId: id,
-                    part: 'snippet',
-                    maxResults: '50'
-                }, data => {
-                    if ( !data || !data.items ){
-                        BerryTweaks.dialog("That doesn't seem like a valid playlist URL or ID");
-                        return;
-                    }
-                    if ( data.items.length === 0 ){
-                        BerryTweaks.dialog("That playlist seems to be empty");
+
+                self.queue = [];
+                self.getPage(id, null, () => {
+                    if ( self.queue.length === 0 ){
+                        BerryTweaks.dialog("That playlist seems to be empty.");
                         return;
                     }
 
-                    const videos = data.items.filter(item => item.kind === 'youtube#playlistItem' && item.snippet && item.snippet.resourceId.kind === 'youtube#video').map(item => {
-                        return {
-                            title: item.snippet.title,
-                            id: item.snippet.resourceId.videoId
-                        };
-                    });
-                    if ( !videos || videos.length === 0 ){
-                        BerryTweaks.dialog("That playlist doesn't seem to be empty, but it didn't contain any videos either. What did you even do?");
-                        return;
-                    }
-
-                    const titleList = videos.map(video => video.title).join(', ');
-                    BerryTweaks.confirm('Going to queue the following videos: ' + titleList, ok => {
-                        if ( !ok )
-                            return;
-
-                        self.queue = videos;
-                        self.queueNext();
+                    BerryTweaks.confirm('Queue ' + self.queue.length + ' videos?', ok => {
+                        if ( ok )
+                            self.queueNext();
                     });
                 });
             }).insertBefore(clear);
