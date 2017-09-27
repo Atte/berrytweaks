@@ -25,7 +25,7 @@ const self = {
                 return;
 
             self.queueVideo(video.id);
-        }, 1000);
+        }, 500);
     },
     getPage(id, token, callback) {
         const params = {
@@ -80,7 +80,7 @@ const self = {
                         return;
                     }
 
-                    BerryTweaks.confirm('Queue ' + self.queue.length + ' videos?', ok => {
+                    BerryTweaks.confirm(`Queue ${self.queue.length} videos?`, ok => {
                         if ( ok )
                             self.queueNext();
                     });
