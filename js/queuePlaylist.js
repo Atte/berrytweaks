@@ -25,7 +25,7 @@ const self = {
                 return;
 
             self.queueVideo(video.id);
-        }, 500);
+        }, 100);
     },
     getPage(id, token, callback) {
         const params = {
