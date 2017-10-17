@@ -435,6 +435,10 @@ const self = {
         $('a[rel!="noopener noreferrer"]', _to).attr("rel", "noopener noreferrer");
     },
     init() {
+        self.loadLibs([
+            'http://btc.berrytube.tv/wut/SCfix.js'
+        ], () => { });
+
         self.dialogDOM = $('<div>', {
             title: 'BerryTweaks',
             class: 'berrytweaks-dialog'
