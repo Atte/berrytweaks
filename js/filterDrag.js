@@ -13,7 +13,7 @@ const self = {
         return con[0] ? con : null;
     },
     whenLoaded(win, callback) {
-        let interval = setInterval(() => {
+        let interval = BerryTweaks.setInterval(() => {
             if ( win.find('.loading').length === 0 ){
                 clearInterval(interval);
                 interval = null;
@@ -21,7 +21,7 @@ const self = {
             }
         }, 100);
 
-        setTimeout(() => {
+        BerryTweaks.setTimeout(() => {
             if ( interval ){
                 clearInterval(interval);
                 interval = null;
@@ -48,13 +48,17 @@ const self = {
                 }
             });
         });
+    },
+    bind: {
+        patchAfter: {
+            showAdminFilterWindow() {
+                if (window.TYPE >= 2) {
+                    self.enhanceWindow();
+                }
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'showAdminFilterWindow', () => {
-    if ( self.enabled && window.TYPE >= 2 )
-        self.enhanceWindow();
-});
 
 return self;
 

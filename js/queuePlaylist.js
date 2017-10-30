@@ -17,7 +17,7 @@ const self = {
             self.queueTimeout = null;
         }
 
-        self.queueTimeout = setTimeout(() => {
+        self.queueTimeout = BerryTweaks.setTimeout(() => {
             self.queueTimeout = null;
 
             const video = self.queue.pop();
@@ -37,35 +37,40 @@ const self = {
         if ( token )
             params.pageToken = token;
 
-        $.getJSON('https://www.googleapis.com/youtube/v3/playlistItems', params, data => {
-            if ( !data || (!data.items && self.queue.length === 0) ){
-                BerryTweaks.dialog("That doesn't seem like a valid playlist URL or ID");
-                return;
+        BerryTweaks.ajax({
+            url: 'https://www.googleapis.com/youtube/v3/playlistItems',
+            dataType: 'json',
+            data: params,
+            success(data) {
+                if ( !data || (!data.items && self.queue.length === 0) ){
+                    BerryTweaks.dialog("That doesn't seem like a valid playlist URL or ID");
+                    return;
+                }
+
+                self.queue = self.queue.concat(
+                    data.items
+                    .filter(item => item.kind === 'youtube#playlistItem' && item.snippet && item.snippet.resourceId.kind === 'youtube#video')
+                    .map(item => {
+                        return {
+                            title: item.snippet.title,
+                            id: item.snippet.resourceId.videoId
+                        };
+                    })
+                );
+
+                if ( data.nextPageToken )
+                    self.getPage(id, data.nextPageToken, callback);
+                else
+                    callback();
             }
-
-            self.queue = self.queue.concat(
-                data.items
-                .filter(item => item.kind === 'youtube#playlistItem' && item.snippet && item.snippet.resourceId.kind === 'youtube#video')
-                .map(item => {
-                    return {
-                        title: item.snippet.title,
-                        id: item.snippet.resourceId.videoId
-                    };
-                })
-            );
-
-            if ( data.nextPageToken )
-                self.getPage(id, data.nextPageToken, callback);
-            else
-                callback();
         });
     },
     enable() {
-        whenExists('.import > div:nth-child(2) > .clear', clear => {
+        BerryTweaks.whenExists('.import > div:nth-child(2) > .clear', clear => {
             $('<div>', {
                 'class': 'impele btn berrytweaks-queue-playlist',
                 'text': 'P'
-            }).click(() => {
+            }).click(BerryTweaks.raven.wrap(() => {
                 if ( window.TYPE < 2 )
                     return;
 
@@ -85,23 +90,23 @@ const self = {
                             self.queueNext();
                     });
                 });
-            }).insertBefore(clear);
+            })).insertBefore(clear);
         });
     },
     disable() {
         $('.berrytweaks-queue-playlist').remove();
+    },
+    bind: {
+        patchAfter: {
+            revertLoaders() {
+                self.queueNext();
+            },
+            doRequeue() {
+                self.queueNext();
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'revertLoaders', () => {
-    if ( self.enabled )
-        self.queueNext();
-});
-
-BerryTweaks.patch(window, 'doRequeue', () => {
-    if ( self.enabled )
-        self.queueNext();
-});
 
 return self;
 

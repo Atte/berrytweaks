@@ -72,16 +72,16 @@ const self = {
 
         if ( BerryTweaks.modules.sync )
             BerryTweaks.modules.sync.sync();
+    },
+    bind: {
+        patchBefore: {
+            showCustomSqueesWindow() {
+                self.showWindow();
+                return false;
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'showCustomSqueesWindow', () => {
-    if ( !self.enabled )
-        return true;
-
-    self.showWindow();
-    return false;
-}, true);
 
 return self;
 

@@ -4,15 +4,16 @@
 // @version      0.5.2
 // @description  A collection of BerryTube tweaks
 // @author       Atte
+// @icon         https://dl.atte.fi/bt_favicon.ico
 // @match        http://berrytube.tv/*
 // @match        http://www.berrytube.tv/*
 // @match        http://tunnel.berrypun.ch/*
 // @match        http://tunnel.q-z.xyz/*
 // @match        http://btc.berrytube.tv:8000/*
 // @match        https://bt-proxy.atte.fi/*
-// @updateURL    https://atte.fi/berrytweaks/berrytweaks.user.js
 // @downloadURL  https://atte.fi/berrytweaks/berrytweaks.user.js
 // @grant        none
+// @noframes
 // ==/UserScript==
 
 (function(){

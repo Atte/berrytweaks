@@ -50,7 +50,7 @@ const self = {
         console.log('drop', url);
     },
     enable() {
-        whenExists('#plul', plul => {
+        BerryTweaks.whenExists('#plul', plul => {
             plul.on('dragover.berrytweaks-queueDrop', self.onDragOver);
             plul.on('dragenter.berrytweaks-queueDrop', self.onDragEnter);
             plul.on('drop.berrytweaks-queueDrop', self.onDrop);

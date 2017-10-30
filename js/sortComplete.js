@@ -84,13 +84,15 @@ const self = {
     },
     disable() {
         window.tabComplete = self.originalTabComplete;
+    },
+    bind: {
+        patchAdter: {
+            addChatMsg(data) {
+                self.onMessage(data);
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'addChatMsg', data => {
-    if ( self.enabled )
-        self.onMessage(data);
-});
 
 return self;
 

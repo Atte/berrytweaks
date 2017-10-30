@@ -45,7 +45,7 @@ const self = {
             return;
 
         const time = BerryTweaks.getServerTime();
-        self.partTimeoutHandles[nick] = setTimeout(() => {
+        self.partTimeoutHandles[nick] = BerryTweaks.setTimeout(() => {
             self.partTimeoutHandles[nick] = null;
             self.act(nick, 'part', time);
         }, BerryTweaks.getSetting('timeoutSmoothing', 5) * 1000);
@@ -72,35 +72,34 @@ const self = {
                     width: '3em'
                 },
                 value: BerryTweaks.getSetting('timeoutSmoothing', 5)
-            }).change(function(){
+            }).change(BerryTweaks.raven.wrap(() => {
                 BerryTweaks.setSetting('timeoutSmoothing', +$(this).val());
-            })
+            }))
         ).append(
             $('<label>', {
                 for: 'berrytweaks-ircify-timeout',
                 text: ' seconds'
             })
         ).appendTo(container);
+    },
+    bind: {
+        patchAfter: {
+            addUser(data) {
+                self.addUser(data.nick);
+            }
+        },
+        patchBefore: {
+            rmUser(nick) {
+                self.rmUser(nick);
+            }
+        },
+        socket: {
+            reconnecting() {
+                self.holdActs = true;
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'addUser', data => {
-    if ( !self.enabled )
-        return;
-
-    self.addUser(data.nick);
-});
-
-BerryTweaks.patch(window, 'rmUser', nick => {
-    if ( !self.enabled )
-        return;
-
-    self.rmUser(nick);
-}, true);
-
-socket.on('reconnecting', () => {
-    self.holdActs = true;
-});
 
 return self;
 

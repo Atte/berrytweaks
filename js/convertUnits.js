@@ -203,15 +203,17 @@ const self = {
             click: self.showUnitsDialog,
             text: 'Set preferred units'
         }).appendTo(container);
+    },
+    bind: {
+        patchBefore: {
+            addChatMsg(data) {
+                if (self.preferred) {
+                    data.msg.msg = self.converAll(data.msg.msg);
+                }
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'addChatMsg', data => {
-    if ( !self.enabled || !self.preferred )
-        return;
-
-    data.msg.msg = self.convertAll(data.msg.msg);
-}, true);
 
 return self;
 

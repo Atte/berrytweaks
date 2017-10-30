@@ -48,15 +48,15 @@ const self = {
             },
             text: 'Open link opener window'
         }).appendTo(container);
+    },
+    bind: {
+        patchAfter: {
+            addChatMsg(data) {
+                self.handleMessage(data.msg);
+            }
+        }
     }
 };
-
-BerryTweaks.patch(window, 'addChatMsg', data => {
-    if ( !self.enabled )
-        return;
-
-    self.handleMessage(data.msg);
-});
 
 return self;
 
