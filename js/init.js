@@ -20,6 +20,7 @@ $.ajax({
                 environment: 'atte.fi/berrytweaks/js/'.indexOf('/min/') === -1 ? 'development' : 'production',
                 whitelistUrls: [/atte\.fi/],
                 includePaths: [/https?:\/\/atte\.fi/],
+                instrument: false,
                 autoBreadcrumbs: {
                     xhr: true,
                     console: false,

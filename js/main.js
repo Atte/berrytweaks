@@ -79,7 +79,7 @@ const self = {
     modules: {},
     lib: {},
     libWaiters: {},
-    raven: window.BerryTweaks && BerryTweaks.raven,
+    raven: BerryTweaks.raven,
     setTimeout(fn, time) {
         return setTimeout(self.raven.wrap(fn), time);
     },
@@ -586,4 +586,6 @@ return self;
 
 });
 
-BerryTweaks.raven.context(BerryTweaks.init);
+if (!window.SKIP_BERRYTWEAKS) {
+    BerryTweaks.raven.context(BerryTweaks.init);
+}
