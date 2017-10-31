@@ -31,7 +31,7 @@ window.BerryTweaks = {
                 });
             });
 
-            BerryTweaks.raven.context = function(){};
+            BerryTweaks.raven.context = function(){ /* first invocation is object creation, second is init; we don't want init */ };
         }
     }
 };

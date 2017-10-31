@@ -51,9 +51,9 @@ const self = {
     },
     enable() {
         BerryTweaks.whenExists('#plul', plul => {
-            plul.on('dragover.berrytweaks-queueDrop', self.onDragOver);
-            plul.on('dragenter.berrytweaks-queueDrop', self.onDragEnter);
-            plul.on('drop.berrytweaks-queueDrop', self.onDrop);
+            plul.on('dragover.berrytweaks-queueDrop', BerryTweaks.raven.wrap(self.onDragOver));
+            plul.on('dragenter.berrytweaks-queueDrop', BerryTweaks.raven.wrap(self.onDragEnter));
+            plul.on('drop.berrytweaks-queueDrop', BerryTweaks.raven.wrap(self.onDrop));
         });
     },
     disable() {

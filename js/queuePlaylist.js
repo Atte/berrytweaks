@@ -70,7 +70,7 @@ const self = {
             $('<div>', {
                 'class': 'impele btn berrytweaks-queue-playlist',
                 'text': 'P'
-            }).click(BerryTweaks.raven.wrap(() => {
+            }).click(BerryTweaks.raven.wrap(function click() {
                 if ( window.TYPE < 2 )
                     return;
 

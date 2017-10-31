@@ -13,7 +13,7 @@ const self = {
         }
     },
     enable() {
-        $(window).on('keydown.btweaksCtrlTab', self.handler);
+        $(window).on('keydown.btweaksCtrlTab', BerryTweaks.raven.wrap(self.handler));
     },
     disable() {
         $(window).off('.btweaksCtrlTab');

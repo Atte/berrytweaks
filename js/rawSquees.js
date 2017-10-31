@@ -38,7 +38,7 @@ const self = {
         self.button = $('<div>', {
             class: 'button',
             text: 'Save',
-            click: self.onSaveClick
+            click: BerryTweaks.raven.wrap(self.onSaveClick)
         }).appendTo(self.window);
 
         self.error = $('<pre>', {
