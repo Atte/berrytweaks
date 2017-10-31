@@ -215,24 +215,21 @@ const self = {
             return;
         }
         $.each(mod.bind.socket || {}, (key, fn) => {
-            socket.on(key, self.raven.wrap(() => {
+            socket.on(key, self.raven.wrap(function() {
                 if (mod.enabled) {
-                    return fn.apply(mod, arguments);
+                    fn.apply(mod, arguments);
                 }
             }));
         });
         $.each(mod.bind.patchBefore || {}, (key, fn) => {
-            self.patch(window, key, self.raven.wrap(() => {
-                if (mod.enabled) {
-                    return fn.apply(mod, arguments);
-                }
-                return true;
+            self.patch(window, key, self.raven.wrap(function() {
+                return mod.enabled ? fn.apply(mod, arguments) : true;
             }), true);
         });
         $.each(mod.bind.patchAfter || {}, (key, fn) => {
-            self.patch(window, key, self.raven.wrap(() => {
+            self.patch(window, key, self.raven.wrap(function() {
                 if (mod.enabled) {
-                    return fn.apply(mod, arguments);
+                    fn.apply(mod, arguments);
                 }
             }), false);
         });
