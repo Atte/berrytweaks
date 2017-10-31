@@ -172,11 +172,11 @@ const self = {
                     $('<td>').append(
                         $('<select>', {
                             on: {
-                                change() {
+                                change: BerryTweaks.raven.wrap(function change() {
                                     self.preferred[kind] = $(this).val();
                                     self.cleanPreferred();
                                     BerryTweaks.setSetting('preferredUnits', self.preferred);
-                                }
+                                })
                             }
                         }).append(
                             $('<option>', {
@@ -208,7 +208,7 @@ const self = {
         patchBefore: {
             addChatMsg(data) {
                 if (self.preferred) {
-                    data.msg.msg = self.converAll(data.msg.msg);
+                    data.msg.msg = self.convertAll(data.msg.msg);
                 }
             }
         }

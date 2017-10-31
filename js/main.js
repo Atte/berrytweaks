@@ -447,7 +447,7 @@ const self = {
                             id: 'berrytweaks-module-toggle-' + key,
                             type: 'checkbox',
                             checked: !!settings.enabled[key]
-                        }).change(self.raven.wrap(() => {
+                        }).change(self.raven.wrap(function() {
                             const settings = self.loadSettings();
                             settings.enabled[key] = !!$(this).prop('checked');
                             self.saveSettings(settings);

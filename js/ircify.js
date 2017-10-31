@@ -72,7 +72,7 @@ const self = {
                     width: '3em'
                 },
                 value: BerryTweaks.getSetting('timeoutSmoothing', 5)
-            }).change(BerryTweaks.raven.wrap(() => {
+            }).change(BerryTweaks.raven.wrap(function change() {
                 BerryTweaks.setSetting('timeoutSmoothing', +$(this).val());
             }))
         ).append(
