@@ -211,31 +211,32 @@ const self = {
         });
     },
     bindEvents(mod) {
-        if (!mod.bind) {
+        if ( !mod.bind || mod.bound ){
             return;
         }
-        $.each(mod.bind.socket || {}, (fn, key) => {
+        $.each(mod.bind.socket || {}, (key, fn) => {
             socket.on(key, self.raven.wrap(() => {
                 if (mod.enabled) {
-                    return fn.apply(this, arguments);
+                    return fn.apply(mod, arguments);
                 }
             }));
         });
-        $.each(mod.bind.patchBefore || {}, (fn, key) => {
+        $.each(mod.bind.patchBefore || {}, (key, fn) => {
             self.patch(window, key, self.raven.wrap(() => {
                 if (mod.enabled) {
-                    return fn.apply(this, arguments);
+                    return fn.apply(mod, arguments);
                 }
                 return true;
             }), true);
         });
-        $.each(mod.bind.patchAfter || {}, (fn, key) => {
+        $.each(mod.bind.patchAfter || {}, (key, fn) => {
             self.patch(window, key, self.raven.wrap(() => {
                 if (mod.enabled) {
-                    return fn.apply(this, arguments);
+                    return fn.apply(mod, arguments);
                 }
             }), false);
         });
+        mod.bound = true;
     },
     updateRavenContext() {
         self.raven.setUserContext({
@@ -305,6 +306,7 @@ const self = {
             if ( mod.addSettings )
                 self.updateSettingsGUI();
 
+            self.bindEvents(mod);
             self.updateRavenContext();
             return;
         }
@@ -316,12 +318,10 @@ const self = {
 
             if ( mod.libs ){
                 self.loadLibs(mod.libs, () => {
-                    self.bindEvents(mod);
                     self.enableModule(name);
                 });
             }
             else {
-                self.bindEvents(mod);
                 self.enableModule(name);
             }
         });
