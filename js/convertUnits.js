@@ -115,11 +115,13 @@ const self = {
                     return;
 
                 if ( kind === 'currency' ){
-                    str = str.replace(params.re, (match, number1, number2) => {
-                        const number = number1 === undefined ? number2 : number1;
-                        const converted = number / self.rates[name] * self.rates[self.preferred[kind]];
-                        return `${match} (${converted.toFixed(2)} ${self.preferred[kind]})`;
-                    });
+                    if ( self.rates[name] && self.rates[self.preferred[kind]] ) {
+                        str = str.replace(params.re, (match, number1, number2) => {
+                            const number = number1 === undefined ? number2 : number1;
+                            const converted = number / self.rates[name] * self.rates[self.preferred[kind]];
+                            return `${match} (${converted.toFixed(2)} ${self.preferred[kind]})`;
+                        });
+                    }
                 }
                 else {
                     str = str.replace(params.re, match => {
