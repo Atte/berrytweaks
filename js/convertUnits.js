@@ -131,13 +131,21 @@ const self = {
 
                         let best = null;
                         for ( const target of self.units[kind][self.preferred[kind]].units ){
-                            const candidate = qty.to(target);
-                            if ( candidate.scalar > 1.0 ){
-                                best = candidate;
-                                break;
+                            try {
+                                const candidate = qty.to(target);
+                                if ( candidate.scalar > 1.0 ){
+                                    best = candidate;
+                                    break;
+                                }
+                                else if ( best === null )
+                                    best = candidate;
+                            } catch (e) {
+                                if (e instanceof Qty.Error) {
+                                    console.log('convertUnits', e);
+                                } else {
+                                    throw e;
+                                }
                             }
-                            else if ( best === null )
-                                best = candidate;
                         }
                         return best !== null ? `${match} (${best.toPrec(0.01).format()})` : match;
                     });
