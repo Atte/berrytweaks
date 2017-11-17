@@ -26,7 +26,13 @@ const self = {
                 return;
             }
 
-            const re = new RegExp('^' + who + '.*', 'i');
+            try {
+                const re = new RegExp('^' + who + '.*', 'i');
+            } catch (e) {
+                // name resulted in invalid regexp
+                return;
+            }
+
             for (const prop in CHATLIST) {
                 if (!CHATLIST.hasOwnProperty(prop)) {
                     continue;
