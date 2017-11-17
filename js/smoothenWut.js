@@ -4,9 +4,13 @@ BerryTweaks.modules['smoothenWut'] = (function(){
 const self = {
     css: true,
     patchDone: false,
+    reload() {
+        if ( window.wutReloadUserColors )
+            wutReloadUserColors();
+    },
     enable() {
         if ( self.patchDone ){
-            wutReloadUserColors();
+            self.reload();
             return;
         }
 
@@ -21,11 +25,11 @@ const self = {
 
                 sheet.insertRule(`.msg-${nick} { border-image: linear-gradient(to right, ${color}, transparent) 1 100%; }`, sheet.cssRules.length);
             });
-            wutReloadUserColors();
+            self.reload();
         });
     },
     disable() {
-        wutReloadUserColors();
+        self.reload();
     },
     concatContinuous(_to) {
         const container = $(_to).children().last();
