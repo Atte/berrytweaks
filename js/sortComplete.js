@@ -26,8 +26,9 @@ const self = {
                 return;
             }
 
+            let re;
             try {
-                const re = new RegExp('^' + who + '.*', 'i');
+                re = new RegExp('^' + who + '.*', 'i');
             } catch (e) {
                 // name resulted in invalid regexp
                 return;
