@@ -37,7 +37,7 @@ const self = {
                 contentType: data ? 'text/plain' : undefined,
                 dataType: 'json',
                 data: data,
-                url: fname === 'time.py' ? 'https://itnj16n71f.execute-api.eu-west-1.amazonaws.com/production/findTimezone' : ('https://atte.fi/berrytweaks/api/' + fname),
+                url: fname === 'time.py' ? 'https://aws.atte.fi/berrytweaks/findTimezone' : ('https://atte.fi/berrytweaks/api/' + fname),
                 success(data) {
                     self.cache[type] = data;
                     self.callbacks[type].forEach(waiter => {
