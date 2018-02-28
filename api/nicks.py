@@ -14,6 +14,7 @@ base_aliases = {
     'GentlemanGin': {'elbows', 'butts', 'EezMaiMynd', 'Spike', 'clouds', 'Water', 'geigerrulesbig', 'DolphinButt', 'ThornInYouSide', 'AssholeGin', 'Cat', 'VodkaIsGross'},
     'heart04winds': {'hart04winds'},
     'Kimmychan': {'Kimkam'},
+    'Kris321': {'k321k321'},
     'Lavender': {'LavPhone'},
     'lovershy': {'loversh'},
     'maadneet': {'maadn'},
