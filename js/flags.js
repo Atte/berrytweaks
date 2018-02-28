@@ -4,7 +4,6 @@ BerryTweaks.modules['flags'] = (function(){
 const self = {
     css: true,
     libs: ['user'],
-    urlPrefix: 'https://dl.atte.fi/flags/',
     todo: [],
     flushTodo() {
         BerryTweaks.lib.user.getTimes(self.todo, (nick, timedata) => {
@@ -13,7 +12,7 @@ const self = {
                 $('<div>', {
                     class: 'berrytweaks-flag',
                     css: {
-                        'background-image': `url("${self.urlPrefix}${timedata.countryCode}.png")`
+                        'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${timedata.countryCode.toLowerCase()}.png")`
                     }
                 }).appendTo(el);
             }

@@ -87,7 +87,7 @@ const self = {
     },
     enable() {
         self.originalTabComplete = window.tabComplete;
-        window.tabComplete = self.tabComplete;
+        window.tabComplete = BerryTweaks.raven.wrap(self.tabComplete);
     },
     disable() {
         window.tabComplete = self.originalTabComplete;

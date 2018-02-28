@@ -2,7 +2,7 @@ BerryTweaks.modules['sync'] = (function(){
 'use strict';
 
 const self = {
-    libs: ['https://dl.atte.fi/lib/sha1.min.js'],
+    libs: ['https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js'],
     post(data, callback) {
         const nick = localStorage.getItem('nick');
         const pass = localStorage.getItem('pass');
