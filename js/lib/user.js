@@ -26,7 +26,7 @@ const self = {
                 url = 'https://atte.fi/berrytweaks/api/map.php';
             }
             else {
-                url = 'https://aws.atte.fi/berrytweaks/findTimezone.js';
+                url = 'https://aws.atte.fi/berrytweaks/timezone';
                 if ( !type ){
                     self.callbacks[type][0]();
                     delete self.callbacks[type];
