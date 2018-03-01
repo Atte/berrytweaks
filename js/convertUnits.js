@@ -9,7 +9,7 @@ function each(obj, callback){
 
 const self = {
     libs: [
-        'https://dl.atte.fi/lib/quantities.min.js'
+        'https://cdn.atte.fi/js-quantities/1.7.0/quantities.min.js'
     ],
     symbols: {
         'EUR': /[€]/,

@@ -35,6 +35,7 @@ const self = {
 
             el.data('berrytweaks-localtime_offset', (+offset)*1000);
         }, self.update);
+        self.todo = [];
         self.todoFlusher = null;
     },
     handleUser(nick) {

@@ -17,18 +17,27 @@ const self = {
 
         if ( self.callbacks[type].length === 1 ){
             // yay ugly hacks
-            let fname, data;
-            if ( type === 'nicks' )
-                fname = 'nicks.py';
-            else if ( type === 'map' )
-                fname = 'map.php';
+            let url, data;
+            let dontCache = false;
+            if ( type === 'nicks' ) {
+                url = 'https://atte.fi/berrytweaks/api/nicks.py';
+            }
+            else if ( type === 'map' ) {
+                url = 'https://atte.fi/berrytweaks/api/map.php';
+            }
             else {
-                fname = 'time.py';
-                data = type;
-                if ( !data ){
+                url = 'https://aws.atte.fi/berrytweaks/findTimezone.js';
+                if ( !type ){
                     self.callbacks[type][0]();
                     delete self.callbacks[type];
                     return;
+                }
+
+                if ( type.indexOf('\n') === -1 ) {
+                    url += '?coords=' + type;
+                } else {
+                    data = type;
+                    dontCache = true;
                 }
             }
 
@@ -37,14 +46,14 @@ const self = {
                 contentType: data ? 'text/plain' : undefined,
                 dataType: 'json',
                 data: data,
-                url: fname === 'time.py' ? 'https://aws.atte.fi/berrytweaks/findTimezone' : ('https://atte.fi/berrytweaks/api/' + fname),
+                url: url,
                 success(data) {
                     self.cache[type] = data;
                     self.callbacks[type].forEach(waiter => {
                         waiter(self.cache[type]);
                     });
                     delete self.callbacks[type];
-                    if ( fname === 'time.py' )
+                    if ( dontCache )
                         delete self.cache[type];
                 }
             });
