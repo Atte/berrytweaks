@@ -3,6 +3,7 @@ BerryTweaks.modules['sync'] = (function(){
 
 const self = {
     libs: ['https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js'],
+    browser: {data: {}},
     post(data, callback) {
         const nick = localStorage.getItem('nick');
         const pass = localStorage.getItem('pass');
@@ -16,7 +17,7 @@ const self = {
         if ( !self.enabled )
             return;
 
-        const browser = {
+        self.browser = {
             version: BerryTweaks.getSetting('syncVersion', 0),
             data: {
                 squee: localStorage.getItem('highlightList'),
@@ -27,7 +28,7 @@ const self = {
 
         self.post({
             action: 'sync',
-            payload: JSON.stringify(browser)
+            payload: JSON.stringify(self.browser)
         }, server => {
             BerryTweaks.setSetting('syncVersion', server.version);
 
@@ -95,7 +96,8 @@ const self = {
 
 BerryTweaks.whenExists('#manageAlarms', () => {
     BerryTweaks.patch(PEP, 'setStorage', () => {
-        self.sync();
+        if ( self.browser.data.PEP !== localStorage.getItem('PEP') )
+            self.sync();
     });
 });
 
