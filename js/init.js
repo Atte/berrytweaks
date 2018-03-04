@@ -2,7 +2,7 @@ $(function(){
 'use strict';
 
 $.ajax({
-    url: 'https://cdnjs.cloudflare.com/ajax/libs/raven.js/3.19.1/raven.min.js',
+    url: 'https://cdnjs.cloudflare.com/ajax/libs/raven.js/3.23.1/raven.min.js',
     dataType: 'script',
     cache: true,
     success: function() {
@@ -13,13 +13,23 @@ $.ajax({
 
             clearInterval(interval);
             window.BerryTweaks = {
-                raven: Raven.noConflict()
+                raven: Raven.noConflict(),
+                release: 'RELEASE',
+                releaseUrl: suffix => {
+                    if (BerryTweaks.release) {
+                        return `https://cdn.atte.fi/berrytweaks/${BerryTweaks.release}/${suffix}`;
+                    }
+                    return `https://atte.fi/berrytweaks/${suffix}`;
+                }
             };
 
+            if (BerryTweaks.release === 'RELEASE') {
+                BerryTweaks.release = null;
+            }
+
             BerryTweaks.raven.config('https://d709b359cd66469a8fdbd1b1e5d4d8c4@sentry.io/236977', {
-                environment: 'atte.fi/berrytweaks/js/'.indexOf('/min/') === -1 ? 'development' : 'production',
-                whitelistUrls: [/atte\.fi/],
-                includePaths: [/https?:\/\/atte\.fi/],
+                environment: BerryTweaks.release ? 'production' : 'development',
+                whitelistUrls: [/atte\.fi\/berrytweaks\//],
                 instrument: false,
                 autoBreadcrumbs: {
                     xhr: true,
@@ -29,6 +39,10 @@ $.ajax({
                 }
             }).install();
 
+            if (BerryTweaks.release) {
+                BerryTweaks.raven.setRelease(BerryTweaks.release);
+            }
+
             if (window.NAME) {
                 BerryTweaks.raven.setUserContext({
                     id: window.NAME
@@ -36,7 +50,7 @@ $.ajax({
             }
 
             $.ajax({
-                url: 'https://atte.fi/berrytweaks/js/main.js',
+                url: BerryTweaks.releaseUrl('js/main.js'),
                 dataType: 'script',
                 cache: true
             });

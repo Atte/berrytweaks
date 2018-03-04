@@ -2,6 +2,9 @@ window.BerryTweaks = BerryTweaks.raven.context(function(){
 'use strict';
 
 const self = {
+    raven: BerryTweaks.raven,
+    release: BerryTweaks.release,
+    releaseUrl: BerryTweaks.releaseUrl,
     categories: [
         {
             title: 'Chat view',
@@ -79,7 +82,6 @@ const self = {
     modules: {},
     lib: {},
     libWaiters: {},
-    raven: BerryTweaks.raven,
     setTimeout(fn, time) {
         return setTimeout(self.raven.wrap(fn), time);
     },
@@ -170,7 +172,7 @@ const self = {
         $('<link>', {
             'data-berrytweaks_module': name,
             rel: 'stylesheet',
-            href: name.indexOf('//') === -1 ? `https://atte.fi/berrytweaks/css/${name}.css` : name
+            href: name.indexOf('//') === -1 ?  BerryTweaks.releaseUrl(`css/${name}.css`) : name
         }).appendTo(document.head);
     },
     unloadCSS(name) {
@@ -178,7 +180,7 @@ const self = {
     },
     loadScript(name, callback) {
         self.ajax({
-            url: name.indexOf('//') === -1 ? `https://atte.fi/berrytweaks/js/${name}.js` : name,
+            url: name.indexOf('//') === -1 ? BerryTweaks.releaseUrl(`js/${name}.js`) : name,
             dataType: 'script',
             success: callback
         });
@@ -266,7 +268,7 @@ const self = {
                 self.libWaiters[name] = [after];
 
                 const isAbsolute = name.indexOf('://') !== -1;
-                self.loadScript(isAbsolute ? name : `https://atte.fi/berrytweaks/js/lib/${name}.js`, () => {
+                self.loadScript(isAbsolute ? name : BerryTweaks.releaseUrl(`js/lib/${name}.js`), () => {
                     if ( isAbsolute ) {
                         self.lib[name] = true;
                     } else {
@@ -308,7 +310,7 @@ const self = {
             return;
         }
 
-        self.loadScript(`https://atte.fi/berrytweaks/js/${name}.js`, () => {
+        self.loadScript(BerryTweaks.releaseUrl(`js/${name}.js`), () => {
             const mod = self.modules[name];
             if ( !mod )
                 return;

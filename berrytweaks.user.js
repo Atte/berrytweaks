@@ -20,7 +20,7 @@
 'use strict';
 
 const script = document.createElement('script');
-script.setAttribute('src', 'https://atte.fi/berrytweaks/min/js/init.js?_=no-cache');
+script.setAttribute('src', 'https://atte.fi/berrytweaks/min/js/init.js');
 document.head.appendChild(script);
 
 })();

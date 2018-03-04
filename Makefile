@@ -9,8 +9,7 @@ min/js: js
 	mkdir -p min/js/
 	babel-minify --mangle false --out-dir min/js/lib js/lib
 	babel-minify --mangle false --out-dir min/js js
-	find min/js/ -type f -name '*.js' -print0 | xargs -0 --verbose \
-		sed -r --in-place 's#atte.fi/berrytweaks/(css|js)/#cdn.atte.fi/berrytweaks/$(rev)/\1/#g'
+	sed --in-place "s|'RELEASE'|'$(rev)'|" min/js/init.js
 	mkdir -p $(deploydir)
 	cp -r min/* $(deploydir)/
 
