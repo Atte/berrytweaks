@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BerryTweaks
 // @namespace    https://atte.fi/berrytweaks/
-// @version      0.5.2
+// @version      0.5.3
 // @description  A collection of BerryTube tweaks
 // @author       Atte
 // @icon         https://dl.atte.fi/bt_favicon.ico
