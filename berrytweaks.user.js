@@ -4,7 +4,8 @@
 // @version      0.5.4
 // @description  A collection of BerryTube tweaks
 // @author       Atte
-// @icon         https://dl.atte.fi/bt_favicon.ico
+// @icon         https://atte.fi/berrytweaks/favicon.ico
+// @icon64       https://atte.fi/berrytweaks/favicon64.png
 // @match        http://berrytube.tv/*
 // @match        http://www.berrytube.tv/*
 // @match        http://btc.berrytube.tv:8000/*
