@@ -24,27 +24,13 @@ const self = {
                 const color = wutGetUsercolor(nick);
 
                 sheet.insertRule(`.msg-${nick} { border-image: linear-gradient(to right, ${color}, transparent) 1 100%; }`, sheet.cssRules.length);
+                sheet.insertRule(`.msg-${nick} + .msg-${nick} { margin-top: 0; }`, sheet.cssRules.length);
             });
             self.reload();
         });
     },
     disable() {
         self.reload();
-    },
-    concatContinuous(_to) {
-        const container = $(_to).children().last();
-        const previousContainer = container.prev();
-        if ( container[0] && previousContainer[0] && container[0].className === previousContainer[0].className ){
-            previousContainer.append(container.children());
-            container.remove();
-        }
-    },
-    bind: {
-        patchAfter: {
-            addChatMsg(data, _to) {
-                self.concatContinuous(_to);
-            }
-        }
     }
 };
 

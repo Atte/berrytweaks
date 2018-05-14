@@ -11,3 +11,13 @@
     border-left: none !important;
     border-image: none !important;
 }
+
+.chatbuffer .message {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.chatbuffer > div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
