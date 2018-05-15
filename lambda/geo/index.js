@@ -18,22 +18,8 @@ function lookupTimezone(lat, lng) {
     };
 }
 
-/**
-* Returns both country and timezone information for the given coordinates.
-* @param {float} lat latitude
-* @param {float} lng longitude
-* @returns {object}
-*/
 exports.handler = async (event) => {
-    let coords;
-    if (event.httpMethod === 'POST') {
-        coords = JSON.parse(event.body);
-    } else {
-        coords = [{
-            lat: event.queryStringParameters.lat,
-            lng: event.queryStringParameters.lng
-        }];
-    }
+    const coords = event.httpMethod === 'POST' ? JSON.parse(event.body) : [event.queryStringParameters];
 
     const results = coords.map(coord => ({
         country: lookupCountry(coord.lat, coord.lng),

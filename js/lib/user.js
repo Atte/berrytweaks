@@ -4,70 +4,66 @@ BerryTweaks.lib['user'] = (function(){
 const self = {
     callbacks: {},
     cache: {},
-    cacheData(cacheKey, apiName, callback, body) {
-        if (cacheKey) {
-            if ( self.cache[cacheKey] ){
-                callback(self.cache[cacheKey]);
-                return;
-            }
-
-            if ( self.callbacks[cacheKey] )
-                self.callbacks[cacheKey].push(callback);
-            else
-                self.callbacks[cacheKey] = [callback];
+    cacheData(apiName, callback, body) {
+        const cacheKey = apiName + JSON.stringify(body || null);
+        if ( self.cache[cacheKey] ){
+            callback(self.cache[cacheKey]);
+            return;
         }
 
-        if ( !cacheKey || self.callbacks[cacheKey].length === 1 ){
-            let url;
-            const headers = {};
-            switch (apiName) {
-                case 'nicks':
-                    url = 'https://atte.fi/berrytweaks/api/nicks.py';
-                    break;
-                case 'map':
-                    url = 'https://atte.fi/berrytweaks/api/map.php';
-                    break;
-                case 'geo':
-                    headers[[
-                        String.fromCharCode(88),
-                        'Api',
-                        'Key'
-                    ].join('-')] = 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6';
-                    if (body.length === 1) {
-                        url = 'https://aws.atte.fi/geo?lat=' + body[0].lat + '&lng=' + body[0].lng;
-                        body = undefined;
-                    } else {
-                        url = 'https://aws.atte.fi/geo';
-                    }
-                    break;
-                default:
-                    console.warn('Unknown API:', apiName);
-                    return;
-            }
+        if ( self.callbacks[cacheKey] ){
+            self.callbacks[cacheKey].push(callback);
+            return;
+        }
+        else
+            self.callbacks[cacheKey] = [callback];
 
-            BerryTweaks.ajax({
-                type: body ? 'POST' : 'GET',
-                contentType: body ? 'application/json' : false,
-                dataType: 'json',
-                data: body && JSON.stringify(body),
-                url: url,
-                headers: headers,
-                success(data) {
-                    if (cacheKey) {
-                        self.cache[cacheKey] = data;
-                        self.callbacks[cacheKey].forEach(waiter => {
-                            waiter(self.cache[cacheKey]);
-                        });
-                        delete self.callbacks[cacheKey];
-                    } else {
-                        callback(data);
-                    }
+        let url;
+        const headers = {};
+        switch (apiName) {
+            case 'nicks':
+                url = 'https://atte.fi/berrytweaks/api/nicks.py';
+                break;
+            case 'map':
+                url = 'https://atte.fi/berrytweaks/api/map.php';
+                break;
+            case 'geo':
+                headers[[
+                    String.fromCharCode(88),
+                    'Api',
+                    'Key'
+                ].join('-')] = 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6';
+                if (body.length === 1) {
+                    url = 'https://aws.atte.fi/geo?lat=' + body[0].lat + '&lng=' + body[0].lng;
+                    body = undefined;
+                } else {
+                    url = 'https://aws.atte.fi/geo';
                 }
-            });
+                break;
+            default:
+                console.warn('Unknown API:', apiName);
+                return;
         }
+
+        BerryTweaks.ajax({
+            type: body ? 'POST' : 'GET',
+            contentType: body ? 'application/json' : false,
+            dataType: 'json',
+            data: body && JSON.stringify(body),
+            url: url,
+            headers: headers,
+            success(data) {
+                self.callbacks[cacheKey].forEach(waiter => {
+                    waiter(data);
+                });
+                delete self.callbacks[cacheKey];
+                if (!body)
+                    self.cache[cacheKey] = data;
+            }
+        });
     },
     getAliases(nick, callback) {
-        self.cacheData('nicks', 'nicks', data => {
+        self.cacheData('nicks', data => {
             if ( data.hasOwnProperty(nick) ){
                 callback([nick].concat(data[nick]));
                 return;
@@ -87,7 +83,7 @@ const self = {
         });
     },
     getMap(nick, callback) {
-        self.cacheData('map', 'map', data => {
+        self.cacheData('map', data => {
             self.getAliases(nick, keys => {
                 for ( let i=0; i<keys.length; ++i ){
                     const mapdata = data[keys[i].toLowerCase()];
@@ -114,7 +110,7 @@ const self = {
                         if ( datas[key] )
                             coords.push({ lat: datas[key].lat, lng: datas[key].lng });
                     });
-                    self.cacheData(null, 'geo', results => {
+                    self.cacheData('geo', results => {
                         nicks.forEach((key, i) => {
                             if ( datas[key] )
                                 callback(key, results[i]);

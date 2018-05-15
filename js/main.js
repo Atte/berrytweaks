@@ -204,6 +204,7 @@ const self = {
         settings[key] = val;
         self.saveSettings(settings);
     },
+    applyingSettings: false,
     applySettings() {
         $.each(self.loadSettings().enabled, (key, val) => {
             if ( val )
@@ -291,7 +292,7 @@ const self = {
 
         const mod = self.modules[name];
         if ( mod ){
-            if ( mod.enabled )
+            if ( mod.enabled || mod.enabling )
                 return;
 
             if ( mod.css )
@@ -310,13 +311,16 @@ const self = {
             return;
         }
 
+        self.modules[name] = { enabling: true };
         self.loadScript(BerryTweaks.releaseUrl(`js/${name}.js`), () => {
             const mod = self.modules[name];
             if ( !mod )
                 return;
 
             if ( mod.libs ){
+                mod.enabling = true;
                 self.loadLibs(mod.libs, () => {
+                    delete mod.enabling;
                     self.enableModule(name);
                 });
             }

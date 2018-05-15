@@ -8,7 +8,7 @@ const self = {
     flushTodo() {
         BerryTweaks.lib.user.getGeo(self.todo, (nick, data) => {
             const el = $('#chatlist > ul > li.' + nick);
-            if ( data.country && data.country.alpha2 && !$('.berrytweaks-flag', el).length ){
+            if ( data && data.country && data.country.alpha2 && !$('.berrytweaks-flag', el).length ){
                 $('<div>', {
                     class: 'berrytweaks-flag',
                     css: {
