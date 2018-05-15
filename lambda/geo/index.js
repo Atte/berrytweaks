@@ -14,7 +14,7 @@ function lookupTimezone(lat, lng) {
     return {
         name: zone.name,
         abbr: zone.abbr(now),
-        offset: zone.utcOffset(now)
+        offset: -zone.utcOffset(now)
     };
 }
 

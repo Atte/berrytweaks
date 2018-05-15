@@ -4,63 +4,70 @@ BerryTweaks.lib['user'] = (function(){
 const self = {
     callbacks: {},
     cache: {},
-    cacheData(type, callback) {
-        if ( self.cache[type] ){
-            callback(self.cache[type]);
-            return;
+    cacheData(cacheKey, apiName, callback, body) {
+        if (cacheKey) {
+            if ( self.cache[cacheKey] ){
+                callback(self.cache[cacheKey]);
+                return;
+            }
+
+            if ( self.callbacks[cacheKey] )
+                self.callbacks[cacheKey].push(callback);
+            else
+                self.callbacks[cacheKey] = [callback];
         }
 
-        if ( self.callbacks[type] )
-            self.callbacks[type].push(callback);
-        else
-            self.callbacks[type] = [callback];
-
-        if ( self.callbacks[type].length === 1 ){
-            // yay ugly hacks
-            let url, data;
-            let dontCache = false;
-            if ( type === 'nicks' ) {
-                url = 'https://atte.fi/berrytweaks/api/nicks.py';
-            }
-            else if ( type === 'map' ) {
-                url = 'https://atte.fi/berrytweaks/api/map.php';
-            }
-            else {
-                url = 'https://aws.atte.fi/berrytweaks/timezone';
-                if ( !type ){
-                    self.callbacks[type][0]();
-                    delete self.callbacks[type];
+        if ( !cacheKey || self.callbacks[cacheKey].length === 1 ){
+            let url;
+            const headers = {};
+            switch (apiName) {
+                case 'nicks':
+                    url = 'https://atte.fi/berrytweaks/api/nicks.py';
+                    break;
+                case 'map':
+                    url = 'https://atte.fi/berrytweaks/api/map.php';
+                    break;
+                case 'geo':
+                    headers[[
+                        String.fromCharCode(88),
+                        'Api',
+                        'Key'
+                    ].join('-')] = 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6';
+                    if (body.length === 1) {
+                        url = 'https://aws.atte.fi/geo?lat=' + body[0].lat + '&lng=' + body[0].lng;
+                        body = undefined;
+                    } else {
+                        url = 'https://aws.atte.fi/geo';
+                    }
+                    break;
+                default:
+                    console.warn('Unknown API:', apiName);
                     return;
-                }
-
-                if ( type.indexOf('\n') === -1 ) {
-                    url += '?coords=' + type;
-                } else {
-                    data = type;
-                    dontCache = true;
-                }
             }
 
             BerryTweaks.ajax({
-                type: data ? 'POST' : 'GET',
-                contentType: data ? 'text/plain' : undefined,
+                type: body ? 'POST' : 'GET',
+                contentType: body ? 'application/json' : false,
                 dataType: 'json',
-                data: data,
+                data: body && JSON.stringify(body),
                 url: url,
+                headers: headers,
                 success(data) {
-                    self.cache[type] = data;
-                    self.callbacks[type].forEach(waiter => {
-                        waiter(self.cache[type]);
-                    });
-                    delete self.callbacks[type];
-                    if ( dontCache )
-                        delete self.cache[type];
+                    if (cacheKey) {
+                        self.cache[cacheKey] = data;
+                        self.callbacks[cacheKey].forEach(waiter => {
+                            waiter(self.cache[cacheKey]);
+                        });
+                        delete self.callbacks[cacheKey];
+                    } else {
+                        callback(data);
+                    }
                 }
             });
         }
     },
     getAliases(nick, callback) {
-        self.cacheData('nicks', data => {
+        self.cacheData('nicks', 'nicks', data => {
             if ( data.hasOwnProperty(nick) ){
                 callback([nick].concat(data[nick]));
                 return;
@@ -80,7 +87,7 @@ const self = {
         });
     },
     getMap(nick, callback) {
-        self.cacheData('map', data => {
+        self.cacheData('map', 'map', data => {
             self.getAliases(nick, keys => {
                 for ( let i=0; i<keys.length; ++i ){
                     const mapdata = data[keys[i].toLowerCase()];
@@ -93,7 +100,7 @@ const self = {
             });
         });
     },
-    getTimes(nicks, callback, finalCallback) {
+    getGeo(nicks, callback, finalCallback) {
         const datas = {};
         let left = nicks.length;
         nicks.forEach(nick => {
@@ -105,16 +112,16 @@ const self = {
                     const coords = [];
                     nicks.forEach(key => {
                         if ( datas[key] )
-                            coords.push(datas[key].lat + ' ' + datas[key].lng);
+                            coords.push({ lat: datas[key].lat, lng: datas[key].lng });
                     });
-                    self.cacheData(coords.join('\n'), timedata => {
+                    self.cacheData(null, 'geo', results => {
                         nicks.forEach((key, i) => {
                             if ( datas[key] )
-                                callback(key, timedata.results[i]);
+                                callback(key, results[i]);
                         });
                         if ( finalCallback )
                             finalCallback();
-                    });
+                    }, coords);
                 }
             });
         });

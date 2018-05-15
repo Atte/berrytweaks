@@ -21,9 +21,9 @@ const self = {
         });
     },
     flushTodo() {
-        BerryTweaks.lib.user.getTimes(self.todo, (nick, timedata) => {
+        BerryTweaks.lib.user.getGeo(self.todo, (nick, data) => {
             const el = $('#chatlist > ul > li.' + nick);
-            const offset = timedata && timedata.gmtOffset;
+            const offset = data && data.tz && data.tz.offset;
             if ( offset == null )
                 return;
 
@@ -33,7 +33,7 @@ const self = {
                 }).appendTo(el);
             }
 
-            el.data('berrytweaks-localtime_offset', (+offset)*1000);
+            el.data('berrytweaks-localtime_offset', offset * 60 * 1000);
         }, self.update);
         self.todo = [];
         self.todoFlusher = null;

@@ -6,13 +6,13 @@ const self = {
     libs: ['user'],
     todo: [],
     flushTodo() {
-        BerryTweaks.lib.user.getTimes(self.todo, (nick, timedata) => {
+        BerryTweaks.lib.user.getGeo(self.todo, (nick, data) => {
             const el = $('#chatlist > ul > li.' + nick);
-            if ( timedata.countryCode && !$('.berrytweaks-flag', el).length ){
+            if ( data.country && data.country.alpha2 && !$('.berrytweaks-flag', el).length ){
                 $('<div>', {
                     class: 'berrytweaks-flag',
                     css: {
-                        'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${timedata.countryCode.toLowerCase()}.png")`
+                        'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${data.country.alpha2.toLowerCase()}.png")`
                     }
                 }).appendTo(el);
             }
