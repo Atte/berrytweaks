@@ -1,0 +1,11 @@
+{
+  "name": "btmap",
+  "version": "0.0.1",
+  "description": "Provides caches ",
+  "author": "Atte Virtanen <aten.email@gmail.com>",
+  "dependencies": {
+    "node-fetch": "^2.1.2",
+    "xml2js-es6-promise": "^1.1.1"
+  },
+  "publish": false
+}

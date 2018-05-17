@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-source package.config.sh
+source ../package.config.sh
 
 modclean --run --patterns="default:*"
 rm -f ./deploy.zip

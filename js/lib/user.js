@@ -19,20 +19,17 @@ const self = {
             self.callbacks[cacheKey] = [callback];
 
         let url;
-        const headers = {};
+        let headers = {};
+        headers[[String.fromCharCode(88), 'Api', 'Key'].join('-')] = 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6';
         switch (apiName) {
             case 'nicks':
                 url = 'https://atte.fi/berrytweaks/api/nicks.py';
+                headers = {};
                 break;
             case 'map':
-                url = 'https://atte.fi/berrytweaks/api/map.php';
+                url = 'https://aws.atte.fi/btmap';
                 break;
             case 'geo':
-                headers[[
-                    String.fromCharCode(88),
-                    'Api',
-                    'Key'
-                ].join('-')] = 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6';
                 if (body.length === 1) {
                     url = 'https://aws.atte.fi/geo?lat=' + body[0].lat + '&lng=' + body[0].lng;
                     body = undefined;
