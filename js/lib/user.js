@@ -105,9 +105,11 @@ const self = {
                     const coords = [];
                     nicks.forEach(key => {
                         if ( datas[key] )
-                            coords.push({ lat: datas[key].lat, lng: datas[key].lng });
+                            coords.push(datas[key]);
                     });
                     self.cacheData('geo', results => {
+                        if (!Array.isArray(results))
+                            results = [results];
                         nicks.forEach((key, i) => {
                             if ( datas[key] )
                                 callback(key, results[i]);
