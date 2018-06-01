@@ -28,7 +28,6 @@ const self = {
             },
             ghost: false
         }, '#chatbuffer');
-        delete window.CHATLIST[nick];
     },
     addUser(nick) {
         if ( nick === window.NAME )
@@ -49,6 +48,7 @@ const self = {
         self.partTimeoutHandles[nick] = BerryTweaks.setTimeout(() => {
             self.partTimeoutHandles[nick] = null;
             self.act(nick, 'part', time);
+            delete window.CHATLIST[nick];
         }, BerryTweaks.getSetting('timeoutSmoothing', 5) * 1000);
     },
     enable() {
