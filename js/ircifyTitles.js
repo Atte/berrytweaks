@@ -37,6 +37,7 @@ const self = {
             },
             ghost: false
         }, '#chatbuffer');
+        delete window.CHATLIST['Now Playing'];
 
         // add URL afterwards, or addChatMsg will shitty drunken regex it
         if ( video.link )
