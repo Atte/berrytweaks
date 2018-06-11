@@ -579,9 +579,7 @@ const self = {
         self.loadCSS('init');
         self.applySettings();
 
-        self.loadLibs([
-            'http://btc.berrytube.tv/wut/SCfix.js'
-        ]);
+        //self.loadLibs(['https://btc.berrytube.tv/wut/SCfix.js']);
     }
 };
 
