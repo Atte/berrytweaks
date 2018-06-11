@@ -354,22 +354,6 @@ const self = {
         delete self.modules[name];
         self.enableModule(name);
     },
-    fixWindowHeight(win) {
-        if ( !win || win.data('berrytweaked') )
-            return;
-
-        const height = Math.min(
-            win.height() + 20,
-            $(window).height() - (win.offset().top - $(window).scrollTop()) - 20
-        );
-
-        win.css({
-            'overflow-y': 'scroll',
-            'max-height': height
-        });
-
-        win.data('berrytweaked', true);
-    },
     fixWindowPosition(dialogContent) {
         if ( !dialogContent )
             return;
@@ -411,8 +395,6 @@ const self = {
         const win = self.settingsContainer.parents('.dialogContent');
         if ( !win )
             return;
-
-        self.fixWindowHeight(win);
 
         const settings = self.loadSettings();
         const scroll = win.scrollTop();
@@ -480,40 +462,6 @@ const self = {
 
         win.scrollTop(scroll);
     },
-    onEsc(e) {
-        if ( e.which !== 27 )
-            return;
-
-        // async in case the dialog is doing stuff on keydown
-        self.setTimeout(() => {
-            const wins = $(document.body).data('windows');
-            if ( !wins || wins.length === 0 ){
-                // MalTweaks header/motd/footer
-                $('.floatinner:visible').last().next('.mtclose').click();
-                return;
-            }
-
-            wins[wins.length-1].close();
-        }, 0);
-    },
-    onEuro(e) {
-        if ( window.Bem && e.ctrlKey && (e.altKey || e.shiftKey) && (
-                e.keyCode === 69 ||
-                (Bem.drunkMode && (e.keyCode === 87 || e.keyCode === 82))
-            )
-        ){
-            e.stopImmediatePropagation();
-            const bemWin = $('.dialogWindow.berrymotes');
-            if ( bemWin[0] ){
-                bemWin.remove();
-                if ( Bem.lastFocus )
-                    Bem.lastFocus.focus();
-            }
-        }
-    },
-    noreferrer(_to) {
-        $('a[rel!="noopener noreferrer"]', _to).attr("rel", "noopener noreferrer");
-    },
     init() {
         self.dialogDOM = $('<div>', {
             title: 'BerryTweaks',
@@ -531,29 +479,10 @@ const self = {
             self.updateSettingsGUI();
         });
 
-        self.patch(window, 'showPluginWindow', () => {
-            self.fixWindowHeight($('.pluginNode').parents('.dialogContent'));
-        });
-
-        self.patch(window, 'addChatMsg', (data, _to) => {
-            self.noreferrer(_to);
-        });
-
-        self.patch(window, 'showEditNote', () => {
-            const area = $('.dialogWindow .controlWindow textarea');
-            area.attr('rows', 20);
-            self.fixWindowHeight(area.parents('.dialogContent'));
-        });
-
         self.patch(window, 'showUserActions', () => {
             self.setTimeout(() => {
                 self.fixWindowPosition($('#userOps').parents('.dialogContent'));
             }, 200 + 100); // dialog fade-in
-        });
-
-        self.patch(window, 'handleACL', () => {
-            if ( window.MT )
-                window.MT.fixPlaylistHeight();
         });
 
         self.patch(window, 'setNick', () => {
@@ -565,21 +494,10 @@ const self = {
                 if ( data && data.msg && data.msg.timestamp )
                     self.timeDiff = new Date(data.msg.timestamp) - new Date();
             });
-            if ( window.MT )
-                window.MT.fixPlaylistHeight();
         }, 5000);
-
-        self.whenExists('#chatbuffer', el => {
-            self.noreferrer(el);
-        });
-
-        $(document).on('keydown', self.raven.wrap(self.onEsc));
-        $(window).on('keydown', self.raven.wrap(self.onEuro));
 
         self.loadCSS('init');
         self.applySettings();
-
-        //self.loadLibs(['https://btc.berrytube.tv/wut/SCfix.js']);
     }
 };
 
