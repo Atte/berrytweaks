@@ -27,13 +27,12 @@ const self = {
         );
 
         self.textarea = $('<textarea>', {
-            value: HIGHLIGHT_LIST.join('\n'),
             class: 'berrytweaks-rawsquees-textarea',
             rows: 10,
             css: {
                 width: '97%'
             }
-        }).appendTo(self.window);
+        }).val(HIGHLIGHT_LIST.join('\n')).appendTo(self.window);
 
         self.button = $('<div>', {
             class: 'button',
