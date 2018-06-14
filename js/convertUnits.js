@@ -87,6 +87,7 @@ const self = {
         });
     },
     loadRates() {
+        return;
         $.getJSON('https://api.fixer.io/latest', data => {
             data.rates[data.base] = 1;
             self.rates = data.rates;
