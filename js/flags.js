@@ -3,33 +3,37 @@ BerryTweaks.modules['flags'] = (function(){
 
 const self = {
     css: true,
-    libs: ['user'],
-    todo: [],
-    flushTodo() {
-        BerryTweaks.lib.user.getGeo(self.todo, (nick, data) => {
-            const el = $('#chatlist > ul > li.' + nick);
-            if ( data && data.country && data.country.alpha2 && !$('.berrytweaks-flag', el).length ){
-                $('<div>', {
-                    class: 'berrytweaks-flag',
-                    css: {
-                        'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${data.country.alpha2.toLowerCase()}.png")`
-                    }
-                }).appendTo(el);
-            }
-        });
-        self.todo = [];
-    },
+    libs: ['geo'],
     handleUser(nick) {
-        if ( !nick )
+        if (!nick) {
             return;
-
-        self.todo.push(nick);
-        if ( !self.todoFlusher ){
-            self.todoFlusher = BerryTweaks.setTimeout(() => {
-                self.todoFlusher = null;
-                self.flushTodo();
-            }, 1000);
         }
+
+        const el = $('#chatlist > ul > li.' + nick);
+        if ($('.berrytweaks-flag', el).length) {
+            return;
+        }
+
+        BerryTweaks.lib.geo.getCoords(nick, coords => {
+            if (!coords) {
+                return;
+            }
+
+            BerryTweaks.lib.geo.getCountry(coords, country => {
+                if (!country) {
+                    return;
+                }
+
+                if (!$('.berrytweaks-flag', el).length){
+                    $('<div>', {
+                        class: 'berrytweaks-flag',
+                        css: {
+                            'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${country.alpha2.toLowerCase()}.png")`
+                        }
+                    }).appendTo(el);
+                }
+            });
+        });
     },
     enable() {
         BerryTweaks.whenExists('#chatlist > ul > li', users => {

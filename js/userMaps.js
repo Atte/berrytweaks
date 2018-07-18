@@ -1,8 +1,10 @@
 BerryTweaks.modules['userMaps'] = (function(){
 'use strict';
 
+const key = ['***REMOVED***', '***REMOVED***'].join('-');
+
 const self = {
-    libs: ['user'],
+    libs: ['geo'],
     addMap() {
         // find window
         const dialogContent = $('#userOps').parents('.dialogContent');
@@ -10,8 +12,8 @@ const self = {
         if ( !dialogContent || !nick )
             return;
 
-        BerryTweaks.lib.user.getMap(nick, mapdata => {
-            if ( !mapdata )
+        BerryTweaks.lib.geo.getCoords(nick, coords => {
+            if ( !coords )
                 return;
 
             // add map
@@ -23,7 +25,7 @@ const self = {
                     width: 256,
                     height: 256
                 },
-                src: `https://www.google.com/maps/embed/v1/place?key=***REMOVED***&zoom=5&q=${mapdata.lat},${mapdata.lng}`
+                src: `https://www.google.com/maps/embed/v1/place?key=${key}&zoom=5&q=${coords.lat},${coords.lng}`
             }).appendTo(dialogContent);
 
             BerryTweaks.fixWindowPosition(dialogContent);

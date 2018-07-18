@@ -46,6 +46,10 @@ const self = {
         }
     },
     callCallbacks() {
+        if (!window.ACTIVE) {
+            return;
+        }
+
         if ( window.ACTIVE.videoid !== self.prevID ){
             self.prevID = window.ACTIVE.videoid;
             self.data = {

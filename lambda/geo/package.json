@@ -1,12 +1,10 @@
 {
   "name": "geo",
-  "version": "0.0.1",
-  "description": "Provides country and timezone information for the given coordinates.",
+  "version": "0.1.0",
+  "description": "Provides country information for the given coordinates.",
   "author": "Atte Virtanen <aten.email@gmail.com>",
   "dependencies": {
     "iso-3166-1": "^1.1.0",
-    "moment-timezone": "^0.5.17",
-    "tz-lookup": "^6.1.7",
     "which-country": "^1.0.0"
   },
   "publish": false

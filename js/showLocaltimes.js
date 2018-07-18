@@ -3,49 +3,64 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 
 const self = {
     css: true,
-    libs: ['user'],
+    libs: [
+        'https://cdn.atte.fi/tz-lookup/6.1.8/tz.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.21/moment-timezone-with-data-2012-2022.min.js',
+        'geo'
+    ],
     clockUpdateInterval: null,
-    todo: [],
-    todoFlusher: null,
+    updateSingle(el, now) {
+        const offset = el.data('berrytweaks-localtime_offset');
+        if ( offset == null )
+            return;
+
+        if (!now) {
+            now = BerryTweaks.getServerTime();
+        }
+
+        const time = new Date(now + offset);
+        const mins = time.getUTCMinutes();
+        $('.berrytweaks-localtime', el).text(time.getUTCHours() + ':' + (mins<10 ? '0'+mins : mins));
+    },
     update() {
         const now = BerryTweaks.getServerTime();
         $('#chatlist > ul > li').each(function() {
-            const el = $(this);
-            const offset = el.data('berrytweaks-localtime_offset');
-            if ( offset == null )
-                return;
-
-            const time = new Date(now + offset);
-            const mins = time.getUTCMinutes();
-            $('.berrytweaks-localtime', el).text(time.getUTCHours() + ':' + (mins<10 ? '0'+mins : mins));
+            self.updateSingle($(this), now);
         });
     },
-    flushTodo() {
-        BerryTweaks.lib.user.getGeo(self.todo, (nick, data) => {
-            const el = $('#chatlist > ul > li.' + nick);
-            const offset = data && data.tz && data.tz.offset;
-            if ( offset == null )
-                return;
+    handleUser(nick) {
+        if ( !nick )
+            return;
 
+        BerryTweaks.lib.geo.getCoords(nick, coords => {
+            if (!coords) {
+                return;
+            }
+
+            let zoneName = null;
+            try {
+                zoneName = tzlookup(coords.lat, coords.lng);
+            } catch(ex) {}
+            if (!zoneName) {
+                return;
+            }
+
+            const zone = moment.tz.zone(zoneName);
+            if (!zone) {
+                return;
+            }
+
+            const el = $('#chatlist > ul > li.' + nick);
             if ( !$('.berrytweaks-localtime', el).length ){
                 $('<div>', {
                     class: 'berrytweaks-localtime'
                 }).appendTo(el);
             }
 
+            const offset = -zone.utcOffset(moment().valueOf());
             el.data('berrytweaks-localtime_offset', offset * 60 * 1000);
-        }, self.update);
-        self.todo = [];
-        self.todoFlusher = null;
-    },
-    handleUser(nick) {
-        if ( !nick )
-            return;
-
-        self.todo.push(nick);
-        if ( !self.todoFlusher ){
-            self.todoFlusher = BerryTweaks.setTimeout(self.flushTodo, 1000);
-        }
+            self.updateSingle(el);
+        });
     },
     enable() {
         BerryTweaks.whenExists('#chatlist > ul > li', users => {
