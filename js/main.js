@@ -24,7 +24,7 @@ const self = {
         },
         {
             title: 'Nitpicking',
-            configs: ['stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair', 'reduceCPU', 'hideTitle']
+            configs: ['reduceCPU', 'stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair', 'hideTitle']
         },
         {
             title: 'Mod stuff',
@@ -58,11 +58,11 @@ const self = {
         rawSquees: "Unlimited squee editor",
         squeeSound: "Custom squee sound",
 
+        reduceCPU: "Reduce CPU usage (but break some things)",
         stripes: "Stripe messages (requires theme support)",
         squeeVolume: "Customize notification volumes",
         hideLoggedin: 'Hide extra "Logged in as" label',
         resetFlair: "Reset flair on page load",
-        reduceCPU: "Disable transitions",
         hideTitle: "Hide tab title",
 
         tabHighlight: "Highlight chat tabs with new messages",
