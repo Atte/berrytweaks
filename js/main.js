@@ -24,7 +24,7 @@ const self = {
         },
         {
             title: 'Nitpicking',
-            configs: ['stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair', 'hideTitle']
+            configs: ['stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair', 'reduceCPU', 'hideTitle']
         },
         {
             title: 'Mod stuff',
@@ -62,6 +62,7 @@ const self = {
         squeeVolume: "Customize notification volumes",
         hideLoggedin: 'Hide extra "Logged in as" label',
         resetFlair: "Reset flair on page load",
+        reduceCPU: "Disable transitions",
         hideTitle: "Hide tab title",
 
         tabHighlight: "Highlight chat tabs with new messages",
