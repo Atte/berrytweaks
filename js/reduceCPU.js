@@ -5,11 +5,16 @@ const self = {
     css: true,
     propTransfer: null,
     enable() {
-        self.propTransfer = window.propTransfer;
-        window.propTransfer = function(){};
+        // TODO: actual detection
+        setTimeout(function(){
+            self.propTransfer = window.propTransfer;
+            window.propTransfer = function(){};
+        }, 1000 * 5);
     },
     disable() {
-        window.propTransfer = self.propTransfer;
+        if (self.propTransfer) {
+            window.propTransfer = self.propTransfer;
+        }
     }
 };
 
