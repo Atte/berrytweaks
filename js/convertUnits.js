@@ -9,7 +9,7 @@ function each(obj, callback){
 
 const self = {
     libs: [
-        'https://cdnjs.cloudflare.com/ajax/libs/js-quantities/1.7.0/quantities.min.js'
+        'https://cdnjs.cloudflare.com/ajax/libs/js-quantities/1.7.2/quantities.min.js'
     ],
     symbols: {
         'EUR': /[€]/,
