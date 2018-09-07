@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BerryTweaks
 // @namespace    https://atte.fi/berrytweaks/
-// @version      0.5.5
+// @version      0.5.6
 // @description  A collection of BerryTube tweaks
 // @author       Atte
 // @icon         https://atte.fi/berrytweaks/favicon.ico
@@ -12,7 +12,7 @@
 // @match        https://www.berrytube.tv/*
 // @downloadURL  https://atte.fi/berrytweaks/berrytweaks.user.js
 // @grant        none
-// @require      https://cdnjs.cloudflare.com/ajax/libs/raven.js/3.23.3/raven.min.js#md5=faa0565b124106ce0b4577dbff19ddb0,sha256=7ce91eeae533c4e84634e99babb27d83820ec40084db3a7924be0c6a49db844f
+// @require      https://cdnjs.cloudflare.com/ajax/libs/raven.js/3.26.2/raven.min.js#md5=9d93fd0b81d26d806fd3bbda88742eea,sha256=4b0353ddb76fd7318ad95d2600420c21d48484847e1db8581cb324991e94ec3f
 // @noframes
 // ==/UserScript==
 

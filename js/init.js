@@ -1,22 +1,22 @@
 $(function(){
 'use strict';
 
-function initialize() {
-    window.BerryTweaks = {
-        raven: Raven.noConflict(),
-        release: 'RELEASE',
-        releaseUrl: suffix => {
-            if (BerryTweaks.release) {
-                return `https://cdn.atte.fi/berrytweaks/${BerryTweaks.release}/${suffix}`;
-            }
-            return `https://atte.fi/berrytweaks/${suffix}`;
+window.BerryTweaks = {
+    raven: window.Raven && window.Raven.noConflict(),
+    release: 'RELEASE',
+    releaseUrl: suffix => {
+        if (BerryTweaks.release) {
+            return `https://cdn.atte.fi/berrytweaks/${BerryTweaks.release}/${suffix}`;
         }
-    };
-
-    if (BerryTweaks.release === 'RELEASE') {
-        BerryTweaks.release = null;
+        return `https://atte.fi/berrytweaks/${suffix}`;
     }
+};
 
+if (BerryTweaks.release === 'RELEASE') {
+    BerryTweaks.release = null;
+}
+
+if (BerryTweaks.raven) {
     BerryTweaks.raven.config('https://d709b359cd66469a8fdbd1b1e5d4d8c4@sentry.io/236977', {
         environment: BerryTweaks.release ? 'production' : 'development',
         whitelistUrls: [/atte\.fi\/berrytweaks\//],
@@ -38,30 +38,23 @@ function initialize() {
             id: window.NAME
         });
     }
-
-    $.ajax({
-        url: BerryTweaks.releaseUrl('js/main.js'),
-        dataType: 'script',
-        cache: true
-    });
-}
-
-if (window.Raven) {
-    initialize();
 } else {
-    $.ajax({
-        url: 'https://cdnjs.cloudflare.com/ajax/libs/raven.js/3.23.3/raven.min.js',
-        dataType: 'script',
-        cache: true,
-        success: function() {
-            const interval = setInterval(() => {
-                if (window.Raven) {
-                    clearInterval(interval);
-                    initialize();
-                }
-            }, 100);
-        }
-    });
+    BerryTweaks.raven = {
+        wrap(fn) {
+            return fn;
+        },
+        context(fn) {
+            return fn();
+        },
+        setUserContext() {},
+        setExtraContext() {}
+    };
 }
+
+$.ajax({
+    url: BerryTweaks.releaseUrl('js/main.js'),
+    dataType: 'script',
+    cache: true
+});
 
 });
