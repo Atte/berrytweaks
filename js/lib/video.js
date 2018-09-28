@@ -104,12 +104,10 @@ const self = {
                 return 'https://vimeo.com/' + vid.videoid + (timeStr ? '#t='+timeStr : '');
             case 'dm':
                 return 'http://www.dailymotion.com/video/' + vid.videoid;
-            case 'osmf':
-                return vid.videoid;
             case 'soundcloud':
                 return 'https://atte.fi/soundcloud/?' + vid.videoid.substr(2);
             default:
-                return null;
+                return vid.videoid;
         }
     },
     onSecondPassed() {
