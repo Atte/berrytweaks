@@ -5,11 +5,17 @@ const self = {
     accepted: [],
     // callback({allowed:[], blocked:[]})
     getRestrictions(id, callback) {
+        let handled = false;
         $.getJSON('https://www.googleapis.com/youtube/v3/videos', {
             key: '***REMOVED***',
             part: 'contentDetails',
             id,
             success(data) {
+                if (handled) {
+                    return;
+                }
+                handled = true;
+
                 const res = data && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.regionRestriction || {};
                 callback({
                     allowed: res.allowed || null,
@@ -17,6 +23,11 @@ const self = {
                 });
             },
             error() {
+                if (handled) {
+                    return;
+                }
+                handled = true;
+
                 callback({
                     allowed: null,
                     blocked: []
