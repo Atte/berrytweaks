@@ -8,13 +8,20 @@ const self = {
         $.getJSON('https://www.googleapis.com/youtube/v3/videos', {
             key: '***REMOVED***',
             part: 'contentDetails',
-            id
-        }, data => {
-            const res = data && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.regionRestriction || {};
-            callback({
-                allowed: res.allowed || null,
-                blocked: res.blocked || []
-            });
+            id,
+            success(data) {
+                const res = data && data.items && data.items[0] && data.items[0].contentDetails && data.items[0].contentDetails.regionRestriction || {};
+                callback({
+                    allowed: res.allowed || null,
+                    blocked: res.blocked || []
+                });
+            },
+            error() {
+                callback({
+                    allowed: null,
+                    blocked: []
+                });
+            }
         });
     },
     formatCountries(lst) {
