@@ -30,12 +30,9 @@ function greenlet(asyncFunction, imports) {
         'data:,'+importSnippet+'$$='+asyncFunction+';onmessage='+(e => {
             /* global $$ */
 
-            // Invoking within then() captures exceptions in the supplied async function as rejections
             Promise.resolve(e.data[1]).then(
                 v => $$.apply($$, v)
             ).then(
-                // success handler - callback(id, SUCCESS(0), result)
-                // if `d` is transferable transfer zero-copy
                 d => {
                     postMessage([e.data[0], 0, d], [d].filter(x => (
                         (x instanceof ArrayBuffer) ||
@@ -43,7 +40,6 @@ function greenlet(asyncFunction, imports) {
                         (x instanceof ImageBitmap)
                     )));
                 },
-                // error handler - callback(id, ERROR(1), error)
                 er => { postMessage([e.data[0], 1, '' + er]); }
             );
         })
