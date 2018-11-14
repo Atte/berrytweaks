@@ -3,7 +3,10 @@ BerryTweaks.modules['flags'] = (function(){
 
 const self = {
     css: true,
-    libs: ['geo'],
+    libs: [
+        'greenlet',
+        'geo'
+    ],
     handleUser(nick) {
         if (!nick) {
             return;

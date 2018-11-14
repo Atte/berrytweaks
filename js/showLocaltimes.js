@@ -6,6 +6,7 @@ const self = {
     libs: [
         'https://cdn.atte.fi/tz-lookup/6.1.9/tz.js',
         'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.21/moment-timezone-with-data-2012-2022.min.js',
+        'greenlet',
         'geo'
     ],
     clockUpdateInterval: null,

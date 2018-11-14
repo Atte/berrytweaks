@@ -4,7 +4,10 @@ BerryTweaks.modules['userMaps'] = (function(){
 const key = ['***REMOVED***', '***REMOVED***'].join('-');
 
 const self = {
-    libs: ['geo'],
+    libs: [
+        'greenlet',
+        'geo'
+    ],
     addMap() {
         // find window
         const dialogContent = $('#userOps').parents('.dialogContent');

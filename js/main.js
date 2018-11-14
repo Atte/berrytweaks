@@ -215,7 +215,7 @@ const self = {
         });
     },
     bindEvents(mod) {
-        if ( !mod.bind || mod.bound ){
+        if ( !mod || !mod.bind || mod.bound ){
             return;
         }
         $.each(mod.bind.socket || {}, (key, fn) => {

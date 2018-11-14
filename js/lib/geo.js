@@ -27,6 +27,8 @@ const makeCaching = function(loader){
     };
 };
 
+let geoWorker = null;
+
 const self = {
     loadNicks: makeCaching(callback => {
         BerryTweaks.ajax({
@@ -77,18 +79,16 @@ const self = {
         });
     },
     getCountry(coords, callback) {
-        BerryTweaks.ajax({
-            url: 'https://aws.atte.fi/geo2',
-            data: {
-                lat: coords.lat,
-                lng: coords.lng
-            },
-            headers: {
-                'X-Api-Key': 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6'
-            },
-            dataType: 'json',
-            success: callback
-        });
+        if (!geoWorker) {
+            geoWorker = BerryTweaks.lib.greenlet(async coords => {
+                const alpha3 = whichCountry([coords.lng, coords.lat]);
+                return alpha3 && iso31661.whereAlpha3(alpha3) || null;
+            }, [
+                'https://cdn.atte.fi/browserify/which-country-1.0.0.js',
+                'https://cdn.atte.fi/browserify/iso-3166-1-1.1.0.js'
+            ]);
+        }
+        return geoWorker(coords).then(callback || (x=>x));
     }
 };
 
