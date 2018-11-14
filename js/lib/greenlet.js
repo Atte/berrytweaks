@@ -1,5 +1,7 @@
 // https://github.com/developit/greenlet/blob/master/greenlet.js
+// v1.0.1
 // with added importScripts handling
+
 BerryTweaks.lib['greenlet'] = (function(){
 'use strict';
 
