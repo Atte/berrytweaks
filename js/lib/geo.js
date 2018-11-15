@@ -83,10 +83,12 @@ const self = {
             geoWorker = BerryTweaks.lib.greenlet(async coords => {
                 const alpha3 = whichCountry([coords.lng, coords.lat]);
                 return alpha3 && iso31661.whereAlpha3(alpha3) || null;
-            }, [
-                'https://cdn.atte.fi/browserify/which-country-1.0.0.js',
-                'https://cdn.atte.fi/browserify/iso-3166-1-1.1.0.js'
-            ]);
+            }, () => {
+                importScripts(
+                    'https://cdn.atte.fi/browserify/which-country-1.0.0.js',
+                    'https://cdn.atte.fi/browserify/iso-3166-1-1.1.0.js'
+                );
+            });
         }
         return geoWorker(coords).then(callback || (x=>x));
     }
