@@ -35,7 +35,7 @@ function greenlet(asyncFunction, setupFunction) {
     // Create an "inline" worker (1:1 at definition time)
     const worker = new Worker(
         // Use a data URI for the worker's src. It inlines the setup and target functions and an RPC handler:
-        'data:'+setupSnippet+',$$='+asyncFunction+';onmessage='+(e => {
+        'data:,'+setupSnippet+'$$='+asyncFunction+';onmessage='+(e => {
             /* global $$ */
 
             /* Invoking within then() captures exceptions in the supplied async function as rejections */
