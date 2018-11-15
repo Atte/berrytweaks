@@ -19,7 +19,7 @@ function greenlet(asyncFunction, setupFunction) {
     const promises = {};
 
     // Stores the exception if setupFunction fails:
-    let setupException = undefined;
+    let setupException;
 
     // Create code for invoking setupFunction, if one was given:
     const setupSnippet = setupFunction ? `
@@ -71,8 +71,10 @@ function greenlet(asyncFunction, setupFunction) {
 
             // Call reject() on all promises, then delete them
             for (const key of Object.keys(promises)) {
-                promises[key][1](setupException);
-                delete promises[key];
+                if (promises[key]) {
+                    promises[key][1](setupException);
+                }
+                promises[key] = null;
             }
 
             return;
@@ -82,7 +84,7 @@ function greenlet(asyncFunction, setupFunction) {
         promises[e.data[0]][e.data[1]](e.data[2]);
 
         // ... then delete the promise controller
-        delete promises[e.data[0]];
+        promises[e.data[0]] = null;
     };
 
     // Return a proxy function that forwards calls to the worker & returns a promise for the result.
