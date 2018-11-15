@@ -10,24 +10,30 @@ BerryTweaks.lib['greenlet'] = (function(){
  *  @public
  */
 function greenlet(asyncFunction, imports) {
-    let importSnippet = '';
-    if (imports) {
-        if (!Array.isArray(imports)) {
-            imports = [imports];
-        }
-        importSnippet = 'importScripts(' + imports.map(url => JSON.stringify(url)).join(',') + ');';
-    }
-
     // A simple counter is used to generate worker-global unique ID's for RPC:
+    // The value -1 is reserved for importScripts errors
     let currentId = 0;
 
     // Outward-facing promises store their "controllers" (`[request, reject]`) here:
     const promises = {};
 
+    // Stores the error if importScripts fails:
+    let importError = null;
+
+    // Create code for loading imports, if any:
+    const importer = imports ? `
+        try {
+            importScripts(...${JSON.stringify(imports)});
+        } catch(e) {
+            postMessage([-1, 1, e]);
+            throw e;
+        }
+    ` : '';
+
     // Create an "inline" worker (1:1 at definition time)
     const worker = new Worker(
         // Use a data URI for the worker's src. It inlines the target function and an RPC handler:
-        'data:,'+importSnippet+'$$='+asyncFunction+';onmessage='+(e => {
+        'data:,'+importer+'$$='+asyncFunction+';onmessage='+(e => {
             /* global $$ */
 
             Promise.resolve(e.data[1]).then(
@@ -52,6 +58,19 @@ function greenlet(asyncFunction, imports) {
      *    result - the result or error, depending on `status`
      */
     worker.onmessage = e => {
+        // Handle importScripts error
+        if (e.data[0] === -1) {
+            importError = e.data[2];
+
+            // Call reject() on all promises
+            for (const promise of Object.values(promises)) {
+                promise[1](importError);
+            }
+            promises = {};
+
+            return;
+        }
+
         // invoke the promise's resolve() or reject() depending on whether there was an error.
         promises[e.data[0]][e.data[1]](e.data[2]);
 
@@ -62,7 +81,13 @@ function greenlet(asyncFunction, imports) {
     // Return a proxy function that forwards calls to the worker & returns a promise for the result.
     return function (args) {
         args = [].slice.call(arguments);
-        return new Promise(function () {
+        return new Promise(function (resolve, reject) {
+            // Reject early if importScripts failed
+            if (importError !== null) {
+                reject(importError);
+                return;
+            }
+
             // Add the promise controller to the registry
             promises[++currentId] = arguments;
 
