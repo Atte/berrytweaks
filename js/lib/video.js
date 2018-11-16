@@ -102,12 +102,14 @@ const self = {
                 return 'https://www.youtube.com/watch?v=' + vid.videoid + (timeStr ? '#t='+timeStr : '');
             case 'vimeo':
                 return 'https://vimeo.com/' + vid.videoid + (timeStr ? '#t='+timeStr : '');
-            case 'dm':
-                return 'http://www.dailymotion.com/video/' + vid.videoid;
             case 'soundcloud':
                 return 'https://atte.fi/soundcloud/?' + vid.videoid.substr(2);
+            case 'twitch':
+                return 'https://www.twitch.tv/' + vid.videoid + (vid.videoid.startsWith('videos/') && timeStr ? '?t='+timeStr : '');
+            case 'twitchclip':
+                return 'https://clips.twitch.tv/' + vid.videoid;
             default:
-                return vid.videoid;
+                return vid.videoid.includes('//') ? vid.videoid : '#';
         }
     },
     onSecondPassed() {
