@@ -30,11 +30,6 @@ const self = {
             title: 'Mod stuff',
             configs: ['tabHighlight', 'hoverNotes', 'altTab', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
             minType: 2
-        },
-        {
-            title: 'Always enabled',
-            configs: ['escClose', 'settingsFix', 'noReferrer', 'onEuro', 'fixDialogs'],
-            hidden: true
         }
     ],
     configTitles: {
@@ -71,13 +66,7 @@ const self = {
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
         filterDrag: "Reorder filters by dragging",
         ircifyModlog: "Show mod log in chat",
-        queuePlaylist: "Playlist queuing",
-
-        escClose: "Close dialogs with Esc",
-        settingsFix: "Make settings dialog scrollable",
-        noReferrer: "Circumvent hotlink protection on links",
-        onEuro: "Fix AltGr when using BerryMotes",
-        fixDialogs: "Fix various dialog behaviors"
+        queuePlaylist: "Playlist queuing"
     },
     deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc'],
     modules: {},
