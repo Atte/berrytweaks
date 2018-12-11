@@ -20,7 +20,7 @@ const self = {
         },
         {
             title: 'Other',
-            configs: ['requestCheck', 'sortComplete', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
+            configs: ['requestCheck', 'sync', 'linkOpener', 'rawSquees', 'squeeSound']
         },
         {
             title: 'Nitpicking',
@@ -47,7 +47,6 @@ const self = {
         videoTitle: "Show video title in chat toolbar",
 
         requestCheck: "Check requests for country restrictions",
-        sortComplete: "Sort tab completion based on squees",
         sync: "Sync squees and PEP stars",
         linkOpener: "Open links automatically",
         rawSquees: "Unlimited squee editor",
@@ -68,7 +67,7 @@ const self = {
         ircifyModlog: "Show mod log in chat",
         queuePlaylist: "Playlist queuing"
     },
-    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc'],
+    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc', 'sortComplete'],
     modules: {},
     lib: {},
     libWaiters: {},
