@@ -39,11 +39,8 @@ const self = {
     }),
     loadMap: makeCaching(callback => {
         BerryTweaks.ajax({
-            url: 'https://aws.atte.fi/btmap',
+            url: 'https://s3.amazonaws.com/btmap/latest.json',
             dataType: 'json',
-            headers: {
-                'X-Api-Key': 'OHG90mF69n88PpkO8fQns94gmfBgKnpa78ojkSX6'
-            },
             success: callback
         });
     }),
