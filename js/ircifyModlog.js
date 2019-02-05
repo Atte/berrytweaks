@@ -9,11 +9,16 @@ const self = {
         if ( data.nick === 'Server' || key === self.previous )
             return;
 
+        let msg = data.msg;
+        if (msg.startsWith(data.nick + ' ')) {
+            msg = msg.substr(data.nick.length + 1);
+        }
+
         self.previous = key;
         addChatMsg({
             msg: {
                 nick: data.nick,
-                msg: `<span class="berrytweaks-ircify-modlog">${data.msg} </span>`,
+                msg: `<span class="berrytweaks-ircify-modlog">${msg} </span>`,
                 metadata:  {
                     graymute: false,
                     nameflaunt: false,
