@@ -11,7 +11,7 @@ min/js: js
 	babel-minify --mangle false --out-dir min/js js
 	mkdir -p $(deploydir)
 	cp -r min/* $(deploydir)/
-	sed --in-place "s|'RELEASE'|'$(rev)'|" min/js/init.js $(deploydir)/js/init.js
+	sed --in-place -e 's|RELEASE|$(rev)|' -e 's|"GAPI"|$(shell cat gapi.json)|' min/js/init.js $(deploydir)/js/init.js
 
 min/css: css
 	mkdir -p min/css/

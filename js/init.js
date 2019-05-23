@@ -3,6 +3,7 @@ $(function(){
 
 window.BerryTweaks = {
     raven: window.Raven && window.Raven.noConflict(),
+    gapi: 'GAPI',
     release: 'RELEASE',
     releaseUrl: suffix => {
         if (BerryTweaks.release) {
@@ -13,6 +14,7 @@ window.BerryTweaks = {
 };
 
 if (BerryTweaks.release === 'RELEASE') {
+    BerryTweaks.gapi = null;
     BerryTweaks.release = null;
 }
 
@@ -51,10 +53,21 @@ if (BerryTweaks.raven) {
     };
 }
 
-$.ajax({
-    url: BerryTweaks.releaseUrl('js/main.js'),
-    dataType: 'script',
-    cache: true
-});
+function loadMain() {
+    $.ajax({
+        url: BerryTweaks.releaseUrl('js/main.js'),
+        dataType: 'script',
+        cache: true
+    });
+}
+
+if (BerryTweaks.gapi) {
+    loadMain();
+} else {
+    $.getJSON(BerryTweaks.releaseUrl('gapi.json'), gapi => {
+        BerryTweaks.gapi = gapi;
+        loadMain();
+    });
+}
 
 });

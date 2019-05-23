@@ -29,7 +29,7 @@ const self = {
     },
     getPage(id, token, callback) {
         const params = {
-            key: '***REMOVED***',
+            key: BerryTweaks.gapi.key,
             playlistId: id,
             part: 'snippet',
             maxResults: '50'

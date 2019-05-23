@@ -1,8 +1,6 @@
 BerryTweaks.modules['userMaps'] = (function(){
 'use strict';
 
-const key = ['***REMOVED***', '***REMOVED***'].join('-');
-
 const self = {
     libs: [
         'greenlet',
@@ -28,7 +26,7 @@ const self = {
                     width: 256,
                     height: 256
                 },
-                src: `https://www.google.com/maps/embed/v1/place?key=${key}&zoom=5&q=${coords.lat},${coords.lng}`
+                src: `https://www.google.com/maps/embed/v1/place?key=${BerryTweaks.gapi.key}&zoom=5&q=${coords.lat},${coords.lng}`
             }).appendTo(dialogContent);
 
             BerryTweaks.fixWindowPosition(dialogContent);

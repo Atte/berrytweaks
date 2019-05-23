@@ -3,6 +3,7 @@ window.BerryTweaks = BerryTweaks.raven.context(function(){
 
 const self = {
     raven: BerryTweaks.raven,
+    gapi: BerryTweaks.gapi,
     release: BerryTweaks.release,
     releaseUrl: BerryTweaks.releaseUrl,
     categories: [
