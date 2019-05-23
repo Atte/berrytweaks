@@ -109,7 +109,7 @@ const self = {
             case 'twitchclip':
                 return 'https://clips.twitch.tv/' + vid.videoid;
             default:
-                return vid.videoid.includes('//') ? vid.videoid : '#';
+                return vid.videoid && vid.videoid.includes('//') ? vid.videoid : '#';
         }
     },
     onSecondPassed() {
