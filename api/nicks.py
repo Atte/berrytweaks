@@ -1,5 +1,6 @@
 import glob
 import json
+from collections import deque
 
 base_aliases = {
     'Ajaxtitan': {'Ajaxtitan496'},
@@ -107,6 +108,7 @@ for als in base_aliases.values():
     nonbases.union(als)
 
 # constants
+MAX_FILES = 365
 LOG_GLOB = '/var/bt_logs/irc.berrytube.#berrytube.*.weechatlog'
 EMPTY_SET = set()
 
@@ -119,7 +121,7 @@ def load_nicks():
 
     fnames = sorted(glob.iglob(LOG_GLOB))
     cached = last_file is not None
-    for fname in fnames:
+    for fname in deque(fnames, maxlen=MAX_FILES):
         if cached:
             if fname != last_file:
                 continue
