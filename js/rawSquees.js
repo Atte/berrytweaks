@@ -66,7 +66,7 @@ const self = {
             return;
         }
 
-        HIGHLIGHT_LIST = lines;
+        window.HIGHLIGHT_LIST = lines;
         localStorage.setItem('highlightList', HIGHLIGHT_LIST.join(';'));
 
         if ( BerryTweaks.modules.sync )

@@ -4,14 +4,16 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
 function param($name){
-    if ( !array_key_exists($name, $_REQUEST) )
+    if ( !array_key_exists($name, $_REQUEST) ) {
         die("no $name");
+    }
     return $_REQUEST[$name];
 }
 
 $id = param('id');
-if ( !preg_match('/^[a-z0-9]+$/', $id) )
+if ( !preg_match('/^[a-z0-9]+$/', $id) ) {
     die('invalid id');
+}
 
 $fname = "sync/$id.json";
 
@@ -22,15 +24,17 @@ function sync_file($fname){
         'version' => -1,
         'data' => []
     ];
-    if ( file_exists($fname) )
+    if ( file_exists($fname) ) {
         $server = json_decode(file_get_contents($fname), true);
+    }
 
     ksort($browser['data']);
     ksort($server['data']);
 
     if ( $browser['version'] >= $server['version'] ){
-        if ( $browser['version'] == 0 || ($browser['version'] == $server['version'] && print_r($browser['data'], true) != print_r($server['data'], true)) )
+        if ( $browser['version'] == 0 || ($browser['version'] == $server['version'] && print_r($browser['data'], true) != print_r($server['data'], true)) ) {
             $browser['version'] = time();
+        }
 
         $server = $browser;
     }

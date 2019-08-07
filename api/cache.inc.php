@@ -1,7 +1,8 @@
 <?php
 
-if ( !defined('NO_AUTO') && (!defined('DATA_URL') || !defined('CACHE_FNAME')) )
+if ( !defined('NO_AUTO') && (!defined('DATA_URL') || !defined('CACHE_FNAME')) ) {
     die('params missing');
+}
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
@@ -17,18 +18,18 @@ function download($url){
 }
 
 function do_cache($data_url, $cache_fname){
-    if ( defined('SERVE_CACHED') && SERVE_CACHED && is_readable($cache_fname) )
+    if ( defined('SERVE_CACHED') && SERVE_CACHED && is_readable($cache_fname) ) {
         $data = null;
-    else
+    } else {
         $data = download($data_url);
+    }
 
     if ( $data ){
         if ( function_exists('cache_validate') && !cache_validate($data) ){
             if ( function_exists('cache_calback') ){
                 cache_calback(null);
                 return;
-            }
-            else{
+            } else {
                 http_response_code(500);
                 die('invalid data');
             }
@@ -41,11 +42,14 @@ function do_cache($data_url, $cache_fname){
         header('X-BerryTweaks-Cached: ' . filemtime($cache_fname));
     }
 
-    if ( function_exists('cache_callback') )
+    if ( function_exists('cache_callback') ) {
         cache_callback($data);
-    else
+    } else {
         echo $data;
+    }
 }
 
-if ( !defined('NO_AUTO') || !NO_AUTO )
+if ( !defined('NO_AUTO') || !NO_AUTO ) {
     do_cache(DATA_URL, CACHE_FNAME);
+}
+

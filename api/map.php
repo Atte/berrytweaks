@@ -10,8 +10,9 @@ function cache_callback($xml){
     foreach ( $data->marker as $el ){
         $obj = [];
         foreach ( $el->attributes() as $key => $val ){
-            if ( $key == 'name' )
+            if ( $key == 'name' ) {
                 continue;
+            }
 
             $str = (string)$val;
             $obj[$key] = is_numeric($str) ? (float)$str : $str;

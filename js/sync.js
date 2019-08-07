@@ -36,7 +36,7 @@ const self = {
                 localStorage.setItem('highlightList', server.data.squee);
 
                 if ( server.data.squee.length > 0 )
-                    HIGHLIGHT_LIST = server.data.squee.split(';');
+                    window.HIGHLIGHT_LIST = server.data.squee.split(';');
             }
 
             if ( server.data.PEP ){

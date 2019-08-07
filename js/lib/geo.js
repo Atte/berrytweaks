@@ -62,9 +62,9 @@ const self = {
     },
     getCoords(nick, callback) {
         self.loadMap(map => {
-            self.getAliases(nick, nicks => {
-                for (const nick of nicks) {
-                    const data = map[nick.toLowerCase()];
+            self.getAliases(nick, aliases => {
+                for (const alias of aliases) {
+                    const data = map[alias.toLowerCase()];
                     if (data) {
                         callback(data);
                         return;

@@ -87,7 +87,7 @@ const self = {
         });
     },
     loadRates() {
-        return;
+        /*
         $.getJSON('https://api.fixer.io/latest', data => {
             data.rates[data.base] = 1;
             self.rates = data.rates;
@@ -102,6 +102,7 @@ const self = {
             self.cleanPreferred();
             self.preProcess();
         });
+        */
     },
     convertAll(str) {
         if ( !str || str[0] === '<' )
@@ -116,7 +117,7 @@ const self = {
                     return;
 
                 if ( kind === 'currency' ){
-                    if ( self.rates[name] && self.rates[self.preferred[kind]] ) {
+                    if ( self.rates && self.rates[name] && self.rates[self.preferred[kind]] ) {
                         str = str.replace(params.re, (match, number1, number2) => {
                             const number = number1 === undefined ? number2 : number1;
                             const converted = number / self.rates[name] * self.rates[self.preferred[kind]];
