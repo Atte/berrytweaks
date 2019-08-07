@@ -27,9 +27,8 @@ const makeCaching = function(loader){
     };
 };
 
-let geoWorker = null;
-
 const self = {
+    geoWorker: null,
     loadNicks: makeCaching(callback => {
         BerryTweaks.ajax({
             url: 'https://atte.fi/berrytweaks/api/nicks.py',
@@ -76,8 +75,8 @@ const self = {
         });
     },
     getCountry(coords, callback) {
-        if (!geoWorker) {
-            geoWorker = BerryTweaks.lib.greenlet(async coords => {
+        if (!self.geoWorker) {
+            self.geoWorker = BerryTweaks.lib.greenlet(async coords => {
                 const alpha3 = whichCountry([coords.lng, coords.lat]);
                 return alpha3 && iso31661.whereAlpha3(alpha3) || null;
             }, () => {
@@ -87,7 +86,7 @@ const self = {
                 );
             });
         }
-        return geoWorker(coords).then(callback || (x=>x));
+        return self.geoWorker(coords).then(callback || (x=>x));
     }
 };
 
