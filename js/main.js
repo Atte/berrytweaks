@@ -345,37 +345,13 @@ const self = {
         self.enableModule(name);
     },
     fixWindowPosition(dialogContent) {
-        if ( !dialogContent )
-            return;
-
-        const dialogWindow = dialogContent.parents('.dialogWindow');
-        if ( !dialogWindow || !dialogWindow.length )
-            return;
-
-        const diaMargin = 8;
-        const offset = dialogWindow.offset();
-        const diaSize = {
-            height: dialogWindow.height() + diaMargin,
-            width: dialogWindow.width() + diaMargin
-        };
-
-        const win = $(window);
-        const scroll = {
-            top: win.scrollTop(),
-            left: win.scrollLeft()
-        };
-        const winSize = {
-            height: win.height(),
-            width: win.width()
-        };
-
-        if ( offset.top + diaSize.height > scroll.top + winSize.height )
-            offset.top = scroll.top + winSize.height - diaSize.height;
-
-        if ( offset.left + diaSize.width > scroll.left + winSize.width )
-            offset.left = scroll.left + winSize.width - diaSize.width;
-
-        dialogWindow.offset(offset);
+        const uid = dialogContent.parents('.dialogWindow').data('uid');
+        for (const win of $('body').data('windows')) {
+            if (win.data('uid') === uid) {
+                console.log('refreshing', uid);
+                win.refreshWindowOffset();
+            }
+        }
     },
     settingsContainer: null,
     updateSettingsGUI() {
