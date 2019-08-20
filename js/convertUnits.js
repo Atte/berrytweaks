@@ -188,7 +188,7 @@ const self = {
                                     self.preferred[kind] = $(this).val();
                                     self.cleanPreferred();
                                     BerryTweaks.setSetting('preferredUnits', self.preferred);
-                                })
+                                }
                             }
                         }).append(
                             $('<option>', {
