@@ -5,19 +5,21 @@ const self = {
     css: true,
     previous: null,
     addLogMsg(data) {
-        const key = `${data.timestamp}|${data.nick}|${data.msg}`;
-        if ( data.nick === 'Server' || key === self.previous )
-            return;
+        const nick = data.logEvent && data.logEvent.data && data.logEvent.data.mod || data.nick;
 
-        let msg = data.msg;
+        let msg = data.logEvent && data.logEvent.formatted || data.msg;
         if (msg.startsWith(data.nick + ' ')) {
             msg = msg.substr(data.nick.length + 1);
         }
 
+        const key = `${data.timestamp}|${nick}|${msg}`;
+        if ( !nick || !msg || nick === 'Server' || key === self.previous )
+            return;
+
         self.previous = key;
         addChatMsg({
             msg: {
-                nick: data.nick,
+                nick: nick,
                 msg: `<span class="berrytweaks-ircify-modlog">${msg} </span>`,
                 metadata:  {
                     graymute: false,
@@ -26,17 +28,15 @@ const self = {
                     channel: 'main'
                 },
                 emote: 'act',
-                timestamp: new Date(data.timestamp)
+                timestamp: data.timestamp
             },
             ghost: false
         }, '#chatbuffer');
     },
     bind: {
-        socket: {
-            adminLog(data) {
-                if (window.TYPE >= 2) {
-                    self.addLogMsg(data);
-                }
+        patchAfter: {
+            addLogMsg(data) {
+                self.addLogMsg(data);
             }
         }
     }
