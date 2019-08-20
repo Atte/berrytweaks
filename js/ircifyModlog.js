@@ -1,10 +1,16 @@
 BerryTweaks.modules['ircifyModlog'] = (function(){
 'use strict';
 
+// TODO: proper detection of "joined" status of self
 const self = {
     css: true,
     previous: null,
+    holdActs: true,
     addLogMsg(data) {
+        if (self.holdActs) {
+            return;
+        }
+
         const nick = data.logEvent && data.logEvent.data && data.logEvent.data.mod || data.nick;
 
         let msg = data.logEvent && data.logEvent.formatted || data.msg;
@@ -32,6 +38,11 @@ const self = {
             },
             ghost: false
         }, '#chatbuffer');
+    },
+    enable() {
+        setTimeout(function() {
+            self.holdActs = false;
+        }, 5000);
     },
     bind: {
         patchAfter: {
