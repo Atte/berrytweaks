@@ -1,8 +1,7 @@
-window.BerryTweaks = BerryTweaks.raven.context(function(){
+window.BerryTweaks = (function(){
 'use strict';
 
 const self = {
-    raven: BerryTweaks.raven,
     gapi: BerryTweaks.gapi,
     release: BerryTweaks.release,
     releaseUrl: BerryTweaks.releaseUrl,
@@ -72,33 +71,14 @@ const self = {
     modules: {},
     lib: {},
     libWaiters: {},
-    setTimeout(fn, time) {
-        return setTimeout(self.raven.wrap(fn), time);
-    },
-    setInterval(fn, time) {
-        return setInterval(self.raven.wrap(fn), time);
-    },
     whenExists(selector, fn) {
-        const interval = self.setInterval(() => {
+        const interval = setInterval(() => {
             const el = $(selector);
             if ( el && el.length > 0 ){
                 clearInterval(interval);
                 fn(el);
             }
         }, 100);
-    },
-    ajax(config) {
-        config.cache = true;
-        if (config.success) {
-            config.success = self.raven.wrap(config.success);
-        }
-        if (config.error) {
-            config.error = self.raven.wrap(config.error);
-        }
-        if (config.complete) {
-            config.complete = self.raven.wrap(config.complete);
-        }
-        return $.ajax(config);
     },
     timeDiff: 0,
     getServerTime() {
@@ -111,9 +91,9 @@ const self = {
             buttons: [
                 {
                     text: 'Ok',
-                    click: self.raven.wrap(function click(){
+                    click: function() {
                         $(this).dialog('close');
-                    })
+                    }
                 }
             ]
         });
@@ -124,24 +104,23 @@ const self = {
             buttons: [
                 {
                     text: 'Ok',
-                    click: self.raven.wrap(function click(){
+                    click: function() {
                         $(this).dialog('close');
                         callback(true);
-                    })
+                    }
                 },
                 {
                     text: 'Cancel',
-                    click: self.raven.wrap(function click(){
+                    click: function() {
                         $(this).dialog('close');
                         callback(false);
-                    })
+                    }
                 }
             ]
         });
     },
     patch(container, name, callback, before) {
         const original = container[name] || function(){/* noop */};
-        callback = self.raven.wrap(callback);
 
         if ( before ){
             container[name] = function(){
@@ -169,9 +148,10 @@ const self = {
         $(`link[data-berrytweaks_module=${name}]`).remove();
     },
     loadScript(name, callback) {
-        self.ajax({
+        $.ajax({
             url: name.indexOf('//') === -1 ? BerryTweaks.releaseUrl(`js/${name}.js`) : name,
             dataType: 'script',
+            cache: true,
             success: callback
         });
     },
@@ -208,34 +188,25 @@ const self = {
             return;
         }
         $.each(mod.bind.socket || {}, (key, fn) => {
-            socket.on(key, self.raven.wrap(function() {
+            socket.on(key, () => {
                 if (mod.enabled) {
                     fn.apply(mod, arguments);
                 }
-            }));
+            });
         });
         $.each(mod.bind.patchBefore || {}, (key, fn) => {
-            self.patch(window, key, self.raven.wrap(function() {
+            self.patch(window, key, function() {
                 return mod.enabled ? fn.apply(mod, arguments) : true;
-            }), true);
+            }, true);
         });
         $.each(mod.bind.patchAfter || {}, (key, fn) => {
-            self.patch(window, key, self.raven.wrap(function() {
+            self.patch(window, key, function() {
                 if (mod.enabled) {
                     fn.apply(mod, arguments);
                 }
-            }), false);
+            }, false);
         });
         mod.bound = true;
-    },
-    updateRavenContext() {
-        self.raven.setUserContext({
-            id: window.NAME
-        });
-        self.raven.setExtraContext({
-            libs: Object.keys(self.lib).sort(),
-            modules: Object.keys(self.modules).sort()
-        });
     },
     loadLibs(names, callback) {
         names = names.filter(name => !self.lib[name]);
@@ -297,7 +268,6 @@ const self = {
                 self.updateSettingsGUI();
 
             self.bindEvents(mod);
-            self.updateRavenContext();
             return;
         }
 
@@ -335,8 +305,6 @@ const self = {
 
             if ( mod.css )
                 self.unloadCSS(name);
-
-            self.updateRavenContext();
         }
     },
     reloadModule(name) {
@@ -401,11 +369,11 @@ const self = {
                             id: 'berrytweaks-module-toggle-' + key,
                             type: 'checkbox',
                             checked: !!settings.enabled[key]
-                        }).change(self.raven.wrap(function() {
+                        }).change(function() {
                             const settings = self.loadSettings();
                             settings.enabled[key] = !!$(this).prop('checked');
                             self.saveSettings(settings);
-                        }))
+                        })
                     );
                 }));
             })
@@ -446,16 +414,12 @@ const self = {
         });
 
         self.patch(window, 'showUserActions', () => {
-            self.setTimeout(() => {
+            setTimeout(() => {
                 self.fixWindowPosition($('#userOps').parents('.dialogContent'));
             }, 200 + 100); // dialog fade-in
         });
 
-        self.patch(window, 'setNick', () => {
-            self.updateRavenContext();
-        });
-
-        self.setTimeout(() => {
+        setTimeout(() => {
             self.patch(window, 'addChatMsg', data => {
                 if ( data && data.msg && data.msg.timestamp )
                     self.timeDiff = new Date(data.msg.timestamp) - new Date();
@@ -469,8 +433,8 @@ const self = {
 
 return self;
 
-});
+})();
 
 if (!window.SKIP_BERRYTWEAKS) {
-    BerryTweaks.raven.context(BerryTweaks.init);
+    BerryTweaks.init();
 }

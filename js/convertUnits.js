@@ -184,7 +184,7 @@ const self = {
                     $('<td>').append(
                         $('<select>', {
                             on: {
-                                change: BerryTweaks.raven.wrap(function change() {
+                                change: function() {
                                     self.preferred[kind] = $(this).val();
                                     self.cleanPreferred();
                                     BerryTweaks.setSetting('preferredUnits', self.preferred);

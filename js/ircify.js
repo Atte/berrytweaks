@@ -45,7 +45,7 @@ const self = {
             return;
 
         const time = BerryTweaks.getServerTime();
-        self.partTimeoutHandles[nick] = BerryTweaks.setTimeout(() => {
+        self.partTimeoutHandles[nick] = setTimeout(() => {
             self.partTimeoutHandles[nick] = null;
             self.act(nick, 'part', time);
             delete window.CHATLIST[nick];
@@ -73,9 +73,9 @@ const self = {
                     width: '3em'
                 },
                 value: BerryTweaks.getSetting('timeoutSmoothing', 5)
-            }).change(BerryTweaks.raven.wrap(function change() {
+            }).change(function() {
                 BerryTweaks.setSetting('timeoutSmoothing', +$(this).val());
-            }))
+            })
         ).append(
             $('<label>', {
                 for: 'berrytweaks-ircify-timeout',

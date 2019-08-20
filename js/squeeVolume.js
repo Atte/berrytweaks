@@ -24,7 +24,7 @@ const self = {
         self.applyVolume();
 
         // in case some other scripts haven't loaded yet
-        BerryTweaks.setTimeout(self.applyVolume, 1000 * 10);
+        setTimeout(self.applyVolume, 1000 * 10);
     },
     disable() {
         self.applyVolume();

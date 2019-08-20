@@ -13,7 +13,7 @@ const self = {
         return con[0] ? con : null;
     },
     whenLoaded(win, callback) {
-        let interval = BerryTweaks.setInterval(() => {
+        let interval = setInterval(() => {
             if ( win.find('.loading').length === 0 ){
                 clearInterval(interval);
                 interval = null;
@@ -21,7 +21,7 @@ const self = {
             }
         }, 100);
 
-        BerryTweaks.setTimeout(() => {
+        setTimeout(() => {
             if ( interval ){
                 clearInterval(interval);
                 interval = null;

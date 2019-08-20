@@ -30,16 +30,18 @@ const makeCaching = function(loader){
 const self = {
     geoWorker: null,
     loadNicks: makeCaching(callback => {
-        BerryTweaks.ajax({
+        $.ajax({
             url: 'https://atte.fi/berrytweaks/api/nicks.py',
             dataType: 'json',
+            cache: true,
             success: callback
         });
     }),
     loadMap: makeCaching(callback => {
-        BerryTweaks.ajax({
+        $.ajax({
             url: 'https://s3.amazonaws.com/btmap/latest.json',
             dataType: 'json',
+            cache: true,
             success: callback
         });
     }),

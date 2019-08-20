@@ -17,7 +17,7 @@ const self = {
             self.queueTimeout = null;
         }
 
-        self.queueTimeout = BerryTweaks.setTimeout(() => {
+        self.queueTimeout = setTimeout(() => {
             self.queueTimeout = null;
 
             const video = self.queue.pop();
@@ -37,9 +37,10 @@ const self = {
         if ( token )
             params.pageToken = token;
 
-        BerryTweaks.ajax({
+        $.ajax({
             url: 'https://www.googleapis.com/youtube/v3/playlistItems',
             dataType: 'json',
+            cache: true,
             data: params,
             success(data) {
                 if ( !data || (!data.items && self.queue.length === 0) ){
@@ -70,7 +71,7 @@ const self = {
             $('<div>', {
                 'class': 'impele btn berrytweaks-queue-playlist',
                 'text': 'P'
-            }).click(BerryTweaks.raven.wrap(function click() {
+            }).click(function() {
                 if ( window.TYPE < 2 )
                     return;
 
@@ -90,7 +91,7 @@ const self = {
                             self.queueNext();
                     });
                 });
-            })).insertBefore(clear);
+            }).insertBefore(clear);
         });
     },
     disable() {

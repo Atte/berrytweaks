@@ -69,7 +69,7 @@ const self = {
                 self.handleUser($(this).data('nick'));
             });
         });
-        self.clockUpdateInterval = BerryTweaks.setInterval(self.update, 1000*60);
+        self.clockUpdateInterval = setInterval(self.update, 1000*60);
     },
     disable() {
         if ( self.clockUpdateInterval ){

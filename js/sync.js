@@ -86,9 +86,7 @@ const self = {
     bind: {
         patchAfter: {
             showCustomSqueesWindow() {
-                $('.controlWindow > div > .button:nth-child(2)').click(BerryTweaks.raven.wrap(function click() {
-                    self.sync();
-                }));
+                $('.controlWindow > div > .button:nth-child(2)').click(self.sync);
             }
         }
     }

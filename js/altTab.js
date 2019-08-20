@@ -26,7 +26,7 @@ const self = {
         }
     },
     enable() {
-        $(window).on('keydown.btweaksAltTab', BerryTweaks.raven.wrap(self.handler));
+        $(window).on('keydown.btweaksAltTab', self.handler);
     },
     disable() {
         $(window).off('.btweaksAltTab');

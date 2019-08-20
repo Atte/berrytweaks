@@ -38,7 +38,7 @@ const self = {
     bind: {
         patchAfter: {
             showUserActions() {
-                BerryTweaks.setTimeout(() => {
+                setTimeout(() => {
                     self.addMap();
                 }, 200 + 100); // dialog fade-in
             }

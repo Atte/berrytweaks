@@ -36,9 +36,9 @@ const self = {
                 id: 'berrytweaks-linkOpener-hideSpoilers',
                 type: 'checkbox',
                 checked: BerryTweaks.getSetting('hideSpoilers', true)
-            }).change(BerryTweaks.raven.wrap(function() {
+            }).change(function() {
                 BerryTweaks.setSetting('hideSpoilers', !!$(this).prop('checked'));
-            }))
+            })
         ).appendTo(container);
 
         $('<a>', {

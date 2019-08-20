@@ -34,7 +34,7 @@ const self = {
             return;
 
         if ( self.enabled ){
-            self.interval = BerryTweaks.setInterval(self.onSecondPassed, 1000);
+            self.interval = setInterval(self.onSecondPassed, 1000);
         }
         else{
             if ( self.interval ){
