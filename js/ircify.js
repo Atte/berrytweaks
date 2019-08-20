@@ -1,6 +1,7 @@
 BerryTweaks.modules['ircify'] = (function(){
 'use strict';
 
+// TODO: proper detection of "joined" status of self
 const self = {
     css: true,
     verbs: {
@@ -9,10 +10,7 @@ const self = {
     },
     partTimeoutHandles: {},
     holdActs: true,
-    act(nick, type, time, overrideHold) {
-        if ( !nick || (self.holdActs && !overrideHold) )
-            return;
-
+    act(nick, type, time) {
         addChatMsg({
             msg: {
                 nick,
@@ -30,8 +28,8 @@ const self = {
         }, '#chatbuffer');
     },
     addUser(nick) {
-        if ( nick === window.NAME )
-            self.holdActs = false;
+        if (self.holdActs || !nick)
+            return;
 
         if ( self.partTimeoutHandles[nick] ){
             clearTimeout(self.partTimeoutHandles[nick]);
@@ -41,7 +39,7 @@ const self = {
             self.act(nick, 'join', BerryTweaks.getServerTime());
     },
     rmUser(nick) {
-        if ( self.partTimeoutHandles[nick] )
+        if (self.holdActs || !nick || self.partTimeoutHandles[nick])
             return;
 
         const time = BerryTweaks.getServerTime();
@@ -52,8 +50,9 @@ const self = {
         }, BerryTweaks.getSetting('timeoutSmoothing', 5) * 1000);
     },
     enable() {
-        if ( window.CHATLIST.hasOwnProperty(window.NAME) )
+        setTimeout(function() {
             self.holdActs = false;
+        }, 5000);
     },
     addSettings(container) {
         $('<div>', {
@@ -97,6 +96,9 @@ const self = {
         socket: {
             reconnecting() {
                 self.holdActs = true;
+                setTimeout(function() {
+                    self.holdActs = false;
+                }, 5000);
             }
         }
     }
