@@ -3,12 +3,15 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 
 const self = {
     css: true,
-    libs: [
+    libs: (window.moment ? [] : [
+        // TODO: workerize?
+        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js'
+    ]).concat([
         'https://cdn.atte.fi/tz-lookup/6.1.9/tz.js',
         'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.21/moment-timezone-with-data-2012-2022.min.js',
         'greenlet',
         'geo'
-    ],
+    ]),
     clockUpdateInterval: null,
     updateSingle(el, now) {
         const offset = el.data('berrytweaks-localtime_offset');
