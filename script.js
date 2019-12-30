@@ -1,37 +1,30 @@
 'use strict';
-window.BerryTweaks = {
-    raven: {
-        wrap(fn) {
-            return fn;
-        },
-        context(fn) {
-            const btweaks = fn();
 
-            const list = document.getElementById('feature-list');
-            list.removeChild(list.firstChild);
+window.SKIP_BERRYTWEAKS = true;
+window.BerryTweaks = {};
 
-            btweaks.categories.forEach(function(cat){
-                if ( cat.minType !== undefined && cat.minType > 0 )
-                    return;
+setTimeout(function() {
+    const list = document.getElementById('feature-list');
+    list.removeChild(list.firstChild);
 
-                const title = document.createElement('h4');
-                title.textContent = cat.title;
+    window.BerryTweaks.categories.forEach(function(cat){
+        if ( cat.minType !== undefined && cat.minType > 0 )
+            return;
 
-                let li = document.createElement('li');
-                list.appendChild(li);
+        const title = document.createElement('h4');
+        title.textContent = cat.title;
 
-                const ul = document.createElement('ul');
-                li.appendChild(title);
-                li.appendChild(ul);
+        let li = document.createElement('li');
+        list.appendChild(li);
 
-                cat.configs.forEach(function(conf){
-                    li = document.createElement('li');
-                    li.textContent = btweaks.configTitles[conf];
-                    ul.appendChild(li);
-                });
-            });
+        const ul = document.createElement('ul');
+        li.appendChild(title);
+        li.appendChild(ul);
 
-            BerryTweaks.raven.context = function(){ /* first invocation is object creation, second is init; we don't want init */ };
-        }
-    }
-};
+        cat.configs.forEach(function(conf){
+            li = document.createElement('li');
+            li.textContent = window.BerryTweaks.configTitles[conf];
+            ul.appendChild(li);
+        });
+    });
+}, 0);
