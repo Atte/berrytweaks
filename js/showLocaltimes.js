@@ -28,26 +28,25 @@ const self = {
             self.updateSingle($(this), now);
         });
     },
-    handleUser(nick) {
+    async handleUser(nick) {
         if ( !nick )
             return;
 
-        BerryTweaks.lib.geo.getCoords(nick, async coords => {
-            const offset = coords && await self.coordsToOffsetWorker(coords);
-            if (!offset) {
-                return;
-            }
+        const coords = await BerryTweaks.lib.geo.getCoords(nick);
+        const offset = coords && await self.coordsToOffsetWorker(coords);
+        if (!offset) {
+            return;
+        }
 
-            const el = $('#chatlist > ul > li.' + nick);
-            if ( !$('.berrytweaks-localtime', el).length ){
-                $('<div>', {
-                    class: 'berrytweaks-localtime'
-                }).appendTo(el);
-            }
+        const el = $('#chatlist > ul > li.' + nick);
+        if ( !$('.berrytweaks-localtime', el).length ){
+            $('<div>', {
+                class: 'berrytweaks-localtime'
+            }).appendTo(el);
+        }
 
-            el.data('berrytweaks-localtime_offset', offset);
-            self.updateSingle(el);
-        });
+        el.data('berrytweaks-localtime_offset', offset);
+        self.updateSingle(el);
     },
     enable() {
         if (!self.coordsToOffsetWorker) {

@@ -6,31 +6,30 @@ const self = {
         'greenlet',
         'geo'
     ],
-    addMap() {
+    async addMap() {
         // find window
         const dialogContent = $('#userOps').parents('.dialogContent');
         const nick = $('h1', dialogContent).text();
         if ( !dialogContent || !nick )
             return;
 
-        BerryTweaks.lib.geo.getCoords(nick, coords => {
-            if ( !coords )
-                return;
+        const coords = await BerryTweaks.lib.geo.getCoords(nick);
+        if ( !coords )
+            return;
 
-            // add map
-            $('<iframe>', {
-                class: 'berrytweaks-usermap',
-                frameborder: 0,
-                css: {
-                    border: 'none',
-                    width: 256,
-                    height: 256
-                },
-                src: `https://www.google.com/maps/embed/v1/place?key=${BerryTweaks.gapi.key}&zoom=5&q=${coords.lat},${coords.lng}`
-            }).appendTo(dialogContent);
+        // add map
+        $('<iframe>', {
+            class: 'berrytweaks-usermap',
+            frameborder: 0,
+            css: {
+                border: 'none',
+                width: 256,
+                height: 256
+            },
+            src: `https://www.google.com/maps/embed/v1/place?key=${BerryTweaks.gapi.key}&zoom=5&q=${coords.lat},${coords.lng}`
+        }).appendTo(dialogContent);
 
-            BerryTweaks.fixWindowPosition(dialogContent);
-        });
+        BerryTweaks.fixWindowPosition(dialogContent);
     },
     disable() {
         $('.berrytweaks-usermap').remove();

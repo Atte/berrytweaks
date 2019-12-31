@@ -7,7 +7,7 @@ const self = {
         'greenlet',
         'geo'
     ],
-    handleUser(nick) {
+    async handleUser(nick) {
         if (!nick) {
             return;
         }
@@ -17,26 +17,24 @@ const self = {
             return;
         }
 
-        BerryTweaks.lib.geo.getCoords(nick, coords => {
-            if (!coords) {
-                return;
-            }
+        const coords = await BerryTweaks.lib.geo.getCoords(nick);
+        if (!coords) {
+            return;
+        }
 
-            BerryTweaks.lib.geo.getCountry(coords, country => {
-                if (!country) {
-                    return;
-                }
+        const country = await BerryTweaks.lib.geo.getCountry(coords);
+        if (!country) {
+            return;
+        }
 
-                if (!$('.berrytweaks-flag', el).length){
-                    $('<div>', {
-                        class: 'berrytweaks-flag',
-                        css: {
-                            'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${country.alpha2.toLowerCase()}.png")`
-                        }
-                    }).appendTo(el);
+        if (!$('.berrytweaks-flag', el).length){
+            $('<div>', {
+                class: 'berrytweaks-flag',
+                css: {
+                    'background-image': `url("https://cdn.atte.fi/famfamfam/flags/1/${country.alpha2.toLowerCase()}.png")`
                 }
-            });
-        });
+            }).appendTo(el);
+        }
     },
     enable() {
         BerryTweaks.whenExists('#chatlist > ul > li', users => {

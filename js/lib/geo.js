@@ -1,82 +1,73 @@
 BerryTweaks.lib['geo'] = (function(){
 'use strict';
 
-const makeCaching = function(loader){
+const makeCaching = function(loader) {
     let cache = undefined;
     let waiters = null;
-    return function(callback){
+    return () => new Promise(resolve => {
         if (cache !== undefined) {
-            callback(cache);
+            resolve(cache);
             return;
         }
 
         if (waiters == null) {
-            waiters = [callback];
+            waiters = [resolve];
         } else {
-            waiters.push(callback);
+            waiters.push(resolve);
             return;
         }
 
-        loader(data => {
+        loader().then(data => {
             cache = data;
             for (const waiter of waiters) {
                 waiter(cache);
             }
             waiters = null;
         });
-    };
+    });
 };
 
 const self = {
     geoWorker: null,
-    loadNicks: makeCaching(callback => {
-        $.ajax({
-            url: 'https://atte.fi/berrytweaks/api/nicks.py',
-            dataType: 'json',
-            cache: true,
-            success: callback
-        });
-    }),
-    loadMap: makeCaching(callback => {
-        $.ajax({
-            url: 'https://s3.amazonaws.com/btmap/latest.json',
-            dataType: 'json',
-            cache: true,
-            success: callback
-        });
-    }),
-    getAliases(nick, callback) {
-        self.loadNicks(nicks => {
-            if (nicks.hasOwnProperty(nick)) {
-                callback([nick].concat(nicks[nick]));
-                return;
-            }
+    loadNicks: makeCaching(() => $.ajax({
+        url: 'https://atte.fi/berrytweaks/api/nicks.py',
+        dataType: 'json',
+        cache: true
+    }).promise()),
+    loadMap: makeCaching(() => $.ajax({
+        url: 'https://s3.amazonaws.com/btmap/latest.json',
+        dataType: 'json',
+        cache: true
+    }).promise()),
+    async getAliases(nick) {
+        const nicks = await self.loadNicks();
+        if (nicks.hasOwnProperty(nick)) {
+            return [nick].concat(nicks[nick]);
+        }
 
-            for (const key of Object.keys(nicks)) {
-                if (nicks[key].includes(nick)) {
-                    callback([key].concat(nicks[key]));
-                    return;
-                }
+        for (const key of Object.keys(nicks)) {
+            if (nicks[key].includes(nick)) {
+                return [key].concat(nicks[key]);
             }
+        }
 
-            callback([nick]);
-        });
+        return [nick];
     },
-    getCoords(nick, callback) {
-        self.loadMap(map => {
-            self.getAliases(nick, aliases => {
-                for (const alias of aliases) {
-                    const data = map[alias.toLowerCase()];
-                    if (data) {
-                        callback(data);
-                        return;
-                    }
-                }
-                callback(null);
-            });
-        });
+    async getCoords(nick) {
+        const [map, aliases] = await Promise.all([
+            self.loadMap(),
+            self.getAliases(nick)
+        ]);
+
+        for (const alias of aliases) {
+            const data = map[alias.toLowerCase()];
+            if (data) {
+                return data;
+            }
+        }
+        return null;
     },
-    getCountry(coords, callback) {
+    getCountry(coords) {
         if (!self.geoWorker) {
             self.geoWorker = BerryTweaks.lib.greenlet(async coords => {
                 const alpha3 = whichCountry([coords.lng, coords.lat]);
@@ -88,7 +79,8 @@ const self = {
                 );
             });
         }
-        return self.geoWorker(coords).then(callback || (x=>x));
+
+        return self.geoWorker(coords);
     }
 };
 
