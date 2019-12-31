@@ -34,7 +34,7 @@ const self = {
 
         const coords = await BerryTweaks.lib.geo.getCoords(nick);
         const offset = coords && await self.coordsToOffsetWorker(coords);
-        if (!offset) {
+        if (offset == null) {
             return;
         }
 
