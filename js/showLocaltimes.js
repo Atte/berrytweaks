@@ -3,15 +3,11 @@ BerryTweaks.modules['showLocaltimes'] = (function(){
 
 const self = {
     css: true,
-    libs: (window.moment ? [] : [
-        // TODO: workerize?
-        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js'
-    ]).concat([
-        'https://cdn.atte.fi/tz-lookup/6.1.9/tz.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.21/moment-timezone-with-data-2012-2022.min.js',
+    libs: [
         'greenlet',
         'geo'
-    ]),
+    ],
+    coordsToOffsetWorker: null,
     clockUpdateInterval: null,
     updateSingle(el, now) {
         const offset = el.data('berrytweaks-localtime_offset');
@@ -36,21 +32,9 @@ const self = {
         if ( !nick )
             return;
 
-        BerryTweaks.lib.geo.getCoords(nick, coords => {
-            if (!coords) {
-                return;
-            }
-
-            let zoneName = null;
-            try {
-                zoneName = tzlookup(coords.lat, coords.lng);
-            } catch(ex) {}
-            if (!zoneName) {
-                return;
-            }
-
-            const zone = moment.tz.zone(zoneName);
-            if (!zone) {
+        BerryTweaks.lib.geo.getCoords(nick, async coords => {
+            const offset = coords && await self.coordsToOffsetWorker(coords);
+            if (!offset) {
                 return;
             }
 
@@ -61,12 +45,40 @@ const self = {
                 }).appendTo(el);
             }
 
-            const offset = -zone.utcOffset(moment().valueOf());
-            el.data('berrytweaks-localtime_offset', offset * 60 * 1000);
+            el.data('berrytweaks-localtime_offset', offset);
             self.updateSingle(el);
         });
     },
     enable() {
+        if (!self.coordsToOffsetWorker) {
+            self.coordsToOffsetWorker = BerryTweaks.lib.greenlet(async coords => {
+                if (!coords) {
+                    return;
+                }
+
+                let zoneName = null;
+                try {
+                    zoneName = tzlookup(coords.lat, coords.lng);
+                } catch(ex) {}
+                if (!zoneName) {
+                    return;
+                }
+
+                const zone = moment.tz.zone(zoneName);
+                if (!zone) {
+                    return;
+                }
+
+                return -zone.utcOffset(moment().valueOf()) * 60 * 1000;
+            }, () => {
+                importScripts(
+                    'https://cdn.atte.fi/tz-lookup/6.1.25/tz.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data-2012-2022.min.js'
+                );
+            });
+        }
+
         BerryTweaks.whenExists('#chatlist > ul > li', users => {
             users.each(function() {
                 self.handleUser($(this).data('nick'));
