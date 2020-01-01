@@ -24,21 +24,28 @@ function greenlet(asyncFunction, setupFunction) {
     // Create code for invoking setupFunction, if one was given:
     const setupSnippet = setupFunction ? `
         try {
-            (${setupFunction})();
+            const result = (${setupFunction})();
+			if (result && typeof result.then === 'function') {
+				$$setupPromise = result.catch(e => {
+					postMessage([-1, 1, '' + e]);
+					throw e;
+				});
+			}
         }
         catch (e) {
-            postMessage([-1, 1, e]);
+			$$setupPromise = Promise.reject(e);
+            postMessage([-1, 1, '' + e]);
             throw e;
         }
     ` : '';
 
 	// Use a data URI for the worker's src. It inlines the target function and an RPC handler:
-	const script = setupSnippet+'$$='+asyncFunction+';onmessage='+(e => {
-		/* global $$ */
+	const script = '$$setupPromise=Promise.resolve();'+setupSnippet+'$$='+asyncFunction+';onmessage='+(e => {
+		/* global $$, $$setupPromise */
 
 		// Invoking within then() captures exceptions in the supplied async function as rejections
-		Promise.resolve(e.data[1]).then(
-			v => $$.apply($$, v)
+		$$setupPromise.then(
+			() => $$.apply($$, e.data[1])
 		).then(
 			// success handler - callback(id, SUCCESS(0), result)
 			// if `d` is transferable transfer zero-copy
