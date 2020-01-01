@@ -1,75 +1,48 @@
 BerryTweaks.lib['geo'] = (function(){
 'use strict';
 
-const makeCaching = function(loader) {
-    let cache = undefined;
-    let waiters = null;
-    return () => new Promise(resolve => {
-        if (cache !== undefined) {
-            resolve(cache);
-            return;
-        }
-
-        if (waiters == null) {
-            waiters = [resolve];
-        } else {
-            waiters.push(resolve);
-            return;
-        }
-
-        loader().then(data => {
-            cache = data;
-            for (const waiter of waiters) {
-                waiter(cache);
-            }
-            waiters = null;
-        });
-    });
-};
-
 const self = {
-    geoWorker: null,
-    loadNicks: makeCaching(() => $.ajax({
-        url: 'https://atte.fi/berrytweaks/api/nicks.py',
-        dataType: 'json',
-        cache: true
-    }).promise()),
-    loadMap: makeCaching(() => $.ajax({
-        url: 'https://s3.amazonaws.com/btmap/latest.json',
-        dataType: 'json',
-        cache: true
-    }).promise()),
-    async getAliases(nick) {
-        const nicks = await self.loadNicks();
-        if (nicks.hasOwnProperty(nick)) {
-            return [nick].concat(nicks[nick]);
-        }
-
-        for (const key of Object.keys(nicks)) {
-            if (nicks[key].includes(nick)) {
-                return [key].concat(nicks[key]);
-            }
-        }
-
-        return [nick];
+    workers: {
+        getCoords: null,
+        getCountry: null
     },
-    async getCoords(nick) {
-        const [map, aliases] = await Promise.all([
-            self.loadMap(),
-            self.getAliases(nick)
-        ]);
+    getCoords(nick) {
+        if (!self.workers.getCoords) {
+            self.workers.getCoords = BerryTweaks.lib.greenlet(async nick => {
+                let aliases = [nick];
+                if (self.aliases.hasOwnProperty(nick)) {
+                    aliases = [nick].concat(self.aliases[nick]);
+                } else {
+                    for (const key of Object.keys(self.aliases)) {
+                        if (self.aliases[key].includes(nick)) {
+                            aliases = [key].concat(self.aliases[key]);
+                            break;
+                        }
+                    }
+                }
 
-        for (const alias of aliases) {
-            const data = map[alias.toLowerCase()];
-            if (data) {
-                return data;
-            }
+                for (const alias of aliases) {
+                    const data = self.map[alias.toLowerCase()];
+                    if (data) {
+                        return data;
+                    }
+                }
+
+                return null;
+            }, async () => {
+                const [aliases, map] = await Promise.all([
+                    fetch('https://atte.fi/berrytweaks/api/nicks.py').then(r => r.json()),
+                    fetch('https://s3.amazonaws.com/btmap/latest.json').then(r => r.json())
+                ]);
+                self.aliases = aliases;
+                self.map = map;
+            });
         }
-        return null;
+        return self.workers.getCoords(nick);
     },
     getCountry(coords) {
-        if (!self.geoWorker) {
-            self.geoWorker = BerryTweaks.lib.greenlet(async coords => {
+        if (!self.workers.getCountry) {
+            self.workers.getCountry = BerryTweaks.lib.greenlet(async coords => {
                 const alpha3 = whichCountry([coords.lng, coords.lat]);
                 return alpha3 && iso31661.whereAlpha3(alpha3) || null;
             }, () => {
@@ -79,8 +52,7 @@ const self = {
                 );
             });
         }
-
-        return self.geoWorker(coords);
+        return self.workers.getCountry(coords);
     }
 };
 
