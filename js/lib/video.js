@@ -98,6 +98,8 @@ const self = {
         const timeStr = self.timeString(time);
 
         switch ( vid.videotype ){
+            case 'dm':
+                return 'https://www.dailymotion.com/video/' + vid.videoid + (timeStr ? '?start='+time : '');
             case 'yt':
                 return 'https://www.youtube.com/watch?v=' + vid.videoid + (timeStr ? '#t='+timeStr : '');
             case 'vimeo':
