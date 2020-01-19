@@ -40,12 +40,12 @@ const self = {
         socket: {
             adminLog(data) {
                 self.addLogMsg(data);
+            },
+            createPlayer() {
+                self.holdActs = false;
             }
         },
         patchAfter: {
-            initChatList() {
-                self.holdActs = false;
-            },
             onSocketReconnecting() {
                 self.holdActs = true;
             }
