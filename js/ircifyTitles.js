@@ -10,6 +10,10 @@ const self = {
         return ''+num;
     },
     onChange(video) {
+        if (!video || !video.title || video.title === 'null') {
+            return;
+        }
+
         let length = '';
         if ( video.length ){
             length = self.addZeroes(video.length.s||0);

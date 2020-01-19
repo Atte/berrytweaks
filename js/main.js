@@ -188,21 +188,21 @@ const self = {
             return;
         }
         $.each(mod.bind.socket || {}, (key, fn) => {
-            socket.on(key, () => {
+            socket.on(key, function(...args) {
                 if (mod.enabled) {
-                    fn.apply(mod, arguments);
+                    fn.call(this, ...args);
                 }
             });
         });
         $.each(mod.bind.patchBefore || {}, (key, fn) => {
-            self.patch(window, key, function() {
-                return mod.enabled ? fn.apply(mod, arguments) : true;
+            self.patch(window, key, function(...args) {
+                return mod.enabled ? fn.call(this, ...args) : true;
             }, true);
         });
         $.each(mod.bind.patchAfter || {}, (key, fn) => {
-            self.patch(window, key, function() {
+            self.patch(window, key, function(...args) {
                 if (mod.enabled) {
-                    fn.apply(mod, arguments);
+                    fn.call(this, ...args);
                 }
             }, false);
         });
