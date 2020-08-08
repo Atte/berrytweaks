@@ -6,9 +6,27 @@ const self = {
         getCoords: null,
         getCountry: null
     },
+    loadTime: new Date().getTime(),
     getCoords(nick) {
         if (!self.workers.getCoords) {
-            self.workers.getCoords = BerryTweaks.lib.greenlet(async nick => {
+            self.workers.getCoords = BerryTweaks.lib.greenlet(async (nick, time) => {
+                if (time > self.refreshTime) {
+                    self.refreshTime = time;
+                    self.refreshPromise = new Promise(resolve => {
+                        Promise.all([
+                            fetch('https://atte.fi/berrytweaks/api/nicks.py').then(r => r.json()),
+                            fetch('https://s3.amazonaws.com/btmap/latest.json').then(r => r.json())
+                        ]).then(([aliases, map]) => {
+                            self.aliases = aliases;
+                            self.map = map;
+                            resolve();
+                        });
+                    });
+                }
+                if (self.refreshPromise) {
+                    await self.refreshPromise;
+                }
+
                 let aliases = [nick];
                 if (self.aliases.hasOwnProperty(nick)) {
                     aliases = [nick].concat(self.aliases[nick]);
@@ -29,17 +47,11 @@ const self = {
                 }
 
                 return null;
-            }, async () => {
-                const forcedRefreshVersion = 2;
-                const [aliases, map] = await Promise.all([
-                    fetch('https://atte.fi/berrytweaks/api/nicks.py').then(r => r.json()),
-                    fetch('https://s3.amazonaws.com/btmap/latest.json').then(r => r.json())
-                ]);
-                self.aliases = aliases;
-                self.map = map;
+            }, () => {
+                self.refreshTime = 0;
             });
         }
-        return self.workers.getCoords(nick);
+        return self.workers.getCoords(nick, self.loadTime);
     },
     getCountry(coords) {
         if (!self.workers.getCountry) {
