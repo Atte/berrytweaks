@@ -10,9 +10,9 @@ const self = {
             return;
         }
 
-        const nick = cleanupSessionNick(data.logEvent && data.logEvent.data && data.logEvent.data.mod || data.nick);
+        const nick = cleanupSessionNick(data.logEvent && data.logEvent.data && data.logEvent.data.mod || data.nick || '???');
 
-        let msg = cleanupSessionNick(data.logEvent && data.logEvent.formatted || data.msg);
+        let msg = cleanupSessionNick(data.logEvent && data.logEvent.formatted || data.msg || '???');
         if (msg.startsWith(data.nick + ' ')) {
             msg = msg.substr(data.nick.length + 1);
         }
