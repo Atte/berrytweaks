@@ -30,6 +30,7 @@ const self = {
 
                 return null;
             }, async () => {
+                const forcedRefreshVersion = 2;
                 const [aliases, map] = await Promise.all([
                     fetch('https://atte.fi/berrytweaks/api/nicks.py').then(r => r.json()),
                     fetch('https://s3.amazonaws.com/btmap/latest.json').then(r => r.json())
