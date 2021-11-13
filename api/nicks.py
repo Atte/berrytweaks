@@ -118,6 +118,7 @@ nicks = {}
 
 def load_nicks():
     global last_file, nicks
+    return {}
 
     fnames = sorted(glob.iglob(LOG_GLOB))
     cached = last_file is not None
