@@ -23,8 +23,8 @@ const self = {
                 const sheet = document.getElementById('wutColorStyles').sheet;
                 const color = wutGetUsercolor(nick);
 
-                sheet.insertRule(`.msg-${nick} { border-image: linear-gradient(to right, ${color}, transparent) 1 100%; }`, sheet.cssRules.length);
-                sheet.insertRule(`.msg-${nick} + .msg-${nick} { margin-top: 0; }`, sheet.cssRules.length);
+                sheet.insertRule(`.msg-${nick}, .msgwrap[nick="${nick}"] { border-image: linear-gradient(to right, ${color}, transparent) 1 100%; }`, sheet.cssRules.length);
+                sheet.insertRule(`.msg-${nick} + .msg-${nick}, .msgwrap[nick="${nick}"] + .msgwrap[nick="${nick}"] { margin-top: 0; }`, sheet.cssRules.length);
             });
             self.reload();
         });
