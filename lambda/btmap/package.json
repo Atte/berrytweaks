@@ -4,7 +4,7 @@
   "description": "Provides caches ",
   "author": "Atte Virtanen <aten.email@gmail.com>",
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "xml2js-es6-promise": "^1.1.1"
   },
   "publish": false
