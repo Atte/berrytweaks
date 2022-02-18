@@ -9,12 +9,14 @@ const self = {
         if ( e.altKey && !e.shiftKey && !e.ctrlKey ){
             let target = null;
             switch ( e.keyCode ){
-                case 49:
-                case 97:
+                case 49: // 1
+                case 97: // a
+                case 112: // F1
                     target = 'main';
                     break;
-                case 50:
-                case 98:
+                case 50: // 2
+                case 98: // b
+                case 113: // F2
                     target = 'admin';
                     break;
                 default:
