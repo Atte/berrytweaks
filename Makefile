@@ -3,7 +3,7 @@
 all: min/css min/js
 
 rev := $(shell git rev-parse --short --verify HEAD)
-deploydir := /mnt/bulk/www/cdn.atte.fi/berrytweaks/$(rev)
+deploydir := /tank/www/cdn.atte.fi/berrytweaks/$(rev)
 
 min/js: js
 	mkdir -p min/js/

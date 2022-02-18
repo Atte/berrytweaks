@@ -1,2 +1,5 @@
 /min
 /gapi.json
+/.direnv
+/.scannerwork
+/node_modules
