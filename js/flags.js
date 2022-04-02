@@ -12,7 +12,7 @@ const self = {
             return;
         }
 
-        const el = $('#chatlist > ul > li.' + nick);
+        const el = $(`#chatlist li[nick="${nick}"]`);
         if ($('.berrytweaks-flag', el).length) {
             return;
         }

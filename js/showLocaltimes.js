@@ -38,7 +38,7 @@ const self = {
             return;
         }
 
-        const el = $('#chatlist > ul > li.' + nick);
+        const el = $(`#chatlist li[nick="${nick}"]`);
         if ( !$('.berrytweaks-localtime', el).length ){
             $('<div>', {
                 class: 'berrytweaks-localtime'

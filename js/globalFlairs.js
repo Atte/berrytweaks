@@ -7,7 +7,7 @@ const self = {
         if ( !nick )
             return;
 
-        const el = $('#chatlist > ul > li.' + nick);
+        const el = $(`#chatlist li[nick="${nick}"]`);
         if ( !el )
             return;
 
