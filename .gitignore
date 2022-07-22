@@ -3,3 +3,5 @@
 /.direnv
 /.scannerwork
 /node_modules
+/dist
+/.env

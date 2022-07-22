@@ -1,0 +1,6 @@
+{
+    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix",
+    "files.exclude": {
+        "node_modules": true
+    }
+}

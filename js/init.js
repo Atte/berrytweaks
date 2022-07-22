@@ -2,19 +2,18 @@ $(function(){
 'use strict';
 
 window.BerryTweaks = {
-    gapi: 'GAPI',
-    release: 'RELEASE',
+    gapiKey: 'GAPI_KEY',
+    releaseBase: 'RELEASE_BASE',
     releaseUrl: suffix => {
-        if (BerryTweaks.release) {
-            return `https://cdn.atte.fi/berrytweaks/${BerryTweaks.release}/${suffix}`;
-        }
-        return `https://atte.fi/berrytweaks/${suffix}`;
+        return `${BerryTweaks.releaseBase}/${suffix}`;
     }
 };
 
-if (BerryTweaks.release === 'RELEASE') {
-    BerryTweaks.gapi = null;
-    BerryTweaks.release = null;
+if (BerryTweaks.gapiKey === 'GAPI_KEY') {
+    BerryTweaks.gapiKey = null;
+}
+if (BerryTweaks.releaseBase === 'RELEASE_BASE') {
+    throw new Error('no release base');
 }
 
 function loadMain() {
@@ -25,11 +24,11 @@ function loadMain() {
     });
 }
 
-if (BerryTweaks.gapi) {
+if (BerryTweaks.gapiKey) {
     loadMain();
 } else {
     $.getJSON(BerryTweaks.releaseUrl('gapi.json'), gapi => {
-        BerryTweaks.gapi = gapi;
+        BerryTweaks.gapiKey = gapi.key;
         loadMain();
     });
 }

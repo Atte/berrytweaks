@@ -2,8 +2,8 @@ window.BerryTweaks = (function(){
 'use strict';
 
 const self = {
-    gapi: BerryTweaks.gapi,
-    release: BerryTweaks.release,
+    gapiKey: BerryTweaks.gapiKey,
+    releaseBase: BerryTweaks.releaseBase,
     releaseUrl: BerryTweaks.releaseUrl,
     categories: [
         {
