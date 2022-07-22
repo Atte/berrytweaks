@@ -1,10 +1,14 @@
 .PHONY: all clean min/css min/js
 
-all: min/css min/js
+all: min min/css min/js
 
 # min/functions: functions
 # 	mkdir -p min/functions/
 # 	cp -r functions/* min/functions/
+
+min: static
+	mkdir -p min/
+	cp -r static/* min/
 
 min/js: js
 	mkdir -p min/js/
