@@ -24,7 +24,7 @@ const self = {
         },
         {
             title: 'Nitpicking',
-            configs: ['reduceCPU', 'stripes', 'squeeVolume', 'hideLoggedin', 'resetFlair', 'hideTitle']
+            configs: ['reduceCPU', 'stripes', 'squeeVolume', 'hideLoggedin', 'hideTitle']
         },
         {
             title: 'Mod stuff',
@@ -56,7 +56,6 @@ const self = {
         stripes: "Stripe messages (requires theme support)",
         squeeVolume: "Customize notification volumes",
         hideLoggedin: 'Hide extra "Logged in as" label',
-        resetFlair: "Reset flair on page load",
         hideTitle: "Hide tab title",
 
         tabHighlight: "Highlight chat tabs with new messages",
@@ -66,7 +65,7 @@ const self = {
         ircifyModlog: "Show mod log in chat",
         queuePlaylist: "Playlist queuing"
     },
-    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc', 'sortComplete', 'filterDrag'],
+    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc', 'sortComplete', 'filterDrag', 'resetFlair'],
     modules: {},
     lib: {},
     libWaiters: {},
