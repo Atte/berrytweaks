@@ -28,7 +28,7 @@ const self = {
         },
         {
             title: 'Mod stuff',
-            configs: ['tabHighlight', 'hoverNotes', 'altTab', 'ctrlTab', 'filterDrag', 'ircifyModlog', 'queuePlaylist'],
+            configs: ['tabHighlight', 'hoverNotes', 'altTab', 'ctrlTab', 'ircifyModlog', 'queuePlaylist'],
             minType: 2
         }
     ],
@@ -63,11 +63,10 @@ const self = {
         hoverNotes: "Only show notes on userlist hover",
         altTab: "Change chat tabs with Alt + 1/2",
         ctrlTab: "Cycle chat tabs with Ctrl + Tab",
-        filterDrag: "Reorder filters by dragging",
         ircifyModlog: "Show mod log in chat",
         queuePlaylist: "Playlist queuing"
     },
-    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc', 'sortComplete'],
+    deprecatedModules: ['escClose', 'settingsFix', 'noReferrer', 'esc', 'sortComplete', 'filterDrag'],
     modules: {},
     lib: {},
     libWaiters: {},
