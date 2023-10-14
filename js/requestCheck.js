@@ -7,7 +7,7 @@ const self = {
     getRestrictions(id, callback) {
         let handled = false;
         $.getJSON('https://www.googleapis.com/youtube/v3/videos', {
-            key: BerryTweaks.gapi.key,
+            key: BerryTweaks.gapiKey,
             part: 'contentDetails',
             id,
             success(data) {

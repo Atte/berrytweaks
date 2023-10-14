@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "babel-minify": "^0.5.1"
+    "babel-minify": "^0.5.2"
   },
   "packageManager": "yarn@3.6.4"
 }

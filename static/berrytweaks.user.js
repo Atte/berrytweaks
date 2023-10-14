@@ -4,10 +4,10 @@
 // @version      0.6.0
 // @description  A collection of BerryTube tweaks
 // @author       Atte
-// @icon         https://atte.fi/berrytweaks/favicon.ico
-// @icon64       https://atte.fi/berrytweaks/favicon64.png
+// @icon         https://berrytweaks.app.atte.fi/favicon.ico
+// @icon64       https://berrytweaks.app.atte.fi/favicon64.png
 // @match        https://berrytube.tv/*
-// @downloadURL  https://atte.fi/berrytweaks/berrytweaks.user.js
+// @downloadURL  https://berrytweaks.app.atte.fi/berrytweaks.user.js
 // @grant        none
 // @noframes
 // ==/UserScript==
@@ -16,7 +16,7 @@
 'use strict';
 
 const script = document.createElement('script');
-script.setAttribute('src', 'https://atte.fi/berrytweaks/min/js/init.js');
+script.setAttribute('src', 'https://berrytweaks.app.atte.fi/js/init.js');
 document.head.appendChild(script);
 
 })();
