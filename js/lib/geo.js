@@ -15,7 +15,7 @@ const self = {
                     self.refreshPromise = new Promise(resolve => {
                         Promise.all([
                             fetch('https://atte.fi/berrytweaks/api/nicks.py').then(r => r.json()),
-                            fetch('https://s3.amazonaws.com/btmap/latest.json').then(r => r.json())
+                            fetch('https://btmap.app.atte.fi/latest.json').then(r => r.json())
                         ]).then(([aliases, map]) => {
                             self.aliases = aliases;
                             self.map = map;
